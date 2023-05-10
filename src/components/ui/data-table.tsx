@@ -5,6 +5,8 @@ import {
 	ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
+	getFacetedRowModel,
+	getFacetedUniqueValues,
 	getFilteredRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
@@ -65,6 +67,8 @@ export function DataTable<TData, TValue>({
 		onRowSelectionChange: setRowSelection,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		getFacetedRowModel: getFacetedRowModel(),
+		getFacetedUniqueValues: getFacetedUniqueValues(),
 		state: {
 			rowSelection,
 			columnFilters,

@@ -5,12 +5,14 @@ import { Button } from '@components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { tags } from './data';
 
 export type Item = {
 	location: string;
 	uid: string;
 	name: string;
 	quantity: number;
+	tags?: string[];
 };
 
 export const columns: ColumnDef<Item>[] = [
@@ -18,15 +20,32 @@ export const columns: ColumnDef<Item>[] = [
 	{ header: 'Quantity', accessorKey: 'quantity' },
 	{
 		header: 'Tags',
-		cell: ({ row }: { row: any }) => (
-			<>
-				{row.original.quantity < 6 && (
-					<Badge className='border-red-500 text-red-500' variant='outline'>
-						Low
-					</Badge>
-				)}
-			</>
-		),
+		accessorKey: 'tags',
+		cell: ({ row }: { row: any }) => {
+			const formattedTags = tags.filter((tag) =>
+				row.original.tags?.includes(tag.value)
+			);
+			return (
+				<div className='flex flex-wrap gap-2'>
+					{formattedTags.map((tag) => (
+						<Badge
+							key={tag.label}
+							className={`border-${tag.color} text-${tag.color}`}
+							variant='outline'
+						>
+							{tag.label}
+						</Badge>
+					))}
+				</div>
+			);
+		},
+		filterFn: (row, id, filterValue) => {
+			return (
+				filterValue.filter((value: string) =>
+					row.original.tags?.includes(value)
+				).length > 0
+			);
+		},
 	},
 	{
 		header: 'Actions',

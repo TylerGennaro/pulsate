@@ -6,6 +6,9 @@ import { Row, useReactTable } from '@tanstack/react-table';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import { printQRCodes } from '@lib/qrcode';
+import { DataTableFacetedFilter } from '@components/ui/data-table-faceted-filter';
+import { tags } from './data';
+import { X } from 'lucide-react';
 
 interface InventoryTableProps {
 	data: Item[];
@@ -24,8 +27,41 @@ function printSelectedCodes(rows: Row<Item>[]) {
 
 function Toolbar({ table }: { table: ReturnType<typeof useReactTable<Item>> }) {
 	const selectedRows = table.getFilteredSelectedRowModel().rows;
+	const isFiltered =
+		table.getPreFilteredRowModel().rows.length >
+		table.getFilteredRowModel().rows.length;
+
 	return (
-		<div className='mb-4 flex justify-between gap-4'>
+		<div className='mb-4 flex justify-between gap-4 flex-wrap'>
+			<div className='flex flex-col justify-center gap-4 lg:flex-row lg:items-center'>
+				<Input
+					placeholder='Filter items'
+					className='max-w-xs'
+					value={table.getColumn('name')?.getFilterValue() as string}
+					onChange={(event) =>
+						table.getColumn('name')?.setFilterValue(event.target.value)
+					}
+				/>
+				<div className='flex flex-wrap gap-2'>
+					{table.getColumn('tags') && (
+						<DataTableFacetedFilter
+							column={table.getColumn('tags')}
+							title='Tags'
+							options={tags}
+						/>
+					)}
+					{isFiltered && (
+						<Button
+							variant='ghost'
+							onClick={() => table.resetColumnFilters()}
+							className='h-8 px-2 lg:px-3'
+						>
+							Reset
+							<X className='ml-2 h-4 w-4' />
+						</Button>
+					)}
+				</div>
+			</div>
 			<Button
 				disabled={selectedRows.length === 0}
 				onClick={() => printSelectedCodes(selectedRows)}
@@ -34,14 +70,6 @@ function Toolbar({ table }: { table: ReturnType<typeof useReactTable<Item>> }) {
 				Print {selectedRows.length > 0 ? selectedRows.length + ' ' : ''}QR
 				Code(s)
 			</Button>
-			<Input
-				placeholder='Filter items'
-				className='max-w-xs'
-				value={table.getColumn('name')?.getFilterValue() as string}
-				onChange={(event) =>
-					table.getColumn('name')?.setFilterValue(event.target.value)
-				}
-			/>
 		</div>
 	);
 }

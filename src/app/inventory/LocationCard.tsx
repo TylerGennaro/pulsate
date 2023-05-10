@@ -15,7 +15,7 @@ interface LocationProps {
 
 export default function LocationCard({ location }: LocationProps) {
 	return (
-		<Link href='/inventory/station-154'>
+		<Link href={`/inventory/${location.uid}`}>
 			<Card className='cursor-pointer hover:bg-secondary transition-colors'>
 				<CardHeader>
 					<CardTitle>{location.name}</CardTitle>

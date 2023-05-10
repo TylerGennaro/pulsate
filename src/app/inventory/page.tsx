@@ -1,6 +1,7 @@
 import { Button } from '@components/ui/button';
 import LocationCard from './LocationCard';
 import { Plus } from 'lucide-react';
+import Header from '@components/ui/Header';
 
 export interface Location {
 	uid: string;
@@ -34,7 +35,7 @@ export default async function Page() {
 	const data = await getData();
 
 	return (
-		<div className='container pt-12'>
+		<div className='container py-8'>
 			<Button className='mb-4'>
 				<Plus className='w-4 h-4 mr-2' />
 				New Location

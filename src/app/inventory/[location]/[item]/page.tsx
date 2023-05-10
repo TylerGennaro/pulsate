@@ -35,7 +35,7 @@ export default async function Inventory({
 }) {
 	const data = await getData();
 	return (
-		<div className='container py-16'>
+		<div className='container py-8'>
 			<Link href={`/inventory/${params.location}`}>
 				<Button
 					className='w-fit mb-8 p-0 hover:bg-background hover:text-muted-foreground'
