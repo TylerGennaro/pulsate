@@ -23,8 +23,8 @@ function Container({
 
 async function getData(): Promise<Log[]> {
 	return [
-		{ user: 'John Doe', date: '2021-09-01', change: 5, newQuantity: 5 },
-		{ user: 'John Doe', date: '2021-09-02', change: -2, newQuantity: 3 },
+		{ user: 'John Doe', date: 1683743587760, change: -2, newQuantity: 3 },
+		{ user: 'John Doe', date: 1573642547760, change: 5, newQuantity: 5 },
 	];
 }
 

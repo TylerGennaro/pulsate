@@ -1,13 +1,18 @@
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from './ui/button';
+import { SignInButton, SignOutButton } from './SignButton';
+import { getServerSession } from 'next-auth';
+import SiteProfile from './SiteProfile';
 
 const navItems = {
 	Home: '/',
 	Inventory: '/inventory',
 };
 
-export default function SiteHeader() {
+export default async function SiteHeader() {
+	const session = await getServerSession();
+
 	return (
 		<header className='sticky top-0 w-full z-40 border-b bg-background'>
 			<div className='container flex h-16 items-center space-x-4 justify-between'>
@@ -30,8 +35,20 @@ export default function SiteHeader() {
 					</nav>
 				</div>
 				<div className='flex items-center gap-2'>
-					<ThemeToggle />
-					<Button>Sign In</Button>
+					{session ? (
+						<>
+							<p className='text-sm text-muted-foreground font-semibold mr-2'>
+								{session?.user?.name}
+							</p>
+							{/* @ts-expect-error */}
+							<SiteProfile />
+						</>
+					) : (
+						<>
+							<ThemeToggle />
+							<SignInButton />
+						</>
+					)}
 				</div>
 			</div>
 		</header>

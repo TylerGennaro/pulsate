@@ -1,50 +1,70 @@
-import { Button } from '@components/ui/button';
+import { db } from '@lib/prisma';
 import LocationCard from './LocationCard';
-import { Plus } from 'lucide-react';
-import Header from '@components/ui/Header';
+import NewLocationDialog from './NewLocationDialog';
+import { getServerSession } from 'next-auth';
 
 export interface Location {
-	uid: string;
+	id: string;
 	name: string;
 	hasLow: boolean;
 	hasExpired?: boolean;
 }
 
-async function getData(): Promise<Location[]> {
-	return [
-		{
-			uid: 'station-154',
-			name: 'Station 154',
-			hasLow: true,
+async function getData(id: string): Promise<Location[]> {
+	const data: Location[] = await db.location.findMany({
+		where: {
+			userId: id,
 		},
-		{
-			uid: 'station-155',
-			name: 'Station 155',
-			hasLow: false,
-		},
-		{
-			uid: 'station-156',
-			name: 'Station 156',
-			hasLow: false,
-			hasExpired: true,
-		},
-	];
+	});
+
+	data.forEach(async (location) => {
+		const hasLow = await db.item.groupBy({
+			where: {
+				product: {
+					locationId: location.id,
+				},
+			},
+			by: ['productId'],
+			_sum: {
+				quantity: true,
+			},
+			having: {
+				quantity: {
+					_sum: {
+						lt: 5,
+					},
+				},
+			},
+		});
+		location.hasLow = hasLow.length > 0;
+	});
+
+	return data;
 }
 
 export default async function Page() {
-	const data = await getData();
+	const session = await getServerSession();
+	if (!session) return null;
+	const data = await getData(session.user?.id);
 
 	return (
 		<div className='container py-8'>
-			<Button className='mb-4'>
-				<Plus className='w-4 h-4 mr-2' />
-				New Location
-			</Button>
+			<NewLocationDialog />
 			<div className='flex flex-col gap-4'>
 				{data.map((location) => (
-					<LocationCard location={location} key={location.uid} />
+					<LocationCard location={location} key={location.id} />
 				))}
 			</div>
 		</div>
 	);
 }
+
+/*
+
+SELECT Item.productId, SUM(Item.quantity) AS total
+FROM Item, Product, Location
+WHERE Item.productId = Product.id AND Product.locationId = 'cku0q2q2h0000h1tj5q1q2q2h'
+GROUP BY Item.productId
+HAVING SUM(Item.quantity) < 5
+
+*/

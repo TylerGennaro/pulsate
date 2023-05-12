@@ -1,7 +1,7 @@
 'use client';
 
 import { DataTable } from '@components/ui/data-table';
-import { columns, Item } from './columns';
+import { columns, Product } from './columns';
 import { Row, useReactTable } from '@tanstack/react-table';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
@@ -11,21 +11,25 @@ import { tags } from './data';
 import { X } from 'lucide-react';
 
 interface InventoryTableProps {
-	data: Item[];
+	data: Product[];
 }
 
-function printSelectedCodes(rows: Row<Item>[]) {
+function printSelectedCodes(rows: Row<Product>[]) {
 	const codes = rows.map((row) => {
 		return {
-			location: row.original.location,
-			uid: row.original.uid,
+			location: row.original.location.id,
+			id: row.original.id,
 			name: row.original.name,
 		};
 	});
 	printQRCodes(codes);
 }
 
-function Toolbar({ table }: { table: ReturnType<typeof useReactTable<Item>> }) {
+function Toolbar({
+	table,
+}: {
+	table: ReturnType<typeof useReactTable<Product>>;
+}) {
 	const selectedRows = table.getFilteredSelectedRowModel().rows;
 	const isFiltered =
 		table.getPreFilteredRowModel().rows.length >
@@ -33,9 +37,9 @@ function Toolbar({ table }: { table: ReturnType<typeof useReactTable<Item>> }) {
 
 	return (
 		<div className='mb-4 flex justify-between gap-4 flex-wrap'>
-			<div className='flex flex-col justify-center gap-4 lg:flex-row lg:items-center'>
+			<div className='flex flex-col justify-center gap-4 lg:flex-row lg:items-center lg:justify-start flex-grow'>
 				<Input
-					placeholder='Filter items'
+					placeholder='Filter products'
 					className='max-w-xs'
 					value={table.getColumn('name')?.getFilterValue() as string}
 					onChange={(event) =>

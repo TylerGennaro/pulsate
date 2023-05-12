@@ -6,18 +6,31 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { tags } from './data';
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogContent,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTrigger,
+	AlertDialogCancel,
+	AlertDialogDescription,
+	AlertDialogTitle,
+} from '@components/ui/alert-dialog';
 
-export type Item = {
-	location: string;
-	uid: string;
+export type Product = {
+	location: { id: string; name: string; userId: string };
+	id: string;
 	name: string;
+	exp?: string;
 	quantity: number;
 	tags?: string[];
 };
 
-export const columns: ColumnDef<Item>[] = [
-	{ header: 'Item Name', accessorKey: 'name' },
+export const columns: ColumnDef<Product>[] = [
+	{ header: 'Product Name', accessorKey: 'name' },
 	{ header: 'Quantity', accessorKey: 'quantity' },
+	{ header: 'Earliest Expiration', accessorKey: 'exp' },
 	{
 		header: 'Tags',
 		accessorKey: 'tags',
@@ -54,14 +67,31 @@ export const columns: ColumnDef<Item>[] = [
 				<div className='flex'>
 					<Button variant='ghost' asChild>
 						<Link
-							href={`/inventory/${row.original.location}/${row.original.uid}`}
+							href={`/inventory/${row.original.locationId}/${row.original.id}`}
 						>
 							<Edit size={20} />
 						</Link>
 					</Button>
-					<Button variant='ghost'>
-						<Trash2 size={20} />
-					</Button>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button variant='ghost'>
+								<Trash2 size={20} />
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Are you sure?</AlertDialogTitle>
+								<AlertDialogDescription>
+									This action cannot be undone. This item and all its data will
+									be removed from the system.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction>Continue</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
 				</div>
 			);
 		},

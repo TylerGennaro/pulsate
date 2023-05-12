@@ -5,14 +5,30 @@ import { ArrowDown, ArrowUp } from 'lucide-react';
 
 export type Log = {
 	user: string;
-	date: string;
+	date: number;
 	change: number;
 	newQuantity: number;
 };
 
 export const columns: ColumnDef<Log>[] = [
 	{ header: 'User', accessorKey: 'user' },
-	{ header: 'Date', accessorKey: 'date' },
+	{
+		header: 'Date',
+		accessorKey: 'date',
+		cell: ({ row }: { row: any }) => {
+			const date = new Date(row.original.date);
+			return (
+				<div className='flex flex-col'>
+					<span>
+						{`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`}
+					</span>
+					<span className='text-xs text-muted-foreground'>{` ${
+						date.getHours() % 12
+					}:${date.getMinutes()} ${date.getHours() >= 12 ? 'PM' : 'AM'}`}</span>
+				</div>
+			);
+		},
+	},
 	{
 		header: 'Change',
 		cell: ({ row }: { row: any }) => {

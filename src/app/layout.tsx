@@ -1,8 +1,9 @@
 import SiteHeader from '@components/SiteHeader';
-import ThemeProvider from '@components/ThemeProvider';
+import Providers from '@components/Providers';
 import '@styles/globals.css';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,10 +20,12 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body className={inter.className}>
-				<ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+				<Providers>
+					<Toaster position='bottom-right' />
+					{/* @ts-expect-error */}
 					<SiteHeader />
 					{children}
-				</ThemeProvider>
+				</Providers>
 			</body>
 		</html>
 	);

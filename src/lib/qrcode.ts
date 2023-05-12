@@ -2,7 +2,7 @@ import QRCode from 'qrcode';
 
 export interface CodeData {
 	location: string;
-	uid: string;
+	id: string;
 	name: string;
 }
 
@@ -36,7 +36,7 @@ export function getUrl(location: string, code: string) {
 }
 
 export async function printQRCode(code: CodeData) {
-	const image = await QRCode.toDataURL(getUrl(code.location, code.uid), {
+	const image = await QRCode.toDataURL(getUrl(code.location, code.id), {
 		width: 256,
 	});
 	const content = `
@@ -64,7 +64,7 @@ export async function printQRCode(code: CodeData) {
 export async function printQRCodes(codes: CodeData[]) {
 	const images = codes.map(async (code) => {
 		return {
-			image: await QRCode.toDataURL(getUrl(code.location, code.uid), {
+			image: await QRCode.toDataURL(getUrl(code.location, code.id), {
 				width: 256,
 			}),
 			name: code.name,

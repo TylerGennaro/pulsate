@@ -1,40 +1,63 @@
-import { Item } from '@app/inventory/[location]/columns';
+import { Product } from '@app/inventory/[location]/columns';
 import InventoryTable from './InventoryTable';
 import { Button } from '@components/ui/button';
 import { ChevronLeft, Plus } from 'lucide-react';
 import NewItemSheet from './NewItemSheet';
 import Link from 'next/link';
 import Header from '@components/ui/Header';
+import { db } from '@lib/prisma';
 
-async function getData(): Promise<Item[]> {
-	return [
-		{
-			location: 'station-154',
-			uid: 'cervical-collar',
-			name: 'Cervical Collar',
-			quantity: 10,
+async function getData(
+	location: string
+): Promise<{ products: Product[]; location: string }> {
+	const data = await db.product.findMany({
+		include: {
+			location: true,
 		},
-		{
-			location: 'station-154',
-			uid: 'vomit-bag',
-			name: 'Vomit Bag',
-			quantity: 5,
-			tags: ['low', 'expired'],
+		where: {
+			locationId: location,
 		},
-		{
-			location: 'station-154',
-			uid: 'triangular-bandage',
-			name: 'Triangular Bandage',
-			quantity: 12,
-			tags: ['expired'],
+	});
+	const locationName = await db.location.findFirst({
+		select: {
+			name: true,
 		},
-		{
-			location: 'station-154',
-			uid: 'roller-gauze',
-			name: 'Roller Gauze',
-			quantity: 18,
+		where: {
+			id: location,
 		},
-	];
+	});
+	return { products: data, location: locationName.name };
+	// return [
+	// 	{
+	// 		location: 'station-154',
+	// 		uid: 'cervical-collar',
+	// 		name: 'Cervical Collar',
+	// 		quantity: 10,
+	// 	},
+	// 	{
+	// 		location: 'station-154',
+	// 		uid: 'vomit-bag',
+	// 		name: 'Vomit Bag',
+	// 		quantity: 5,
+	// 		exp: '5/04/2023',
+	// 		tags: ['low', 'expired'],
+	// 	},
+	// 	{
+	// 		location: 'station-154',
+	// 		uid: 'triangular-bandage',
+	// 		name: 'Triangular Bandage',
+	// 		quantity: 12,
+	// 		exp: '3/22/2023',
+	// 		tags: ['expired'],
+	// 	},
+	// 	{
+	// 		location: 'station-154',
+	// 		uid: 'roller-gauze',
+	// 		name: 'Roller Gauze',
+	// 		quantity: 18,
+	// 		exp: '6/10/2023',
+	// 	},
+	// ];
 }
 
 export default async function Inventory({
@@ -42,7 +65,7 @@ export default async function Inventory({
 }: {
 	params: { location: string };
 }) {
-	const data = await getData();
+	const data = await getData(params.location);
 
 	return (
 		<>
@@ -56,10 +79,12 @@ export default async function Inventory({
 						Locations
 					</Button>
 				</Link>
-				<Header className='mb-4'>{params.location}</Header>
-				<InventoryTable data={data} />
+				<div className='flex justify-between items-center flex-wrap'>
+					<Header className='mb-4'>{data.location}</Header>
+					<NewItemSheet location={params.location} />
+				</div>
+				<InventoryTable data={data.products} />
 			</div>
-			<NewItemSheet />
 		</>
 	);
 }
