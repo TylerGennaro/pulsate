@@ -1,0 +1,15 @@
+- [] CRUD operations to Locations
+	- [✅] Create a new location
+	- [✅] Read all locations
+	- [] Delete a location
+	- [] Update a location's name/info
+- [] CRUD operations to Products
+	- [✅] Create a new product
+	- [✅] Read all products
+	- [✅] Delete a product
+	- [] Update a product's name/info
+- [] CRUD operations to Items
+	- [] Create a new item
+	- [] Read all items
+	- [] Delete an item
+	- [] Update an item's name/info

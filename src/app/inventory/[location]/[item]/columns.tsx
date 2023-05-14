@@ -1,5 +1,6 @@
 'use client';
 
+import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 
@@ -9,6 +10,11 @@ export type Log = {
 	change: number;
 	newQuantity: number;
 };
+
+export const itemColumns: ColumnDef<Item>[] = [
+	{ header: 'Expires', accessorKey: 'expires' },
+	{ header: 'Quantity', accessorKey: 'quantity' },
+];
 
 export const columns: ColumnDef<Log>[] = [
 	{ header: 'User', accessorKey: 'user' },

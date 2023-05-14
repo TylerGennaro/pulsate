@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from '@lib/prisma';
+import { revalidatePath } from 'next/cache';
 
 export async function addProduct(fields: FormData, userId?: string) {
 	const payload: { status: number; message: string } = await new Promise(
@@ -61,7 +62,54 @@ export async function addProduct(fields: FormData, userId?: string) {
 					});
 				});
 
+			revalidatePath(`/inventory/${newProduct?.id}`);
 			res({ status: 200, message: 'Product added.' });
+		}
+	);
+
+	return payload;
+}
+
+export async function deleteProduct(id: string, userId?: string) {
+	console.log('made it');
+	const payload: { status: number; message: string } = await new Promise(
+		async (res, rej) => {
+			if (!userId)
+				return res({
+					status: 401,
+					message: 'Could not authorize the request.',
+				});
+
+			const product = await db.product.findUnique({
+				where: { id },
+				include: {
+					location: {
+						include: {
+							user: true,
+						},
+					},
+				},
+			});
+
+			if (!product)
+				return res({
+					status: 404,
+					message: 'Could not find the product you are trying to delete.',
+				});
+
+			if (product.location.user.id !== userId) {
+				return res({
+					status: 401,
+					message: 'Could not authorize the request.',
+				});
+			}
+
+			await db.product.delete({
+				where: { id },
+			});
+
+			revalidatePath(`/inventory/${id}`);
+			res({ status: 200, message: 'Product deleted.' });
 		}
 	);
 

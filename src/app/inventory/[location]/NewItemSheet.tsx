@@ -23,11 +23,13 @@ import { Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { addProduct } from '@actions/products';
 import { handleResponse } from '@lib/actionResponse';
+import { useState } from 'react';
 
 export default function NewItemSheet({ location }: { location: string }) {
+	const [open, setOpen] = useState(false);
 	const session = useSession();
 	return (
-		<Sheet>
+		<Sheet open={open} onOpenChange={setOpen}>
 			<SheetTrigger asChild>
 				<Button>
 					<Plus className='w-4 h-4 mr-2' />
@@ -38,7 +40,10 @@ export default function NewItemSheet({ location }: { location: string }) {
 				<form
 					action={(data: FormData) => {
 						data.append('location', location);
-						addProduct(data, session.data?.user.id).then(handleResponse);
+						addProduct(data, session.data?.user.id).then((res) => {
+							setOpen(false);
+							handleResponse(res);
+						});
 					}}
 				>
 					<SheetHeader>

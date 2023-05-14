@@ -9,6 +9,7 @@ import { printQRCodes } from '@lib/qrcode';
 import { DataTableFacetedFilter } from '@components/ui/data-table-faceted-filter';
 import { tags } from './data';
 import { X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 interface InventoryTableProps {
 	data: Product[];
@@ -79,10 +80,12 @@ function Toolbar({
 }
 
 export default function InventoryTable({ data }: InventoryTableProps) {
+	const session = useSession();
+	if (!session) return null;
 	return (
 		<div>
 			<DataTable
-				columns={columns}
+				columns={columns(session?.data?.user.id as string)}
 				data={data}
 				toolbar={Toolbar}
 				enableSelection

@@ -4,10 +4,12 @@ import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import { cn } from '@lib/utils';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
-import { Log, columns } from './columns';
-import { DataTable } from '@components/ui/data-table';
+import { db } from '@lib/prisma';
+import { Product } from '@prisma/client';
+import ItemTable from './ItemTable';
+import NewItemDialog from './NewItemDialog';
 
 function Container({
 	children,
@@ -21,11 +23,20 @@ function Container({
 	);
 }
 
-async function getData(): Promise<Log[]> {
-	return [
-		{ user: 'John Doe', date: 1683743587760, change: -2, newQuantity: 3 },
-		{ user: 'John Doe', date: 1573642547760, change: 5, newQuantity: 5 },
-	];
+async function getData(id: string): Promise<Product | null> {
+	const data = await db.product.findFirst({
+		include: {
+			items: true,
+		},
+		where: {
+			id,
+		},
+	});
+	return data;
+	// return [
+	// 	{ user: 'John Doe', date: 1683743587760, change: -2, newQuantity: 3 },
+	// 	{ user: 'John Doe', date: 1573642547760, change: 5, newQuantity: 5 },
+	// ];
 }
 
 export default async function Inventory({
@@ -33,7 +44,9 @@ export default async function Inventory({
 }: {
 	params: { location: string; item: string };
 }) {
-	const data = await getData();
+	const data = await getData(params.item);
+	// console.dir(data, { depth: Infinity });
+	if (!data) return null;
 	return (
 		<div className='container py-8'>
 			<Link href={`/inventory/${params.location}`}>
@@ -49,11 +62,9 @@ export default async function Inventory({
 				<Container>
 					<div className='flex flex-col items-start gap-4'>
 						<Badge variant='destructive'>Quantity Low</Badge>
-						<Header size='lg'>Cervical Collar</Header>
+						<Header size='lg'>{data.name}</Header>
 					</div>
-					<span className='text-muted-foreground mt-2 block'>
-						{params.item}
-					</span>
+					<span className='text-muted-foreground mt-2 block'>{data.id}</span>
 				</Container>
 				<div className='flex flex-col md:flex-row gap-8'>
 					<div className='w-full'>
@@ -70,17 +81,19 @@ export default async function Inventory({
 									<Button className='whitespace-nowrap'>Save changes</Button>
 								</div>
 							</div>
+							<NewItemDialog />
+							<ItemTable data={data.items} />
 						</Container>
 						<Container className='w-full mt-8'>
 							<span className='text-lg mb-4 block'>Log</span>
-							<DataTable columns={columns} data={data} />
+							{/* <DataTable columns={columns} data={data} /> */}
 						</Container>
 					</div>
 					<Container className='flex flex-col items-center h-fit'>
 						<QRCode
 							location={params.location}
 							uid={params.item}
-							name='Cervical Collar'
+							name={data.name}
 						/>
 					</Container>
 				</div>

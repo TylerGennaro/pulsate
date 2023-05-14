@@ -17,6 +17,8 @@ import {
 	AlertDialogDescription,
 	AlertDialogTitle,
 } from '@components/ui/alert-dialog';
+import { deleteProduct } from '@actions/products';
+import { handleResponse } from '@lib/actionResponse';
 
 export type Product = {
 	location: { id: string; name: string; userId: string };
@@ -27,7 +29,7 @@ export type Product = {
 	tags?: string[];
 };
 
-export const columns: ColumnDef<Product>[] = [
+export const columns = (userID: string): ColumnDef<Product>[] => [
 	{ header: 'Product Name', accessorKey: 'name' },
 	{ header: 'Quantity', accessorKey: 'quantity' },
 	{ header: 'Earliest Expiration', accessorKey: 'exp' },
@@ -79,17 +81,27 @@ export const columns: ColumnDef<Product>[] = [
 							</Button>
 						</AlertDialogTrigger>
 						<AlertDialogContent>
-							<AlertDialogHeader>
-								<AlertDialogTitle>Are you sure?</AlertDialogTitle>
-								<AlertDialogDescription>
-									This action cannot be undone. This item and all its data will
-									be removed from the system.
-								</AlertDialogDescription>
-							</AlertDialogHeader>
-							<AlertDialogFooter>
-								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction>Continue</AlertDialogAction>
-							</AlertDialogFooter>
+							<form
+								action={(data: FormData) => {
+									deleteProduct(row.original.id, userID).then((res) => {
+										handleResponse(res);
+									});
+								}}
+							>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Are you sure?</AlertDialogTitle>
+									<AlertDialogDescription>
+										This action cannot be undone. This item and all its data
+										will be removed from the system.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<Button type='submit' variant='destructive'>
+										Delete
+									</Button>
+								</AlertDialogFooter>
+							</form>
 						</AlertDialogContent>
 					</AlertDialog>
 				</div>

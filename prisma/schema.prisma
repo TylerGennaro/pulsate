@@ -78,6 +78,7 @@ model Product {
   locationId String
 
   items Item[]
+	logs Log[]
 }
 
 model Item {
@@ -91,8 +92,17 @@ model Item {
 model Log {
   id        String   @id @default(cuid())
   timestamp DateTime @default(now())
+	product  Product  @relation(fields: [productId], references: [id])
+	productId String
   user      User?    @relation(fields: [userId], references: [id])
   userId    String?
-  type      Int
+  type      LogType
   data      Json
+}
+
+enum LogType {
+	QUANTITY_CHANGE
+	ITEM_ADD
+	ITEM_REMOVE
+	STOCK_ORDER
 }
