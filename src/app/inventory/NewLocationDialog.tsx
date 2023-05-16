@@ -15,11 +15,13 @@ import { addLocation } from '@actions/locations';
 import InputGroup from '@components/InputGroup';
 import { useSession } from 'next-auth/react';
 import { handleResponse } from '@lib/actionResponse';
+import { useState } from 'react';
 
 export default function NewLocationDialog() {
+	const [open, setOpen] = useState(false);
 	const session = useSession();
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button className='mb-4'>
 					<Plus className='w-4 h-4 mr-2' />
@@ -30,6 +32,7 @@ export default function NewLocationDialog() {
 				<form
 					action={(data: FormData) => {
 						addLocation(data, session.data?.user.id).then(handleResponse);
+						setOpen(false);
 					}}
 				>
 					<DialogHeader>

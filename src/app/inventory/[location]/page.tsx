@@ -1,6 +1,6 @@
 import InventoryTable from './InventoryTable';
 import { Button } from '@components/ui/button';
-import { ChevronLeft, Plus } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import NewItemSheet from './NewItemSheet';
 import Link from 'next/link';
 import Header from '@components/ui/Header';
@@ -8,6 +8,7 @@ import { db } from '@lib/prisma';
 import { Item, Location, Product } from '@prisma/client';
 import { Tag } from '@lib/enum';
 import { isExpiring } from '@lib/date';
+import EditLocation from './EditLocation';
 
 // export async function generateMetadata({
 // 	params,
@@ -89,7 +90,10 @@ export default async function Inventory({
 					</Button>
 				</Link>
 				<div className='flex justify-between items-center flex-wrap'>
-					<Header className='mb-4'>{data.location}</Header>
+					<div className='flex gap-2'>
+						<Header className='mb-4'>{data.location}</Header>
+						<EditLocation location={params.location} />
+					</div>
 					<NewItemSheet location={params.location} />
 				</div>
 				<InventoryTable data={data.products} />

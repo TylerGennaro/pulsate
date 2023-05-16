@@ -15,6 +15,17 @@ async function getData(id: string): Promise<LocationInfo[]> {
 		where: {
 			userId: id,
 		},
+		select: {
+			id: true,
+			name: true,
+			userId: true,
+			products: true,
+			user: {
+				select: {
+					name: true,
+				},
+			},
+		},
 	});
 
 	await Promise.all([
@@ -58,7 +69,7 @@ async function getData(id: string): Promise<LocationInfo[]> {
 		}),
 	]);
 
-	console.dir(data, { depth: Infinity });
+	// console.dir(data, { depth: Infinity });
 
 	return data;
 }

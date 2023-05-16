@@ -5,6 +5,7 @@ declare global {
 		id: string;
 		name: string;
 		userId: string;
+		user?: { name?: string | null };
 		products?: Product[];
 		hasLow?: boolean;
 		hasExpired?: boolean;

@@ -27,7 +27,9 @@ export default function LocationCard({ location }: LocationProps) {
 				<div>
 					<CardHeader>
 						<CardTitle>{location.name}</CardTitle>
-						<CardDescription>Inventory managed by Eric Gennaro</CardDescription>
+						<CardDescription>
+							Inventory managed by {location.user?.name}
+						</CardDescription>
 					</CardHeader>
 					<CardContent className='flex gap-2'>
 						{location.hasLow && (

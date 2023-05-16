@@ -23,7 +23,15 @@ import { formatDate } from '@lib/date';
 
 export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 	{ header: 'Product Name', accessorKey: 'name' },
-	{ header: 'Quantity', accessorKey: 'quantity' },
+	{
+		header: 'Quantity',
+		accessorKey: 'quantity',
+		cell: ({ row }: { row: any }) => (
+			<p>
+				{row.original.quantity}/{row.original.max || ''}
+			</p>
+		),
+	},
 	{
 		header: 'Earliest Expiration',
 		accessorKey: 'exp',
