@@ -22,9 +22,11 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<Providers>
 					<Toaster position='bottom-right' />
-					{/* @ts-expect-error */}
-					<SiteHeader />
-					{children}
+					<div className='flex flex-col h-screen'>
+						{/* @ts-expect-error */}
+						<SiteHeader />
+						{children}
+					</div>
 				</Providers>
 			</body>
 		</html>

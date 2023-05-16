@@ -22,10 +22,15 @@ function Calendar({
 	className,
 	classNames,
 	showOutsideDays = true,
+	selected,
 	...props
 }: CalendarProps) {
-	const [month, setMonth] = React.useState(new Date().getMonth());
-	const [year, setYear] = React.useState(new Date().getFullYear());
+	const [month, setMonth] = React.useState(
+		(selected as Date).getMonth() || new Date().getMonth()
+	);
+	const [year, setYear] = React.useState(
+		(selected as Date).getFullYear() || new Date().getFullYear()
+	);
 	return (
 		<DayPicker
 			month={new Date(year, month)}

@@ -1,4 +1,3 @@
-import { Product } from '@app/inventory/[location]/columns';
 import InventoryTable from './InventoryTable';
 import { Button } from '@components/ui/button';
 import { ChevronLeft, Plus } from 'lucide-react';
@@ -6,18 +5,59 @@ import NewItemSheet from './NewItemSheet';
 import Link from 'next/link';
 import Header from '@components/ui/Header';
 import { db } from '@lib/prisma';
+import { Item, Location, Product } from '@prisma/client';
+import { Tag } from '@lib/enum';
+import { isExpiring } from '@lib/date';
+
+// export async function generateMetadata({
+// 	params,
+// }: {
+// 	params: { location: string };
+// }) {
+// 	const data = await getData(params.location);
+// 	return {
+// 		title: `${data.location} | LFHRS Inventory`,
+// 		description: `Manage medical supply inventory for ${data.location}.`,
+// 	};
+// }
 
 async function getData(
 	location: string
-): Promise<{ products: Product[]; location: string }> {
+): Promise<{ products: ProductInfo[]; location: string }> {
 	const data = await db.product.findMany({
 		include: {
 			location: true,
+			items: true,
 		},
 		where: {
 			locationId: location,
 		},
 	});
+	const extended = data.map(
+		(product: Product & { location: Location; items: Item[] }) => {
+			const quantity = product.items.reduce(
+				(acc: number, item: Item) => acc + item.quantity,
+				0
+			);
+			const exp = product.items.reduce(
+				(acc: Date | string, item: Item) =>
+					new Date(item.expires) < acc || acc === ''
+						? new Date(item.expires)
+						: acc,
+				''
+			);
+			const tags = [];
+			if (quantity < product.min) tags.push(Tag.LOW);
+			if (isExpiring(exp) && quantity > 0) tags.push(Tag.EXPIRES);
+			return {
+				quantity,
+				exp,
+				tags,
+				...product,
+			};
+		}
+	);
+	// console.dir(extended, { depth: Infinity });
 	const locationName = await db.location.findFirst({
 		select: {
 			name: true,
@@ -26,38 +66,7 @@ async function getData(
 			id: location,
 		},
 	});
-	return { products: data, location: locationName.name };
-	// return [
-	// 	{
-	// 		location: 'station-154',
-	// 		uid: 'cervical-collar',
-	// 		name: 'Cervical Collar',
-	// 		quantity: 10,
-	// 	},
-	// 	{
-	// 		location: 'station-154',
-	// 		uid: 'vomit-bag',
-	// 		name: 'Vomit Bag',
-	// 		quantity: 5,
-	// 		exp: '5/04/2023',
-	// 		tags: ['low', 'expired'],
-	// 	},
-	// 	{
-	// 		location: 'station-154',
-	// 		uid: 'triangular-bandage',
-	// 		name: 'Triangular Bandage',
-	// 		quantity: 12,
-	// 		exp: '3/22/2023',
-	// 		tags: ['expired'],
-	// 	},
-	// 	{
-	// 		location: 'station-154',
-	// 		uid: 'roller-gauze',
-	// 		name: 'Roller Gauze',
-	// 		quantity: 18,
-	// 		exp: '6/10/2023',
-	// 	},
-	// ];
+	return { products: extended, location: locationName!.name };
 }
 
 export default async function Inventory({

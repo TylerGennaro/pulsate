@@ -1,5 +1,9 @@
 'use client';
 
+import { Badge } from '@components/ui/badge';
+import { formatDate, isExpiring } from '@lib/date';
+import { Tag } from '@lib/enum';
+import { tags } from '@lib/tags';
 import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp } from 'lucide-react';
@@ -12,8 +16,28 @@ export type Log = {
 };
 
 export const itemColumns: ColumnDef<Item>[] = [
-	{ header: 'Expires', accessorKey: 'expires' },
+	{
+		header: 'Expires',
+		accessorKey: 'expires',
+		cell: ({ row }: { row: any }) => {
+			return <p>{formatDate(row.original.expires)}</p>;
+		},
+	},
 	{ header: 'Quantity', accessorKey: 'quantity' },
+	{
+		header: 'Tags',
+		cell: ({ row }: { row: any }) => {
+			if (isExpiring(row.original.expires)) {
+				const color = tags[Tag.EXPIRES].color;
+				const label = tags[Tag.EXPIRES].label;
+				return (
+					<Badge className={`border-${color} text-${color}`} variant='outline'>
+						{label}
+					</Badge>
+				);
+			}
+		},
+	},
 ];
 
 export const columns: ColumnDef<Log>[] = [

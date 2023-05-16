@@ -8,14 +8,13 @@ import {
 	CardTitle,
 } from '@components/ui/card';
 import Link from 'next/link';
-import { Location } from './page';
 import { Badge } from '@components/ui/badge';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import '@styles/globals.css';
 
 interface LocationProps {
-	location: Location;
+	location: LocationInfo;
 }
 
 export default function LocationCard({ location }: LocationProps) {
@@ -30,7 +29,7 @@ export default function LocationCard({ location }: LocationProps) {
 						<CardTitle>{location.name}</CardTitle>
 						<CardDescription>Inventory managed by Eric Gennaro</CardDescription>
 					</CardHeader>
-					<CardContent>
+					<CardContent className='flex gap-2'>
 						{location.hasLow && (
 							<Badge className='border-red-500 text-red-500' variant='outline'>
 								Low Inventory
@@ -41,7 +40,7 @@ export default function LocationCard({ location }: LocationProps) {
 								className='border-yellow-500 text-yellow-500'
 								variant='outline'
 							>
-								Expired Inventory
+								Expiring Inventory
 							</Badge>
 						)}
 					</CardContent>

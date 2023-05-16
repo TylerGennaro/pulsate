@@ -1,15 +1,16 @@
 'use client';
 
 import { DataTable } from '@components/ui/data-table';
-import { columns, Product } from './columns';
+import { columns } from './columns';
 import { Row, useReactTable } from '@tanstack/react-table';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import { printQRCodes } from '@lib/qrcode';
 import { DataTableFacetedFilter } from '@components/ui/data-table-faceted-filter';
-import { tags } from './data';
+import { tags } from '@lib/tags';
 import { X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { Product } from '@prisma/client';
 
 interface InventoryTableProps {
 	data: Product[];
@@ -18,7 +19,7 @@ interface InventoryTableProps {
 function printSelectedCodes(rows: Row<Product>[]) {
 	const codes = rows.map((row) => {
 		return {
-			location: row.original.location.id,
+			location: row.original.locationId,
 			id: row.original.id,
 			name: row.original.name,
 		};
@@ -52,7 +53,7 @@ function Toolbar({
 						<DataTableFacetedFilter
 							column={table.getColumn('tags')}
 							title='Tags'
-							options={tags}
+							options={Object.values(tags)}
 						/>
 					)}
 					{isFiltered && (

@@ -2,14 +2,21 @@ import QRCode from '@components/QRCode';
 import Header from '@components/ui/Header';
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
-import { Input } from '@components/ui/input';
 import { cn } from '@lib/utils';
-import { ChevronLeft, Plus } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
-import { Product } from '@prisma/client';
 import ItemTable from './ItemTable';
 import NewItemDialog from './NewItemDialog';
+import { Item, Product } from '@prisma/client';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '@components/ui/tooltip';
+import { Tag } from '@lib/enum';
+import { isExpiring } from '@lib/date';
+import { tags as tagList } from '@lib/tags';
 
 function Container({
 	children,
@@ -23,20 +30,40 @@ function Container({
 	);
 }
 
-async function getData(id: string): Promise<Product | null> {
+async function getData(
+	id: string
+): Promise<{ data: Product | null; tags: Tag[] }> {
 	const data = await db.product.findFirst({
 		include: {
-			items: true,
+			items: {
+				orderBy: {
+					expires: 'asc',
+				},
+			},
 		},
 		where: {
 			id,
 		},
 	});
-	return data;
-	// return [
-	// 	{ user: 'John Doe', date: 1683743587760, change: -2, newQuantity: 3 },
-	// 	{ user: 'John Doe', date: 1573642547760, change: 5, newQuantity: 5 },
-	// ];
+	const quantity = (
+		await db.item.aggregate({
+			where: {
+				productId: id,
+			},
+			_sum: {
+				quantity: true,
+			},
+		})
+	)._sum.quantity!;
+	const exp = data!.items.reduce(
+		(acc: Date | string, item: Item) =>
+			new Date(item.expires) < acc || acc === '' ? new Date(item.expires) : acc,
+		''
+	);
+	const tags = [];
+	if (quantity! < data!.min) tags.push(Tag.LOW);
+	if (isExpiring(exp) && quantity > 0) tags.push(Tag.EXPIRES);
+	return { data, tags };
 }
 
 export default async function Inventory({
@@ -44,7 +71,7 @@ export default async function Inventory({
 }: {
 	params: { location: string; item: string };
 }) {
-	const data = await getData(params.item);
+	const { data, tags } = await getData(params.item);
 	// console.dir(data, { depth: Infinity });
 	if (!data) return null;
 	return (
@@ -60,28 +87,42 @@ export default async function Inventory({
 			</Link>
 			<div className='flex flex-col gap-8'>
 				<Container>
-					<div className='flex flex-col items-start gap-4'>
-						<Badge variant='destructive'>Quantity Low</Badge>
-						<Header size='lg'>{data.name}</Header>
+					<Header size='lg'>{data.name}</Header>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<span className='text-muted-foreground mt-2 block w-fit'>
+								{data.id}
+							</span>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>The item's unique ID</p>
+						</TooltipContent>
+					</Tooltip>
+					<div className='mt-8 flex gap-2'>
+						{tags.map((tag) => {
+							const tagData = tagList[tag];
+							return (
+								<Badge
+									key={tagData.label}
+									className={`border-${tagData.color} text-${tagData.color}`}
+									variant='outline'
+								>
+									{tagData.label}
+								</Badge>
+							);
+						})}
 					</div>
-					<span className='text-muted-foreground mt-2 block'>{data.id}</span>
 				</Container>
 				<div className='flex flex-col md:flex-row gap-8'>
 					<div className='w-full'>
 						<Container className='w-full'>
-							<div className='flex flex-col gap-2'>
-								<span className='text-lg'>Quantity</span>
-								<div className='flex w-full max-w-xs space-x-2 items-center'>
-									<Input
-										defaultValue={8}
-										type='number'
-										placeholder='Quantity'
-										className='text-lg'
-									/>
-									<Button className='whitespace-nowrap'>Save changes</Button>
-								</div>
+							<div className='mb-4'>
+								<NewItemDialog
+									location={params.location}
+									product={params.item}
+								/>
 							</div>
-							<NewItemDialog />
+							{/* @ts-expect-error */}
 							<ItemTable data={data.items} />
 						</Container>
 						<Container className='w-full mt-8'>

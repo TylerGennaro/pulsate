@@ -2,42 +2,63 @@ import { db } from '@lib/prisma';
 import LocationCard from './LocationCard';
 import NewLocationDialog from './NewLocationDialog';
 import { getServerSession } from 'next-auth';
+import { Metadata } from 'next';
+import { isExpiring } from '@lib/date';
 
-export interface Location {
-	id: string;
-	name: string;
-	hasLow: boolean;
-	hasExpired?: boolean;
-}
+export const metadata: Metadata = {
+	title: 'Locations | LFHRS Inventory',
+	description: 'Manage medical supply inventory for LFHRS.',
+};
 
-async function getData(id: string): Promise<Location[]> {
-	const data: Location[] = await db.location.findMany({
+async function getData(id: string): Promise<LocationInfo[]> {
+	const data: LocationInfo[] = await db.location.findMany({
 		where: {
 			userId: id,
 		},
 	});
 
-	data.forEach(async (location) => {
-		const hasLow = await db.item.groupBy({
-			where: {
-				product: {
-					locationId: location.id,
-				},
-			},
-			by: ['productId'],
-			_sum: {
-				quantity: true,
-			},
-			having: {
-				quantity: {
-					_sum: {
-						lt: 5,
+	await Promise.all([
+		...data.map(async (location: LocationInfo) => {
+			const hasLow = await db.item.groupBy({
+				where: {
+					product: {
+						locationId: location.id,
 					},
 				},
-			},
-		});
-		location.hasLow = hasLow.length > 0;
-	});
+				by: ['productId'],
+				_sum: {
+					quantity: true,
+				},
+				having: {
+					quantity: {
+						_sum: {
+							lt: 5,
+						},
+					},
+				},
+			});
+			location.hasLow = hasLow.length > 0;
+
+			const exp = await db.item.findMany({
+				where: {
+					product: {
+						locationId: location.id,
+					},
+				},
+				select: {
+					expires: true,
+				},
+			});
+			for (const item of exp) {
+				if (isExpiring(item.expires)) {
+					location.hasExpired = true;
+					break;
+				}
+			}
+		}),
+	]);
+
+	console.dir(data, { depth: Infinity });
 
 	return data;
 }

@@ -1,37 +1,33 @@
-interface Location {
-	id: string;
-	name: string;
-	userId: string;
-	products: Product[];
-}
+import { Product } from '@prisma/client';
 
-interface Product {
-	id: string;
-	name: string;
-	package: string;
-	min: number;
-	max: number?;
-	locationId: string;
-}
+declare global {
+	interface LocationInfo {
+		id: string;
+		name: string;
+		userId: string;
+		products?: Product[];
+		hasLow?: boolean;
+		hasExpired?: boolean;
+	}
 
-interface Item {
-	id: string;
-	product: Product;
-	quantity: number;
-	expires: Date;
-}
+	export interface ProductInfo extends Product {
+		quantity: number;
+		items: Item[];
+		tags: Tag[];
+	}
 
-interface Log {
-	id: string;
-	timestamp: Date;
-	productId: string;
-	userId: string;
-	type: 
-}
+	interface ItemInfo {
+		id: string;
+		product: Product;
+		quantity: number;
+		expires: Date;
+	}
 
-enum LogType {
-	QUANTITY_CHANGE,
-	ITEM_ADD,
-	ITEM_REMOVE,
-	STOCK_ORDER
+	interface Log {
+		id: string;
+		timestamp: Date;
+		productId: string;
+		userId: string;
+		type: LogType;
+	}
 }

@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/popover';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
+import { ScrollArea } from './scroll-area';
 
 export function DatePicker({
 	date,

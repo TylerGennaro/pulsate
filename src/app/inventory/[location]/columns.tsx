@@ -5,10 +5,9 @@ import { Button } from '@components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { tags } from './data';
+import { tags } from '@lib/tags';
 import {
 	AlertDialog,
-	AlertDialogAction,
 	AlertDialogContent,
 	AlertDialogFooter,
 	AlertDialogHeader,
@@ -19,30 +18,27 @@ import {
 } from '@components/ui/alert-dialog';
 import { deleteProduct } from '@actions/products';
 import { handleResponse } from '@lib/actionResponse';
+import { Tag } from '@lib/enum';
+import { formatDate } from '@lib/date';
 
-export type Product = {
-	location: { id: string; name: string; userId: string };
-	id: string;
-	name: string;
-	exp?: string;
-	quantity: number;
-	tags?: string[];
-};
-
-export const columns = (userID: string): ColumnDef<Product>[] => [
+export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 	{ header: 'Product Name', accessorKey: 'name' },
 	{ header: 'Quantity', accessorKey: 'quantity' },
-	{ header: 'Earliest Expiration', accessorKey: 'exp' },
+	{
+		header: 'Earliest Expiration',
+		accessorKey: 'exp',
+		cell: ({ row }: { row: any }) => {
+			return <p>{formatDate(row.original.exp)}</p>;
+		},
+	},
 	{
 		header: 'Tags',
 		accessorKey: 'tags',
 		cell: ({ row }: { row: any }) => {
-			const formattedTags = tags.filter((tag) =>
-				row.original.tags?.includes(tag.value)
-			);
+			const formattedTags = row.original.tags.map((tag: Tag) => tags[tag]);
 			return (
 				<div className='flex flex-wrap gap-2'>
-					{formattedTags.map((tag) => (
+					{formattedTags.map((tag: any) => (
 						<Badge
 							key={tag.label}
 							className={`border-${tag.color} text-${tag.color}`}
@@ -56,9 +52,10 @@ export const columns = (userID: string): ColumnDef<Product>[] => [
 		},
 		filterFn: (row, id, filterValue) => {
 			return (
-				filterValue.filter((value: string) =>
-					row.original.tags?.includes(value)
-				).length > 0
+				filterValue.filter((value: string) => {
+					const values = row.original.tags.map((tag: Tag) => tags[tag].value);
+					return values.includes(value);
+				}).length > 0
 			);
 		},
 	},
