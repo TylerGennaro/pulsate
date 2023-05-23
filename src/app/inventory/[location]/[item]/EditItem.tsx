@@ -8,11 +8,6 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import {
-	deleteLocation,
-	editLocation,
-	revalidateLocations,
-} from '@actions/locations';
 import { Button } from '@components/ui/button';
 import { useSession } from 'next-auth/react';
 import { handleResponse } from '@lib/actionResponse';
@@ -38,15 +33,16 @@ import {
 } from '@components/ui/dialog';
 import InputGroup from '@components/InputGroup';
 import { useState } from 'react';
+import { deleteProduct, editProduct } from '@actions/products';
+import { deleteItem, editItem } from '@actions/items';
+import { Input } from '@components/ui/input';
+import { DatePicker } from '@components/ui/date-picker';
+import { Checkbox } from '@components/ui/checkbox';
+import { Item } from '@prisma/client';
 
-export default function EditLocation({
-	name,
-	id,
-}: {
-	name: string;
-	id: string;
-}) {
+export default function EditProduct({ item }: { item: Item }) {
 	const [open, setOpen] = useState(false);
+	const [date, setDate] = useState<Date>(item.expires);
 	const router = useRouter();
 	const session = useSession();
 	if (!session) return null;
@@ -56,9 +52,9 @@ export default function EditLocation({
 			<AlertDialog>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant='ghost' className='h-8 w-8 p-0'>
+						<Button variant='ghost'>
 							<span className='sr-only'>Open menu</span>
-							<MoreVertical className='h-6 w-6' />
+							<MoreVertical size={20} />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
@@ -79,18 +75,14 @@ export default function EditLocation({
 				<AlertDialogContent>
 					<form
 						action={() => {
-							deleteLocation(id, session.data?.user.id).then(handleResponse);
-							router.push('/inventory');
-							setTimeout(() => {
-								revalidateLocations();
-							}, 500);
+							deleteItem(item.id, session.data?.user.id).then(handleResponse);
 						}}
 					>
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This location and all its data
-								will be removed from the system.
+								This action cannot be undone. This item and all its data will be
+								removed from the system.
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
@@ -106,23 +98,38 @@ export default function EditLocation({
 				<form
 					className='flex flex-col gap-4'
 					action={(data) => {
-						data.append('location-id', id);
-						editLocation(data, session.data?.user.id).then(handleResponse);
+						data.append('item-id', item.id);
+						data.append('item-exp', date.toISOString());
+						editItem(data, session.data?.user.id).then(handleResponse);
 						setOpen(false);
 					}}
 				>
 					<DialogHeader>
-						<DialogTitle>Edit location</DialogTitle>
+						<DialogTitle>Edit item</DialogTitle>
 						<DialogDescription>
-							Change the name of this location.
+							Change the information of this item.
 						</DialogDescription>
 					</DialogHeader>
-					<InputGroup
-						label='Name'
-						placeholder='Location name'
-						name='location-name'
-						defaultValue={name}
-					/>
+					<div className='grid grid-cols-[min-content_repeat(3,_minmax(0,_1fr))] gap-2 items-center'>
+						<label className='col-span-1 text-right'>
+							Expiration
+							<span className='text-red-500 ml-1'>*</span>
+						</label>
+						<DatePicker
+							date={date}
+							setDate={setDate}
+							className='col-span-3 w-full'
+						/>
+						<Checkbox
+							className='ml-auto'
+							id='on-order'
+							name='item-onOrder'
+							defaultChecked={item.onOrder}
+						/>
+						<label className='col-span-3' htmlFor='on-order'>
+							Item is on order
+						</label>
+					</div>
 					<DialogFooter>
 						<Button icon={Save} type='submit'>
 							Save

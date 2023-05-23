@@ -1,4 +1,4 @@
-import { ArrowDownCircle, CalendarClock } from 'lucide-react';
+import { ArrowDownCircle, CalendarClock, Package2 } from 'lucide-react';
 import { Tag } from './enum';
 
 export const tags = {
@@ -6,12 +6,18 @@ export const tags = {
 		value: 'low',
 		label: 'Low',
 		icon: ArrowDownCircle,
-		color: 'red-500',
+		color: 'red',
 	},
 	[Tag.EXPIRES]: {
 		value: 'expires',
 		label: 'Expires Soon',
 		icon: CalendarClock,
-		color: 'yellow-500',
+		color: 'yellow',
+	},
+	[Tag.ONORDER]: {
+		value: 'onOrder',
+		label: 'On Order',
+		icon: Package2,
+		color: 'blue',
 	},
 };

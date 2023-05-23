@@ -8,4 +8,5 @@ export enum LogType {
 export enum Tag {
 	LOW,
 	EXPIRES,
+	ONORDER,
 }

@@ -30,7 +30,7 @@ async function getData(id: string): Promise<LocationInfo[]> {
 
 	await Promise.all([
 		...data.map(async (location: LocationInfo) => {
-			const hasLow = await db.item.groupBy({
+			const hasLowQuery = db.item.groupBy({
 				where: {
 					product: {
 						locationId: location.id,
@@ -48,9 +48,17 @@ async function getData(id: string): Promise<LocationInfo[]> {
 					},
 				},
 			});
-			location.hasLow = hasLow.length > 0;
 
-			const exp = await db.item.findMany({
+			const hasNoneQuery = db.product.findMany({
+				where: {
+					locationId: location.id,
+					items: {
+						none: {},
+					},
+				},
+			});
+
+			const expQuery = db.item.findMany({
 				where: {
 					product: {
 						locationId: location.id,
@@ -60,6 +68,13 @@ async function getData(id: string): Promise<LocationInfo[]> {
 					expires: true,
 				},
 			});
+
+			const [hasLow, hasNone, exp] = await Promise.all([
+				hasLowQuery,
+				hasNoneQuery,
+				expQuery,
+			]);
+			location.hasLow = hasLow.length > 0 || hasNone.length > 0;
 			for (const item of exp) {
 				if (isExpiring(item.expires)) {
 					location.hasExpired = true;

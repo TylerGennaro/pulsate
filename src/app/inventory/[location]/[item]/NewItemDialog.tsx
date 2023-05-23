@@ -2,6 +2,7 @@
 
 import { addItem } from '@actions/items';
 import { Button } from '@components/ui/button';
+import { Checkbox } from '@components/ui/checkbox';
 import { DatePicker } from '@components/ui/date-picker';
 import {
 	Dialog,
@@ -16,7 +17,7 @@ import { Input } from '@components/ui/input';
 import { handleResponse } from '@lib/actionResponse';
 import { Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export default function NewItemDialog({
 	location,
@@ -27,6 +28,8 @@ export default function NewItemDialog({
 }) {
 	const [date, setDate] = useState<Date>(new Date());
 	const [open, setOpen] = useState(false);
+	const [hasExpiration, setHasExpiration] = useState(true);
+
 	const session = useSession();
 	if (!session) return null;
 	return (
@@ -65,6 +68,7 @@ export default function NewItemDialog({
 							date={date}
 							setDate={setDate}
 							className='col-span-3 w-full'
+							disabled={!hasExpiration}
 						/>
 						<label className='col-span-1 text-right'>
 							Quantity
@@ -77,6 +81,19 @@ export default function NewItemDialog({
 							defaultValue={1}
 							name='quantity'
 						/>
+						<Checkbox
+							className='ml-auto'
+							id='no-expire'
+							name='item-noExpire'
+							onCheckedChange={(checked) => setHasExpiration(!checked)}
+						/>
+						<label className='col-span-3' htmlFor='no-expire'>
+							Item does not expire
+						</label>
+						<Checkbox className='ml-auto' id='on-order' name='item-onOrder' />
+						<label className='col-span-3' htmlFor='on-order'>
+							Item is on order
+						</label>
 					</div>
 					<DialogFooter>
 						<Button type='submit'>

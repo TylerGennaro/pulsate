@@ -87,6 +87,7 @@ model Item {
   productId String
   quantity  Int
   expires   DateTime
+	onOrder Boolean @default(false)
 }
 
 model Log {

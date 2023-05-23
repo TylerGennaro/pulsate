@@ -32,7 +32,7 @@ function Container({
 
 async function getData(
 	id: string
-): Promise<{ data: Product | null; tags: Tag[] }> {
+): Promise<{ data: (Product & { items: Item[] }) | null; tags: Tag[] }> {
 	const data = await db.product.findFirst({
 		include: {
 			items: {
@@ -104,7 +104,7 @@ export default async function Inventory({
 							return (
 								<Badge
 									key={tagData.label}
-									className={`border-${tagData.color} text-${tagData.color}`}
+									color={tagData.color}
 									variant='outline'
 								>
 									{tagData.label}
@@ -116,13 +116,16 @@ export default async function Inventory({
 				<div className='flex flex-col md:flex-row gap-8'>
 					<div className='w-full'>
 						<Container className='w-full'>
-							<div className='mb-4'>
+							<div className='mb-4 flex justify-between flex-wrap gap-4'>
+								<Header size='md'>
+									Total:{' '}
+									{data.items.reduce((acc, val) => (acc += val.quantity), 0)}
+								</Header>
 								<NewItemDialog
 									location={params.location}
 									product={params.item}
 								/>
 							</div>
-							{/* @ts-expect-error */}
 							<ItemTable data={data.items} />
 						</Container>
 						<Container className='w-full mt-8'>

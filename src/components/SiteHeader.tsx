@@ -1,14 +1,9 @@
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
-import { Button } from './ui/button';
-import { SignInButton, SignOutButton } from './SignButton';
+import { SignInButton } from './SignButton';
 import { getServerSession } from 'next-auth';
 import SiteProfile from './SiteProfile';
-
-const navItems = {
-	Home: '/',
-	Inventory: '/inventory',
-};
+import { Nav } from './Nav';
 
 export default async function SiteHeader() {
 	const session = await getServerSession();
@@ -22,17 +17,7 @@ export default async function SiteHeader() {
 							LFHRS
 						</span>
 					</Link>
-					<nav className='hidden gap-6 md:flex'>
-						{Object.entries(navItems).map(([name, href]) => (
-							<Link
-								key={name}
-								href={href}
-								className='flex items-center text-lg font-semibold text-muted-foreground sm:text-sm'
-							>
-								{name}
-							</Link>
-						))}
-					</nav>
+					<Nav />
 				</div>
 				<div className='flex items-center gap-2'>
 					{session ? (

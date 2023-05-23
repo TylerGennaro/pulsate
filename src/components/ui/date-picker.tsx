@@ -13,17 +13,18 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { DayPicker } from 'react-day-picker';
-import { ScrollArea } from './scroll-area';
+import { PopoverPortal } from '@radix-ui/react-popover';
 
 export function DatePicker({
 	date,
 	setDate,
 	className,
+	disabled,
 }: {
 	date: Date;
 	setDate: Dispatch<SetStateAction<Date>>;
 	className?: string;
+	disabled?: boolean;
 }) {
 	const [open, setOpen] = useState(false);
 	return (
@@ -36,25 +37,28 @@ export function DatePicker({
 						!date && 'text-muted-foreground',
 						className
 					)}
+					disabled={disabled}
 				>
 					<CalendarIcon className='mr-2 h-4 w-4' />
 					{date ? format(date, 'PPP') : <span>Pick a date</span>}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className='w-auto p-0 max-h-[calc(var(--radix-popper-available-height)_-_10px)] overflow-y-auto'>
-				<Calendar
-					mode='single'
-					selected={date}
-					onSelect={(date) => {
-						setDate(date as Date);
-						setOpen(false);
-					}}
-					captionLayout='dropdown-buttons'
-					fromYear={new Date().getFullYear()}
-					toYear={2050}
-					initialFocus
-				/>
-			</PopoverContent>
+			<PopoverPortal>
+				<PopoverContent className='w-auto p-0 max-h-[calc(var(--radix-popper-available-height)_-_10px)] overflow-y-auto'>
+					<Calendar
+						mode='single'
+						selected={date}
+						onSelect={(date) => {
+							setDate(date as Date);
+							setOpen(false);
+						}}
+						captionLayout='dropdown-buttons'
+						fromYear={new Date().getFullYear()}
+						toYear={2050}
+						initialFocus
+					/>
+				</PopoverContent>
+			</PopoverPortal>
 		</Popover>
 	);
 }

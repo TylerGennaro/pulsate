@@ -58,7 +58,6 @@ export async function addItem(fields: FormData, userId?: string) {
 }
 
 export async function deleteItem(id: string, userId?: string) {
-	console.log('made it');
 	const payload: { status: number; message: string } = await new Promise(
 		async (res, rej) => {
 			if (!userId)
@@ -67,36 +66,107 @@ export async function deleteItem(id: string, userId?: string) {
 					message: 'Could not authorize the request.',
 				});
 
-			const product = await db.product.findUnique({
+			const item = await db.item.findUnique({
 				where: { id },
 				include: {
-					location: {
+					product: {
 						include: {
-							user: true,
+							location: {
+								include: {
+									user: true,
+								},
+							},
 						},
 					},
 				},
 			});
 
-			if (!product)
+			if (!item)
 				return res({
 					status: 404,
-					message: 'Could not find the product you are trying to delete.',
+					message: 'Could not find the item you are trying to delete.',
 				});
 
-			if (product.location.user.id !== userId) {
+			if (item.product.location.user.id !== userId) {
 				return res({
 					status: 401,
 					message: 'Could not authorize the request.',
 				});
 			}
 
-			await db.product.delete({
+			await db.item.delete({
 				where: { id },
 			});
 
 			revalidatePath(`/inventory/${id}`);
-			res({ status: 200, message: 'Product deleted.' });
+			res({ status: 200, message: 'Item deleted.' });
+		}
+	);
+
+	return payload;
+}
+
+export async function editItem(data: FormData, userId?: string) {
+	const payload: { status: number; message: string } = await new Promise(
+		async (res, rej) => {
+			if (!userId)
+				return res({
+					status: 401,
+					message: 'Could not authorize the request.',
+				});
+
+			const id = data.get('item-id') as string;
+			const exp = new Date(data.get('item-exp') as string);
+			const onOrder = data.get('item-onOrder') as string;
+			console.log(onOrder);
+
+			if (!id || !exp)
+				return res({
+					status: 400,
+					message: 'Invalid data provided.',
+				});
+
+			const item = await db.item.findUnique({
+				where: { id },
+				include: {
+					product: {
+						include: {
+							location: {
+								include: {
+									user: true,
+								},
+							},
+						},
+					},
+				},
+			});
+
+			if (!item)
+				return res({
+					status: 404,
+					message: 'Could not find item with that ID.',
+				});
+
+			const updated = await db.item
+				.update({
+					where: {
+						id,
+					},
+					data: {
+						expires: exp,
+						onOrder: onOrder === 'on',
+					},
+				})
+				.catch((err: any) => {
+					console.log(err);
+					return res({
+						status: 500,
+						message: 'Could not complete request due to a database error.',
+					});
+				});
+
+			revalidatePath(`/inventory/${id}`);
+			res({ status: 200, message: 'Item updated.' });
 		}
 	);
 

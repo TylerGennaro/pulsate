@@ -115,3 +115,67 @@ export async function deleteProduct(id: string, userId?: string) {
 
 	return payload;
 }
+
+export async function editProduct(data: FormData, userId?: string) {
+	const payload: { status: number; message: string } = await new Promise(
+		async (res, rej) => {
+			if (!userId)
+				return res({
+					status: 401,
+					message: 'Could not authorize the request.',
+				});
+
+			const id = data.get('product-id') as string;
+			const name = data.get('product-name') as string;
+
+			if (!id || !name)
+				return res({
+					status: 400,
+					message: 'Invalid data provided.',
+				});
+
+			if (name.match(/[^a-zA-Z0-9\s-']/g))
+				return res({
+					status: 400,
+					message: 'Name contains illegal characters.',
+				});
+
+			const product = await db.product.findFirst({
+				where: {
+					id,
+					location: {
+						userId,
+					},
+				},
+			});
+
+			if (!product)
+				return res({
+					status: 404,
+					message: 'Could not find product with that ID.',
+				});
+
+			const updated = await db.product
+				.update({
+					where: {
+						id,
+					},
+					data: {
+						name,
+					},
+				})
+				.catch((err: any) => {
+					console.log(err);
+					return res({
+						status: 500,
+						message: 'Could not complete request due to a database error.',
+					});
+				});
+
+			revalidatePath(`/inventory/${id}`);
+			res({ status: 200, message: 'Product updated.' });
+		}
+	);
+
+	return payload;
+}

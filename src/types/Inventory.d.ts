@@ -1,4 +1,4 @@
-import { Product } from '@prisma/client';
+import { Item, Product } from '@prisma/client';
 
 declare global {
 	interface LocationInfo {
@@ -15,13 +15,6 @@ declare global {
 		quantity: number;
 		items: Item[];
 		tags: Tag[];
-	}
-
-	interface ItemInfo {
-		id: string;
-		product: Product;
-		quantity: number;
-		expires: Date;
 	}
 
 	interface Log {

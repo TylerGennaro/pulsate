@@ -1,20 +1,13 @@
 'use client';
 
 import { Badge } from '@components/ui/badge';
-import { Button } from '@components/ui/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu';
 import { formatDate, isExpiring } from '@lib/date';
 import { Tag } from '@lib/enum';
 import { tags } from '@lib/tags';
 import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp } from 'lucide-react';
+import EditItem from './EditItem';
 
 export type Log = {
 	user: string;
@@ -35,40 +28,28 @@ export const itemColumns: ColumnDef<Item>[] = [
 	{
 		header: 'Tags',
 		cell: ({ row }: { row: any }) => {
-			if (isExpiring(row.original.expires)) {
-				const color = tags[Tag.EXPIRES].color;
-				const label = tags[Tag.EXPIRES].label;
-				return (
-					<Badge className={`border-${color} text-${color}`} variant='outline'>
-						{label}
-					</Badge>
-				);
-			}
+			const t = [];
+			if (isExpiring(row.original.expires)) t.push(Tag.EXPIRES);
+			if (row.original.onOrder) t.push(Tag.ONORDER);
+			if (t.length === 0) return <Badge variant='outline'>None</Badge>;
+			return (
+				<div className='flex gap-2 flex-wrap'>
+					{t.map((tag) => {
+						const data = tags[tag];
+						return (
+							<Badge variant='outline' color={data.color} key={data.value}>
+								{data.label}
+							</Badge>
+						);
+					})}
+				</div>
+			);
 		},
 	},
 	{
 		id: 'actions',
-		cell: ({ row }: { row: any }) => {
-			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant='ghost' className='h-8 w-8 p-0'>
-							<span className='sr-only'>Open menu</span>
-							<MoreVertical className='h-4 w-4' />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align='end'>
-						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem>
-							<Pencil className='w-4 h-4 mr-2' />
-							Edit
-						</DropdownMenuItem>
-						<DropdownMenuItem className='text-red-500'>
-							<Trash2 className='w-4 h-4 mr-2' /> Delete
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			);
+		cell: ({ row }: { row: { original: Item } }) => {
+			return <EditItem item={row.original} />;
 		},
 	},
 ];

@@ -3,7 +3,7 @@
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
-import { Edit, Trash2 } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { tags } from '@lib/tags';
 import {
@@ -20,6 +20,7 @@ import { deleteProduct } from '@actions/products';
 import { handleResponse } from '@lib/actionResponse';
 import { Tag } from '@lib/enum';
 import { formatDate } from '@lib/date';
+import EditProduct from './EditProduct';
 
 export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 	{ header: 'Product Name', accessorKey: 'name' },
@@ -27,9 +28,15 @@ export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 		header: 'Quantity',
 		accessorKey: 'quantity',
 		cell: ({ row }: { row: any }) => (
-			<p>
-				{row.original.quantity}/{row.original.max || ''}
-			</p>
+			<span>
+				{row.original.quantity}
+				{row.original.max && (
+					<span className='text-xs text-muted-foreground ml-1'>
+						{'/'}
+						{row.original.max || ''}
+					</span>
+				)}
+			</span>
 		),
 	},
 	{
@@ -47,11 +54,7 @@ export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 			return (
 				<div className='flex flex-wrap gap-2'>
 					{formattedTags.map((tag: any) => (
-						<Badge
-							key={tag.label}
-							className={`border-${tag.color} text-${tag.color}`}
-							variant='outline'
-						>
+						<Badge key={tag.label} color={tag.color} variant='outline'>
 							{tag.label}
 						</Badge>
 					))}
@@ -76,39 +79,10 @@ export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 						<Link
 							href={`/inventory/${row.original.locationId}/${row.original.id}`}
 						>
-							<Edit size={20} />
+							<Eye size={20} />
 						</Link>
 					</Button>
-					<AlertDialog>
-						<AlertDialogTrigger asChild>
-							<Button variant='ghost'>
-								<Trash2 size={20} />
-							</Button>
-						</AlertDialogTrigger>
-						<AlertDialogContent>
-							<form
-								action={(data: FormData) => {
-									deleteProduct(row.original.id, userID).then((res) => {
-										handleResponse(res);
-									});
-								}}
-							>
-								<AlertDialogHeader>
-									<AlertDialogTitle>Are you sure?</AlertDialogTitle>
-									<AlertDialogDescription>
-										This action cannot be undone. This item and all its data
-										will be removed from the system.
-									</AlertDialogDescription>
-								</AlertDialogHeader>
-								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
-									<Button type='submit' variant='destructive'>
-										Delete
-									</Button>
-								</AlertDialogFooter>
-							</form>
-						</AlertDialogContent>
-					</AlertDialog>
+					<EditProduct id={row.original.id} name={row.original.name} />
 				</div>
 			);
 		},

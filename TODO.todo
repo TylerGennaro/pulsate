@@ -1,15 +1,27 @@
-- [] CRUD operations to Locations
+- [✅] CRUD operations to Locations
 	- [✅] Create a new location
 	- [✅] Read all locations
-	- [] Delete a location
-	- [] Update a location's name/info
-- [] CRUD operations to Products
+	- [✅] Delete a location
+	- [✅] Update a location's name/info
+- [✅] CRUD operations to Products
 	- [✅] Create a new product
 	- [✅] Read all products
 	- [✅] Delete a product
-	- [] Update a product's name/info
-- [] CRUD operations to Items
-	- [] Create a new item
-	- [] Read all items
-	- [] Delete an item
-	- [] Update an item's name/info
+	- [✅] Update a product's name/info
+- [✅] CRUD operations to Items
+	- [✅] Create a new item
+	- [✅] Read all items
+	- [✅] Delete an item
+	- [✅] Update an item's name/info
+- [] Packaging - Quantity per unit (case, box, pack) (20, 50, etc...)
+- [] Checkbox if items don't expire
+- [] Show items on order
+- [] Product logs
+
+Benefits:
+	- Goes live instantly
+		- ESO says their go-live time is 70 days.
+	- Easy setup and configuration
+		- ESO requires file setups and a long-winded configuration process
+	- Self-explanatory
+		- ESO requires on-site training

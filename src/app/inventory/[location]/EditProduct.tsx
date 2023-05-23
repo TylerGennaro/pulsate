@@ -8,11 +8,6 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import {
-	deleteLocation,
-	editLocation,
-	revalidateLocations,
-} from '@actions/locations';
 import { Button } from '@components/ui/button';
 import { useSession } from 'next-auth/react';
 import { handleResponse } from '@lib/actionResponse';
@@ -38,8 +33,9 @@ import {
 } from '@components/ui/dialog';
 import InputGroup from '@components/InputGroup';
 import { useState } from 'react';
+import { deleteProduct, editProduct } from '@actions/products';
 
-export default function EditLocation({
+export default function EditProduct({
 	name,
 	id,
 }: {
@@ -56,9 +52,9 @@ export default function EditLocation({
 			<AlertDialog>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant='ghost' className='h-8 w-8 p-0'>
+						<Button variant='ghost'>
 							<span className='sr-only'>Open menu</span>
-							<MoreVertical className='h-6 w-6' />
+							<MoreVertical size={20} />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
@@ -79,18 +75,14 @@ export default function EditLocation({
 				<AlertDialogContent>
 					<form
 						action={() => {
-							deleteLocation(id, session.data?.user.id).then(handleResponse);
-							router.push('/inventory');
-							setTimeout(() => {
-								revalidateLocations();
-							}, 500);
+							deleteProduct(id, session.data?.user.id).then(handleResponse);
 						}}
 					>
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This location and all its data
-								will be removed from the system.
+								This action cannot be undone. This product and all its data will
+								be removed from the system.
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
@@ -106,21 +98,21 @@ export default function EditLocation({
 				<form
 					className='flex flex-col gap-4'
 					action={(data) => {
-						data.append('location-id', id);
-						editLocation(data, session.data?.user.id).then(handleResponse);
+						data.append('product-id', id);
+						editProduct(data, session.data?.user.id).then(handleResponse);
 						setOpen(false);
 					}}
 				>
 					<DialogHeader>
-						<DialogTitle>Edit location</DialogTitle>
+						<DialogTitle>Edit product</DialogTitle>
 						<DialogDescription>
-							Change the name of this location.
+							Change the name of this product.
 						</DialogDescription>
 					</DialogHeader>
 					<InputGroup
 						label='Name'
-						placeholder='Location name'
-						name='location-name'
+						placeholder='Product name'
+						name='product-name'
 						defaultValue={name}
 					/>
 					<DialogFooter>

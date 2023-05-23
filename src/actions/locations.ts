@@ -85,6 +85,68 @@ export async function deleteLocation(id: string, userId?: string) {
 	return payload;
 }
 
+export async function editLocation(data: FormData, userId?: string) {
+	const payload: { status: number; message: string } = await new Promise(
+		async (res, rej) => {
+			if (!userId)
+				return res({
+					status: 401,
+					message: 'Could not authorize the request.',
+				});
+
+			const id = data.get('location-id') as string;
+			const name = data.get('location-name') as string;
+
+			if (!id || !name)
+				return res({
+					status: 400,
+					message: 'Invalid data provided.',
+				});
+
+			if (name.match(/[^a-zA-Z0-9\s-']/g))
+				return res({
+					status: 400,
+					message: 'Name contains illegal characters.',
+				});
+
+			const location = await db.location.findFirst({
+				where: {
+					id,
+					userId,
+				},
+			});
+
+			if (!location)
+				return res({
+					status: 404,
+					message: 'Could not find location with that ID.',
+				});
+
+			const updated = await db.location
+				.update({
+					where: {
+						id,
+					},
+					data: {
+						name,
+					},
+				})
+				.catch((err: any) => {
+					console.log(err);
+					return res({
+						status: 500,
+						message: 'Could not complete request due to a database error.',
+					});
+				});
+
+			revalidateLocations();
+			res({ status: 200, message: 'Location updated.' });
+		}
+	);
+
+	return payload;
+}
+
 export async function revalidateLocations() {
 	revalidatePath(`/inventory`);
 }

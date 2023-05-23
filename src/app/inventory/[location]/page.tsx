@@ -10,22 +10,22 @@ import { Tag } from '@lib/enum';
 import { isExpiring } from '@lib/date';
 import EditLocation from './EditLocation';
 
-// export async function generateMetadata({
-// 	params,
-// }: {
-// 	params: { location: string };
-// }) {
-// 	const data = await getData(params.location);
-// 	return {
-// 		title: `${data.location} | LFHRS Inventory`,
-// 		description: `Manage medical supply inventory for ${data.location}.`,
-// 	};
-// }
+export async function generateMetadata({
+	params,
+}: {
+	params: { location: string };
+}) {
+	const data = await getData(params.location);
+	return {
+		title: `${data.location} | LFHRS Inventory`,
+		description: `Manage medical supply inventory for ${data.location}.`,
+	};
+}
 
 async function getData(
 	location: string
 ): Promise<{ products: ProductInfo[]; location: string }> {
-	const data = await db.product.findMany({
+	const dataFetch = db.product.findMany({
 		include: {
 			location: true,
 			items: true,
@@ -34,6 +34,15 @@ async function getData(
 			locationId: location,
 		},
 	});
+	const locationFetch = db.location.findFirst({
+		select: {
+			name: true,
+		},
+		where: {
+			id: location,
+		},
+	});
+	const [data, locationName] = await Promise.all([dataFetch, locationFetch]);
 	const extended = data.map(
 		(product: Product & { location: Location; items: Item[] }) => {
 			const quantity = product.items.reduce(
@@ -47,9 +56,11 @@ async function getData(
 						: acc,
 				''
 			);
+			const hasOnOrder = product.items.some((item) => item.onOrder);
 			const tags = [];
 			if (quantity < product.min) tags.push(Tag.LOW);
 			if (isExpiring(exp) && quantity > 0) tags.push(Tag.EXPIRES);
+			if (hasOnOrder) tags.push(Tag.ONORDER);
 			return {
 				quantity,
 				exp,
@@ -59,14 +70,7 @@ async function getData(
 		}
 	);
 	// console.dir(extended, { depth: Infinity });
-	const locationName = await db.location.findFirst({
-		select: {
-			name: true,
-		},
-		where: {
-			id: location,
-		},
-	});
+
 	return { products: extended, location: locationName!.name };
 }
 
@@ -92,7 +96,7 @@ export default async function Inventory({
 				<div className='flex justify-between items-center flex-wrap'>
 					<div className='flex gap-2'>
 						<Header className='mb-4'>{data.location}</Header>
-						<EditLocation location={params.location} />
+						<EditLocation name={data.location} id={params.location} />
 					</div>
 					<NewItemSheet location={params.location} />
 				</div>
