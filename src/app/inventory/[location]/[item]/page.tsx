@@ -57,7 +57,9 @@ async function getData(
 	)._sum.quantity!;
 	const exp = data!.items.reduce(
 		(acc: Date | string, item: Item) =>
-			new Date(item.expires) < acc || acc === '' ? new Date(item.expires) : acc,
+			item.expires !== null && (new Date(item.expires) < acc || acc === '')
+				? new Date(item.expires)
+				: acc,
 		''
 	);
 	const tags = [];
@@ -98,7 +100,7 @@ export default async function Inventory({
 							<p>The item's unique ID</p>
 						</TooltipContent>
 					</Tooltip>
-					<div className='mt-8 flex gap-2'>
+					<div className={tags.length ? 'mt-8 flex gap-2' : 'hidden'}>
 						{tags.map((tag) => {
 							const tagData = tagList[tag];
 							return (

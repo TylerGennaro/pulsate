@@ -16,9 +16,11 @@ export async function addItem(fields: FormData, userId?: string) {
 				quantity: parseInt(fields.get('quantity') as string) || 1,
 				location: fields.get('location') as string,
 				product: fields.get('product') as string,
+				noExpire: fields.get('no-expire') === 'on',
+				onOrder: fields.get('on-order') === 'on',
 			};
 
-			if (!data.date)
+			if (!data.noExpire && !data.date)
 				return res({ status: 400, message: 'Invalid date provided.' });
 			if (!data.quantity || data.quantity === Number.NaN)
 				return res({
@@ -38,7 +40,8 @@ export async function addItem(fields: FormData, userId?: string) {
 					data: {
 						productId: data.product,
 						quantity: data.quantity,
-						expires: data.date,
+						expires: !data.noExpire ? data.date : null,
+						onOrder: data.onOrder,
 					},
 				})
 				.catch((err: any) => {
@@ -98,7 +101,7 @@ export async function deleteItem(id: string, userId?: string) {
 				where: { id },
 			});
 
-			revalidatePath(`/inventory/${id}`);
+			revalidatePath(`/inventory/${item.product.id}/${id}`);
 			res({ status: 200, message: 'Item deleted.' });
 		}
 	);
@@ -117,8 +120,8 @@ export async function editItem(data: FormData, userId?: string) {
 
 			const id = data.get('item-id') as string;
 			const exp = new Date(data.get('item-exp') as string);
-			const onOrder = data.get('item-onOrder') as string;
-			console.log(onOrder);
+			const onOrder = data.get('item-onOrder') === 'on';
+			const noExpire = data.get('no-expire') === 'on';
 
 			if (!id || !exp)
 				return res({
@@ -153,8 +156,8 @@ export async function editItem(data: FormData, userId?: string) {
 						id,
 					},
 					data: {
-						expires: exp,
-						onOrder: onOrder === 'on',
+						expires: !noExpire ? exp : null,
+						onOrder,
 					},
 				})
 				.catch((err: any) => {

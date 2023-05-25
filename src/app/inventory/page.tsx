@@ -20,11 +20,7 @@ async function getData(id: string): Promise<LocationInfo[]> {
 			name: true,
 			userId: true,
 			products: true,
-			user: {
-				select: {
-					name: true,
-				},
-			},
+			user: true,
 		},
 	});
 

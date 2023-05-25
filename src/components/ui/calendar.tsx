@@ -1,20 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 import { DayPicker } from 'react-day-picker';
 
 import { cn } from '@lib/utils';
 import { buttonVariants } from '@components/ui/button';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from './select';
-import { ScrollArea } from './scroll-area';
-import { format } from 'date-fns';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -22,22 +13,10 @@ function Calendar({
 	className,
 	classNames,
 	showOutsideDays = true,
-	selected,
 	...props
 }: CalendarProps) {
-	const [month, setMonth] = React.useState(
-		(selected as Date).getMonth() || new Date().getMonth()
-	);
-	const [year, setYear] = React.useState(
-		(selected as Date).getFullYear() || new Date().getFullYear()
-	);
 	return (
 		<DayPicker
-			month={new Date(year, month)}
-			onMonthChange={(date) => {
-				setMonth(date.getMonth());
-				setYear(date.getFullYear());
-			}}
 			showOutsideDays={showOutsideDays}
 			className={cn('p-3', className)}
 			classNames={{
@@ -72,31 +51,6 @@ function Calendar({
 					'aria-selected:bg-accent aria-selected:text-accent-foreground',
 				day_hidden: 'invisible',
 				...classNames,
-			}}
-			components={{
-				IconLeft: ({ ...props }) => <ChevronLeft className='h-4 w-4' />,
-				IconRight: ({ ...props }) => <ChevronRight className='h-4 w-4' />,
-				Dropdown: ({ ...props }) => {
-					if (props['aria-label'] === 'Month: ') {
-						return <p>{format(new Date(0, month), 'MMMM')}</p>;
-					}
-					return (
-						<Select onValueChange={(value) => setYear(parseInt(value))}>
-							<SelectTrigger>
-								<SelectValue>{year}</SelectValue>
-							</SelectTrigger>
-							<SelectContent>
-								<ScrollArea className='h-52'>
-									{React.Children.toArray(props.children).map((option: any) => (
-										<SelectItem value={option.props.value}>
-											{option.props.children}
-										</SelectItem>
-									))}
-								</ScrollArea>
-							</SelectContent>
-						</Select>
-					);
-				},
 			}}
 			{...props}
 		/>

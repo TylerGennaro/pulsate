@@ -43,7 +43,7 @@ export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 		header: 'Earliest Expiration',
 		accessorKey: 'exp',
 		cell: ({ row }: { row: any }) => {
-			return <p>{formatDate(row.original.exp)}</p>;
+			return <p>{formatDate(row.original.exp) || 'None'}</p>;
 		},
 	},
 	{

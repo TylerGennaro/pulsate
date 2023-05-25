@@ -14,9 +14,18 @@ import {
 } from '@/components/ui/popover';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { PopoverPortal } from '@radix-ui/react-popover';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from './select';
+import { ScrollArea } from './scroll-area';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function DatePicker({
-	date,
+	date = new Date(),
 	setDate,
 	className,
 	disabled,
@@ -27,6 +36,12 @@ export function DatePicker({
 	disabled?: boolean;
 }) {
 	const [open, setOpen] = useState(false);
+	const [month, setMonth] = React.useState(
+		(date as Date).getMonth() || new Date().getMonth()
+	);
+	const [year, setYear] = React.useState(
+		(date as Date).getFullYear() || new Date().getFullYear()
+	);
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
@@ -48,14 +63,46 @@ export function DatePicker({
 					<Calendar
 						mode='single'
 						selected={date}
-						onSelect={(date) => {
-							setDate(date as Date);
+						onSelect={(newDate) => {
+							setDate((newDate as Date) || date);
 							setOpen(false);
+						}}
+						month={new Date(year, month)}
+						onMonthChange={(date) => {
+							setMonth(date.getMonth());
+							setYear(date.getFullYear());
 						}}
 						captionLayout='dropdown-buttons'
 						fromYear={new Date().getFullYear()}
 						toYear={2050}
 						initialFocus
+						components={{
+							IconLeft: ({ ...props }) => <ChevronLeft className='h-4 w-4' />,
+							IconRight: ({ ...props }) => <ChevronRight className='h-4 w-4' />,
+							Dropdown: ({ ...props }) => {
+								if (props['aria-label'] === 'Month: ') {
+									return <p>{format(new Date(0, month), 'MMMM')}</p>;
+								}
+								return (
+									<Select onValueChange={(value) => setYear(parseInt(value))}>
+										<SelectTrigger>
+											<SelectValue>{year}</SelectValue>
+										</SelectTrigger>
+										<SelectContent>
+											<ScrollArea className='h-52'>
+												{React.Children.toArray(props.children).map(
+													(option: any) => (
+														<SelectItem value={option.props.value}>
+															{option.props.children}
+														</SelectItem>
+													)
+												)}
+											</ScrollArea>
+										</SelectContent>
+									</Select>
+								);
+							},
+						}}
 					/>
 				</PopoverContent>
 			</PopoverPortal>

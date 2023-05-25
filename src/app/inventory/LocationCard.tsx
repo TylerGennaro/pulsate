@@ -4,6 +4,7 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from '@components/ui/card';
@@ -12,12 +13,9 @@ import { Badge } from '@components/ui/badge';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import '@styles/globals.css';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 
-interface LocationProps {
-	location: LocationInfo;
-}
-
-export default function LocationCard({ location }: LocationProps) {
+export default function LocationCard({ location }: { location: LocationInfo }) {
 	const percentage = 88;
 	const circleColor = `hsl(${(percentage / 100) * 120}, 100%, 35%)`;
 
@@ -27,9 +25,7 @@ export default function LocationCard({ location }: LocationProps) {
 				<div>
 					<CardHeader>
 						<CardTitle>{location.name}</CardTitle>
-						<CardDescription>
-							Inventory managed by {location.user?.name}
-						</CardDescription>
+						<CardDescription>Managed by {location.user?.name}</CardDescription>
 					</CardHeader>
 					<CardContent className='flex gap-2'>
 						{location.hasLow && (
@@ -46,9 +42,15 @@ export default function LocationCard({ location }: LocationProps) {
 							</Badge>
 						)}
 					</CardContent>
+					<CardFooter>
+						<Avatar>
+							<AvatarImage src={location.user?.image!} />
+							<AvatarFallback>{location.user?.name?.[0] || 'A'}</AvatarFallback>
+						</Avatar>
+					</CardFooter>
 				</div>
 				<div className='w-24 m-4 flex items-center'>
-					<CircularProgressbar
+					{/* <CircularProgressbar
 						value={percentage}
 						strokeWidth={12}
 						text={`${percentage}%`}
@@ -57,7 +59,7 @@ export default function LocationCard({ location }: LocationProps) {
 							pathColor: circleColor,
 							textColor: circleColor,
 						})}
-					/>
+					/> */}
 				</div>
 			</Card>
 		</Link>

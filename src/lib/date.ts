@@ -8,7 +8,8 @@ export function formatDate(date: Date | string) {
 	return format(date, 'MMM d, yyyy');
 }
 
-export function isExpiring(date: Date | string) {
+export function isExpiring(date: Date | string | null) {
+	if (date === null) return false;
 	if (typeof date === 'string') {
 		if (date.length === 0) return false;
 		date = new Date(date);

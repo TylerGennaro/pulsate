@@ -21,6 +21,7 @@ export const itemColumns: ColumnDef<Item>[] = [
 		header: 'Expires',
 		accessorKey: 'expires',
 		cell: ({ row }: { row: any }) => {
+			if (row.original.expires === null) return <p>Never</p>;
 			return <p>{formatDate(row.original.expires)}</p>;
 		},
 	},

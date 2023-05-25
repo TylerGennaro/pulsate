@@ -42,7 +42,9 @@ import { Item } from '@prisma/client';
 
 export default function EditProduct({ item }: { item: Item }) {
 	const [open, setOpen] = useState(false);
-	const [date, setDate] = useState<Date>(item.expires);
+	const [date, setDate] = useState<Date>(item.expires || new Date());
+	const [hasExpiration, setHasExpiration] = useState(item.expires !== null);
+	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 	const session = useSession();
 	if (!session) return null;
@@ -76,6 +78,7 @@ export default function EditProduct({ item }: { item: Item }) {
 					<form
 						action={() => {
 							deleteItem(item.id, session.data?.user.id).then(handleResponse);
+							setLoading(false);
 						}}
 					>
 						<AlertDialogHeader>
@@ -87,7 +90,12 @@ export default function EditProduct({ item }: { item: Item }) {
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<Button type='submit' variant='destructive'>
+							<Button
+								type='submit'
+								variant='destructive'
+								onClick={() => setLoading(true)}
+								isLoading={loading}
+							>
 								Delete
 							</Button>
 						</AlertDialogFooter>
@@ -102,6 +110,7 @@ export default function EditProduct({ item }: { item: Item }) {
 						data.append('item-exp', date.toISOString());
 						editItem(data, session.data?.user.id).then(handleResponse);
 						setOpen(false);
+						setLoading(false);
 					}}
 				>
 					<DialogHeader>
@@ -119,6 +128,7 @@ export default function EditProduct({ item }: { item: Item }) {
 							date={date}
 							setDate={setDate}
 							className='col-span-3 w-full'
+							disabled={!hasExpiration}
 						/>
 						<Checkbox
 							className='ml-auto'
@@ -129,9 +139,24 @@ export default function EditProduct({ item }: { item: Item }) {
 						<label className='col-span-3' htmlFor='on-order'>
 							Item is on order
 						</label>
+						<Checkbox
+							className='ml-auto'
+							id='no-expire'
+							name='no-expire'
+							onCheckedChange={(checked) => setHasExpiration(!checked)}
+							defaultChecked={!hasExpiration}
+						/>
+						<label className='col-span-3' htmlFor='no-expire'>
+							Item does not expire
+						</label>
 					</div>
 					<DialogFooter>
-						<Button icon={Save} type='submit'>
+						<Button
+							icon={Save}
+							type='submit'
+							onClick={() => setLoading(true)}
+							isLoading={loading}
+						>
 							Save
 						</Button>
 					</DialogFooter>

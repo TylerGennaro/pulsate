@@ -1,11 +1,11 @@
-import { Item, Product } from '@prisma/client';
+import { Item, Product, User } from '@prisma/client';
 
 declare global {
 	interface LocationInfo {
 		id: string;
 		name: string;
 		userId: string;
-		user?: { name?: string | null };
+		user?: User;
 		products?: Product[];
 		hasLow?: boolean;
 		hasExpired?: boolean;

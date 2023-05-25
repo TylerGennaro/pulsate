@@ -57,7 +57,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		if (asChild) {
 			return (
 				<Slot
-					className={cn(buttonVariants({ variant, size, className }))}
+					className={cn(
+						buttonVariants({ variant, size, className }),
+						isLoading ? 'opacity-50 pointer-events-none' : ''
+					)}
 					ref={ref}
 					{...props}
 				>
@@ -67,7 +70,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		}
 		return (
 			<button
-				className={cn(buttonVariants({ variant, size, className }))}
+				className={cn(
+					buttonVariants({ variant, size, className }),
+					isLoading ? 'opacity-50 pointer-events-none' : ''
+				)}
 				ref={ref}
 				{...props}
 			>

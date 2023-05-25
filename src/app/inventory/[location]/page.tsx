@@ -51,7 +51,7 @@ async function getData(
 			);
 			const exp = product.items.reduce(
 				(acc: Date | string, item: Item) =>
-					new Date(item.expires) < acc || acc === ''
+					item.expires !== null && (new Date(item.expires) < acc || acc === '')
 						? new Date(item.expires)
 						: acc,
 				''

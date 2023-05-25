@@ -14,8 +14,8 @@
 	- [✅] Delete an item
 	- [✅] Update an item's name/info
 - [] Packaging - Quantity per unit (case, box, pack) (20, 50, etc...)
-- [] Checkbox if items don't expire
-- [] Show items on order
+- [✅] Checkbox if items don't expire
+- [✅] Show items on order
 - [] Product logs
 
 Benefits:
@@ -23,5 +23,8 @@ Benefits:
 		- ESO says their go-live time is 70 days.
 	- Easy setup and configuration
 		- ESO requires file setups and a long-winded configuration process
-	- Self-explanatory
+	- Intuitive design
 		- ESO requires on-site training
+	- Transparent costs
+		- You know exactly how much you are paying for the service
+		- ESO requires a demo/quote

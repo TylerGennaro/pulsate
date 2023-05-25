@@ -29,16 +29,14 @@ export default function NewItemDialog({
 	const [date, setDate] = useState<Date>(new Date());
 	const [open, setOpen] = useState(false);
 	const [hasExpiration, setHasExpiration] = useState(true);
+	const [loading, setLoading] = useState(false);
 
 	const session = useSession();
 	if (!session) return null;
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>
-					<Plus className='w-4 h-4 mr-2' />
-					Add Item
-				</Button>
+				<Button icon={Plus}>Add Item</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<form
@@ -50,6 +48,7 @@ export default function NewItemDialog({
 						addItem(data, session.data?.user?.id).then((res) => {
 							handleResponse(res);
 							setOpen(false);
+							setLoading(false);
 						});
 					}}
 				>
@@ -84,20 +83,25 @@ export default function NewItemDialog({
 						<Checkbox
 							className='ml-auto'
 							id='no-expire'
-							name='item-noExpire'
+							name='no-expire'
 							onCheckedChange={(checked) => setHasExpiration(!checked)}
+							defaultChecked={!hasExpiration}
 						/>
 						<label className='col-span-3' htmlFor='no-expire'>
 							Item does not expire
 						</label>
-						<Checkbox className='ml-auto' id='on-order' name='item-onOrder' />
+						<Checkbox className='ml-auto' id='on-order' name='on-order' />
 						<label className='col-span-3' htmlFor='on-order'>
 							Item is on order
 						</label>
 					</div>
 					<DialogFooter>
-						<Button type='submit'>
-							<Plus className='w-4 h-4 mr-2' />
+						<Button
+							type='submit'
+							onClick={() => setLoading(true)}
+							isLoading={loading}
+							icon={Plus}
+						>
 							Add
 						</Button>
 					</DialogFooter>
