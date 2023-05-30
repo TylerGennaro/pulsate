@@ -16,6 +16,7 @@ const badgeVariants = cva(
 					'bg-destructive hover:bg-destructive/80 border-transparent text-destructive-foreground',
 				outline: 'text-foreground',
 				success: 'bg-green-700 hover:bg-green-700/80 border-transparent',
+				ghost: 'bg-primary/20 text-primary-foreground border-primary/20'
 			},
 			color: {
 				default: 'text-foreground',
@@ -24,6 +25,28 @@ const badgeVariants = cva(
 				yellow: 'border-yellow-500 text-yellow-500',
 			},
 		},
+		compoundVariants: [
+			{
+				variant: 'ghost',
+				color: 'default',
+				class: 'bg-primary/20 text-primary border-primary/20',
+			},
+			{
+				variant: 'ghost',
+				color: 'red',
+				class: 'bg-red-500/20 text-red-500 border-red-500/30',
+			},
+			{
+				variant: 'ghost',
+				color: 'blue',
+				class: 'bg-blue-500/20 text-blue-500 border-blue-500/30',
+			},
+			{
+				variant: 'ghost',
+				color: 'yellow',
+				class: 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30',
+			}
+		],
 		defaultVariants: {
 			variant: 'default',
 			color: 'default',

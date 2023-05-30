@@ -9,11 +9,10 @@ import { printQRCodes } from '@lib/qrcode';
 import { DataTableFacetedFilter } from '@components/ui/data-table-faceted-filter';
 import { tags } from '@lib/tags';
 import { X } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import { Product } from '@prisma/client';
 
 interface InventoryTableProps {
-	data: Product[];
+	data: ProductInfo[];
 }
 
 function printSelectedCodes(rows: Row<Product>[]) {
@@ -41,7 +40,7 @@ function Toolbar({
 		<div className='mb-4 flex justify-between gap-4 flex-wrap'>
 			<div className='flex flex-col justify-center gap-4 lg:flex-row lg:items-center lg:justify-start flex-grow'>
 				<Input
-					placeholder='Filter products'
+					placeholder='Search products'
 					className='max-w-xs'
 					value={table.getColumn('name')?.getFilterValue() as string}
 					onChange={(event) =>
@@ -81,16 +80,12 @@ function Toolbar({
 }
 
 export default function InventoryTable({ data }: InventoryTableProps) {
-	const session = useSession();
-	if (!session) return null;
 	return (
-		<div>
-			<DataTable
-				columns={columns(session?.data?.user.id as string)}
-				data={data}
-				toolbar={Toolbar}
-				enableSelection
-			/>
-		</div>
+		<DataTable
+			columns={columns}
+			data={data}
+			toolbar={Toolbar}
+			enableSelection
+		/>
 	);
 }

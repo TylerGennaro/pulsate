@@ -21,13 +21,26 @@ import {
 } from '@components/ui/sheet';
 import { Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { addProduct } from '@actions/products';
-import { handleResponse } from '@lib/actionResponse';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { crud, formDataToObject } from '@lib/utils';
 
 export default function NewItemSheet({ location }: { location: string }) {
 	const [open, setOpen] = useState(false);
-	const session = useSession();
+	const [loading, setLoading] = useState(false);
+
+	async function submit(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		setLoading(true);
+		const data = new FormData(e.currentTarget);
+		data.append('locationId', location);
+		const result = await crud({
+			url: '/products',
+			method: 'POST',
+			data: formDataToObject(data),
+		});
+		if (result.status === 200) setOpen(false);
+		setLoading(false);
+	}
 	return (
 		<Sheet open={open} onOpenChange={setOpen}>
 			<SheetTrigger asChild>
@@ -37,15 +50,7 @@ export default function NewItemSheet({ location }: { location: string }) {
 				</Button>
 			</SheetTrigger>
 			<SheetContent size='content'>
-				<form
-					action={(data: FormData) => {
-						data.append('location', location);
-						addProduct(data, session.data?.user.id).then((res) => {
-							setOpen(false);
-							handleResponse(res);
-						});
-					}}
-				>
+				<form onSubmit={submit}>
 					<SheetHeader>
 						<SheetTitle>Add New Product</SheetTitle>
 						<SheetDescription>
@@ -62,15 +67,15 @@ export default function NewItemSheet({ location }: { location: string }) {
 						/>
 						<InputGroup
 							label='Min Quantity'
-							name='min-quantity'
+							name='min'
 							placeholder='Enter the minimum quantity'
-							defaultValue='5'
+							defaultValue={5}
 							type='number'
 							desc="When the product's quantity reaches this number, it will be marked as low quantity. Default: 5"
 						/>
 						<InputGroup
 							label='Max Quantity'
-							name='max-quantity'
+							name='max'
 							placeholder='Enter the maximum quantity'
 							type='number'
 							desc='The maximum number of this product that can be stored in this location.'
@@ -80,7 +85,7 @@ export default function NewItemSheet({ location }: { location: string }) {
 								Packaging<span className='text-red-500 ml-1'>*</span>
 							</label>
 							<div className='col-span-3'>
-								<Select name='package'>
+								<Select name='packageType'>
 									<SelectTrigger>
 										<SelectValue placeholder='Select the packaging' />
 									</SelectTrigger>
@@ -97,8 +102,12 @@ export default function NewItemSheet({ location }: { location: string }) {
 						</div>
 					</div>
 					<SheetFooter>
-						<Button className='ml-auto' type='submit'>
-							<Plus className='w-4 h-4 mr-2' />
+						<Button
+							className='ml-auto'
+							type='submit'
+							icon={Plus}
+							isLoading={loading}
+						>
 							Add
 						</Button>
 					</SheetFooter>

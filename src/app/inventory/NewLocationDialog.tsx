@@ -11,15 +11,48 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 import { Plus } from 'lucide-react';
-import { addLocation } from '@actions/locations';
 import InputGroup from '@components/InputGroup';
-import { useSession } from 'next-auth/react';
-import { handleResponse } from '@lib/actionResponse';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function NewLocationDialog() {
 	const [open, setOpen] = useState(false);
-	const session = useSession();
+	const [loading, setLoading] = useState(false);
+	// const { data, isLoading } = useQuery({
+	// 	queryKey: ['locations'],
+	// 	queryFn: (): Promise<string> =>
+	// 		fetch('/api/locations', {
+	// 			method: 'POST',
+	// 			body: JSON.stringify(data),
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			},
+	// 		}).then((res) => res.text()),
+	// });
+	async function submit(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		setLoading(true);
+		const data = {
+			name: e.currentTarget['location-name'].value,
+		};
+		const result = await fetch('/api/locations', {
+			method: 'POST',
+			body: JSON.stringify(data),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}).then(async (res) => {
+			return { message: await res.text(), status: res.status };
+		});
+
+		if (result.status === 200) {
+			toast.success(result.message);
+			setOpen(false);
+		} else {
+			toast.error(result.message);
+		}
+		setLoading(false);
+	}
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
@@ -29,12 +62,7 @@ export default function NewLocationDialog() {
 				</Button>
 			</DialogTrigger>
 			<DialogContent>
-				<form
-					action={(data: FormData) => {
-						addLocation(data, session.data?.user.id).then(handleResponse);
-						setOpen(false);
-					}}
-				>
+				<form onSubmit={submit}>
 					<DialogHeader>
 						<DialogTitle>Add New Location</DialogTitle>
 						<DialogDescription>
@@ -52,8 +80,7 @@ export default function NewLocationDialog() {
 						/>
 					</div>
 					<DialogFooter>
-						<Button className='ml-auto'>
-							<Plus className='w-4 h-4 mr-2' />
+						<Button className='ml-auto' icon={Plus} isLoading={loading}>
 							Add
 						</Button>
 					</DialogFooter>

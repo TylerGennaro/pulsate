@@ -76,10 +76,10 @@ export default function EditProduct({ item }: { item: Item }) {
 				</DropdownMenu>
 				<AlertDialogContent>
 					<form
-						action={() => {
-							deleteItem(item.id, session.data?.user.id).then(handleResponse);
-							setLoading(false);
-						}}
+					// action={() => {
+					// 	deleteItem(item.id, session.data?.user.id).then(handleResponse);
+					// 	setLoading(false);
+					// }}
 					>
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -105,13 +105,13 @@ export default function EditProduct({ item }: { item: Item }) {
 			<DialogContent>
 				<form
 					className='flex flex-col gap-4'
-					action={(data) => {
-						data.append('item-id', item.id);
-						data.append('item-exp', date.toISOString());
-						editItem(data, session.data?.user.id).then(handleResponse);
-						setOpen(false);
-						setLoading(false);
-					}}
+					// action={(data) => {
+					// 	data.append('item-id', item.id);
+					// 	data.append('item-exp', date.toISOString());
+					// 	editItem(data, session.data?.user.id).then(handleResponse);
+					// 	setOpen(false);
+					// 	setLoading(false);
+					// }}
 				>
 					<DialogHeader>
 						<DialogTitle>Edit item</DialogTitle>

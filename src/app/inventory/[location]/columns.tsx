@@ -6,23 +6,11 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Eye, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { tags } from '@lib/tags';
-import {
-	AlertDialog,
-	AlertDialogContent,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTrigger,
-	AlertDialogCancel,
-	AlertDialogDescription,
-	AlertDialogTitle,
-} from '@components/ui/alert-dialog';
-import { deleteProduct } from '@actions/products';
-import { handleResponse } from '@lib/actionResponse';
 import { Tag } from '@lib/enum';
 import { formatDate } from '@lib/date';
 import EditProduct from './EditProduct';
 
-export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
+export const columns: ColumnDef<ProductInfo>[] = [
 	{ header: 'Product Name', accessorKey: 'name' },
 	{
 		header: 'Quantity',
@@ -30,12 +18,12 @@ export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 		cell: ({ row }: { row: any }) => (
 			<span>
 				{row.original.quantity}
-				{row.original.max && (
+				{row.original.max && row.original.max > 0 ? (
 					<span className='text-xs text-muted-foreground ml-1'>
 						{'/'}
 						{row.original.max || ''}
 					</span>
-				)}
+				) : null}
 			</span>
 		),
 	},
@@ -54,7 +42,8 @@ export const columns = (userID: string): ColumnDef<ProductInfo>[] => [
 			return (
 				<div className='flex flex-wrap gap-2'>
 					{formattedTags.map((tag: any) => (
-						<Badge key={tag.label} color={tag.color} variant='outline'>
+						<Badge key={tag.label} color={tag.color} variant='ghost'>
+							{tag.icon && <tag.icon className='mr-1 w-3 h-3' />}
 							{tag.label}
 						</Badge>
 					))}

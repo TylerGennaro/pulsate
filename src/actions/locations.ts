@@ -1,11 +1,19 @@
-'use server';
+// 'use server';
 
+import { authOptions } from '@lib/auth';
 import { db } from '@lib/prisma';
+import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
+import { toast } from 'react-hot-toast';
 
-export async function addLocation(data: FormData, userId?: string) {
+export async function addLocation(data: FormData) {
 	const payload: { status: number; message: string } = await new Promise(
 		async (res, rej) => {
+			const session = await getServerSession(authOptions);
+			console.log(session);
+			console.log(data);
+			toast.success('done');
+			return res({ status: 200, message: 'Location added.' });
 			if (!userId)
 				return res({
 					status: 401,

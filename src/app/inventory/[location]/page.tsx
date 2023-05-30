@@ -100,7 +100,7 @@ export default async function Inventory({
 					</div>
 					<NewItemSheet location={params.location} />
 				</div>
-				<InventoryTable data={data.products} />
+					<InventoryTable data={data.products} />
 			</div>
 		</>
 	);

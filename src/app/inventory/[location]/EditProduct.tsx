@@ -10,7 +10,6 @@ import {
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
 import { useSession } from 'next-auth/react';
-import { handleResponse } from '@lib/actionResponse';
 import { useRouter } from 'next/navigation';
 import {
 	AlertDialog,
@@ -33,7 +32,6 @@ import {
 } from '@components/ui/dialog';
 import InputGroup from '@components/InputGroup';
 import { useState } from 'react';
-import { deleteProduct, editProduct } from '@actions/products';
 
 export default function EditProduct({
 	name,
@@ -74,9 +72,9 @@ export default function EditProduct({
 				</DropdownMenu>
 				<AlertDialogContent>
 					<form
-						action={() => {
-							deleteProduct(id, session.data?.user.id).then(handleResponse);
-						}}
+					// action={() => {
+					// 	deleteProduct(id, session.data?.user.id).then(handleResponse);
+					// }}
 					>
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -97,11 +95,11 @@ export default function EditProduct({
 			<DialogContent>
 				<form
 					className='flex flex-col gap-4'
-					action={(data) => {
-						data.append('product-id', id);
-						editProduct(data, session.data?.user.id).then(handleResponse);
-						setOpen(false);
-					}}
+					// action={(data) => {
+					// 	data.append('product-id', id);
+					// 	editProduct(data, session.data?.user.id).then(handleResponse);
+					// 	setOpen(false);
+					// }}
 				>
 					<DialogHeader>
 						<DialogTitle>Edit product</DialogTitle>

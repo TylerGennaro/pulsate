@@ -8,15 +8,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import {
-	deleteLocation,
-	editLocation,
-	revalidateLocations,
-} from '@actions/locations';
 import { Button } from '@components/ui/button';
-import { useSession } from 'next-auth/react';
-import { handleResponse } from '@lib/actionResponse';
-import { useRouter } from 'next/navigation';
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -37,7 +29,8 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 import InputGroup from '@components/InputGroup';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { crud } from '@lib/utils';
 
 export default function EditLocation({
 	name,
@@ -47,9 +40,34 @@ export default function EditLocation({
 	id: string;
 }) {
 	const [open, setOpen] = useState(false);
-	const router = useRouter();
-	const session = useSession();
-	if (!session) return null;
+	const [editLoading, setEditLoading] = useState(false);
+	const [deleteLoading, setDeleteLoading] = useState(false);
+
+	async function update(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		setEditLoading(true);
+		const data = {
+			name: e.currentTarget['location-name'].value as string,
+		};
+		const result = await crud({
+			url: `/locations/${id}`,
+			method: 'PUT',
+			data,
+		});
+		setEditLoading(false);
+		if (result?.status === 200) setOpen(false);
+	}
+
+	async function remove(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		setDeleteLoading(true);
+		const result = await crud({
+			url: `/locations/${id}`,
+			method: 'DELETE',
+		});
+		setDeleteLoading(false);
+		if (result?.status === 200) setOpen(false);
+	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -77,15 +95,7 @@ export default function EditLocation({
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<AlertDialogContent>
-					<form
-						action={() => {
-							deleteLocation(id, session.data?.user.id).then(handleResponse);
-							router.push('/inventory');
-							setTimeout(() => {
-								revalidateLocations();
-							}, 500);
-						}}
-					>
+					<form onSubmit={remove}>
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 							<AlertDialogDescription>
@@ -95,7 +105,12 @@ export default function EditLocation({
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<Button type='submit' variant='destructive'>
+							<Button
+								type='submit'
+								variant='destructive'
+								icon={Trash2}
+								isLoading={deleteLoading}
+							>
 								Delete
 							</Button>
 						</AlertDialogFooter>
@@ -103,14 +118,7 @@ export default function EditLocation({
 				</AlertDialogContent>
 			</AlertDialog>
 			<DialogContent>
-				<form
-					className='flex flex-col gap-4'
-					action={(data) => {
-						data.append('location-id', id);
-						editLocation(data, session.data?.user.id).then(handleResponse);
-						setOpen(false);
-					}}
-				>
+				<form className='flex flex-col gap-4' onSubmit={update}>
 					<DialogHeader>
 						<DialogTitle>Edit location</DialogTitle>
 						<DialogDescription>
@@ -124,7 +132,7 @@ export default function EditLocation({
 						defaultValue={name}
 					/>
 					<DialogFooter>
-						<Button icon={Save} type='submit'>
+						<Button icon={Save} type='submit' isLoading={editLoading}>
 							Save
 						</Button>
 					</DialogFooter>

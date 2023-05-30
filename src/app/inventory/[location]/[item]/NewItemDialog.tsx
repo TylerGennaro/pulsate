@@ -41,16 +41,16 @@ export default function NewItemDialog({
 			<DialogContent>
 				<form
 					className='flex flex-col gap-4'
-					action={(data) => {
-						data.append('date', date.toISOString());
-						data.append('location', location);
-						data.append('product', product);
-						addItem(data, session.data?.user?.id).then((res) => {
-							handleResponse(res);
-							setOpen(false);
-							setLoading(false);
-						});
-					}}
+					// action={(data) => {
+					// 	data.append('date', date.toISOString());
+					// 	data.append('location', location);
+					// 	data.append('product', product);
+					// 	addItem(data, session.data?.user?.id).then((res) => {
+					// 		handleResponse(res);
+					// 		setOpen(false);
+					// 		setLoading(false);
+					// 	});
+					// }}
 				>
 					<DialogHeader>
 						<DialogTitle>Add Item</DialogTitle>
