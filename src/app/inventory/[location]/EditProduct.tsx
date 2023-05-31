@@ -31,7 +31,9 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 import InputGroup from '@components/InputGroup';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { crud, formDataToObject } from '@lib/utils';
+import ProductForm from './ProductForm';
 
 export default function EditProduct({
 	name,
@@ -41,9 +43,22 @@ export default function EditProduct({
 	id: string;
 }) {
 	const [open, setOpen] = useState(false);
-	const router = useRouter();
-	const session = useSession();
-	if (!session) return null;
+	const [editLoading, setEditLoading] = useState(false);
+	const [deleteLoading, setDeleteLoading] = useState(false);
+
+	async function update(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		setEditLoading(true);
+		const data = new FormData(e.currentTarget);
+		data.append('id', id);
+		const result = await crud({
+			url: '/products',
+			method: 'POST',
+			data: formDataToObject(data),
+		});
+		if (result.status === 200) setOpen(false);
+		setEditLoading(false);
+	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -93,28 +108,16 @@ export default function EditProduct({
 				</AlertDialogContent>
 			</AlertDialog>
 			<DialogContent>
-				<form
-					className='flex flex-col gap-4'
-					// action={(data) => {
-					// 	data.append('product-id', id);
-					// 	editProduct(data, session.data?.user.id).then(handleResponse);
-					// 	setOpen(false);
-					// }}
-				>
+				<form className='flex flex-col gap-4' onSubmit={update}>
 					<DialogHeader>
 						<DialogTitle>Edit product</DialogTitle>
 						<DialogDescription>
 							Change the name of this product.
 						</DialogDescription>
 					</DialogHeader>
-					<InputGroup
-						label='Name'
-						placeholder='Product name'
-						name='product-name'
-						defaultValue={name}
-					/>
+					<ProductForm />
 					<DialogFooter>
-						<Button icon={Save} type='submit'>
+						<Button icon={Save} type='submit' isLoading={editLoading}>
 							Save
 						</Button>
 					</DialogFooter>
