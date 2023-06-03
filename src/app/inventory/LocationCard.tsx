@@ -21,7 +21,7 @@ export default function LocationCard({ location }: { location: LocationInfo }) {
 
 	return (
 		<Link href={`/inventory/${location.id}`}>
-			<Card className='cursor-pointer hover:bg-secondary transition-colors flex justify-between flex-wrap'>
+			<Card className='cursor-pointer hover:bg-card/50 transition-colors flex justify-between flex-wrap'>
 				<div>
 					<CardHeader>
 						<CardTitle>{location.name}</CardTitle>
