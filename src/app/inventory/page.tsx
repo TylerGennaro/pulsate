@@ -1,6 +1,6 @@
 import { db } from '@lib/prisma';
 import LocationCard from './LocationCard';
-import NewLocationDialog from './NewLocationDialog';
+import NewLocation from './NewLocation';
 import { getServerSession } from 'next-auth';
 import { Metadata } from 'next';
 import { isExpiring } from '@lib/date';
@@ -92,7 +92,7 @@ export default async function Page() {
 
 	return (
 		<div className='container py-8'>
-			<NewLocationDialog />
+			<NewLocation />
 			<div className='flex flex-col gap-4'>
 				{data.map((location) => (
 					<LocationCard location={location} key={location.id} />

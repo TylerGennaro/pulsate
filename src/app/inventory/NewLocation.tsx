@@ -14,21 +14,12 @@ import { Plus } from 'lucide-react';
 import InputGroup from '@components/InputGroup';
 import { FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export default function NewLocationDialog() {
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
-	// const { data, isLoading } = useQuery({
-	// 	queryKey: ['locations'],
-	// 	queryFn: (): Promise<string> =>
-	// 		fetch('/api/locations', {
-	// 			method: 'POST',
-	// 			body: JSON.stringify(data),
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 			},
-	// 		}).then((res) => res.text()),
-	// });
+	const router = useRouter();
 	async function submit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setLoading(true);
@@ -48,6 +39,7 @@ export default function NewLocationDialog() {
 		if (result.status === 200) {
 			toast.success(result.message);
 			setOpen(false);
+			router.refresh();
 		} else {
 			toast.error(result.message);
 		}

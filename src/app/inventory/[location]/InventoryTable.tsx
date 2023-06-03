@@ -47,6 +47,6 @@ async function getData(location: string) {
 
 export default async function InventoryTable({ id }: { id: string }) {
 	const data = await getData(id);
-	await new Promise((res, rej) => setTimeout(res, 5000));
+	// await new Promise((res, rej) => setTimeout(res, 5000));
 	return <Products data={data} />;
 }
