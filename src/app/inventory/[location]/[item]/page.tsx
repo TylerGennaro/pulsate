@@ -21,6 +21,7 @@ import SignIn from '@components/SignIn';
 import { notFound } from 'next/navigation';
 import TagBadge from '@components/TagBadge';
 import { packageTypes } from '@lib/relations';
+import { Badge } from '@components/ui/badge';
 
 function Container({
 	children,
@@ -37,12 +38,14 @@ function Container({
 }) {
 	return (
 		<div className={cn('border rounded-md p-8', className)}>
-			<div className='flex flex-col gap-2'>
-				<Header size='sm' weight='medium'>
-					{header}
-				</Header>
-				<span className='text-muted-foreground'>{description}</span>
-			</div>
+			{header && (
+				<div className='flex flex-col gap-2'>
+					<Header size='sm' weight='medium'>
+						{header}
+					</Header>
+					<span className='text-muted-foreground'>{description}</span>
+				</div>
+			)}
 			{divider && <hr className='my-6' />}
 			{children}
 		</div>
@@ -101,6 +104,7 @@ async function getData(
 	const tags = [];
 	if (quantity! < data!.min) tags.push(Tag.LOW);
 	if (isExpiring(exp) && quantity > 0) tags.push(Tag.EXPIRES);
+	if (data?.items.some((item) => item.onOrder)) tags.push(Tag.ONORDER);
 	return { data, tags };
 }
 
@@ -172,10 +176,14 @@ export default async function Inventory({
 						/>
 						<div className='flex flex-col gap-2'>
 							<span>Tags</span>
-							<div className={tags.length ? 'flex gap-2' : 'hidden'}>
-								{tags.map((tag) => {
-									return <TagBadge key={tag} tag={tag} />;
-								})}
+							<div className='flex gap-2'>
+								{tags.length ? (
+									tags.map((tag) => {
+										return <TagBadge key={tag} tag={tag} />;
+									})
+								) : (
+									<TagBadge tag={Tag.NONE} />
+								)}
 							</div>
 						</div>
 					</div>
@@ -196,8 +204,11 @@ export default async function Inventory({
 							</div>
 							<ItemTable data={data.items} />
 						</Container>
-						<Container className='w-full mt-8'>
-							<span className='text-lg mb-4 block'>Log</span>
+						<Container
+							className='w-full mt-8'
+							header='Log'
+							description='All changes made to the product'
+						>
 							{/* <DataTable columns={columns} data={data} /> */}
 						</Container>
 					</div>

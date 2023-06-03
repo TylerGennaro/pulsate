@@ -1,6 +1,6 @@
 'use client';
 
-import { MoreVertical, Pencil, Save, Trash2 } from 'lucide-react';
+import { MoreVertical, Pencil, Save, Settings, Trash2 } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -78,7 +78,7 @@ export default function EditLocation({
 					<DropdownMenuTrigger asChild>
 						<Button variant='ghost' className='h-8 w-8 p-0'>
 							<span className='sr-only'>Open menu</span>
-							<MoreVertical className='h-6 w-6' />
+							<Settings className='h-6 w-6' />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>

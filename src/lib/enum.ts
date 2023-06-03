@@ -9,6 +9,7 @@ export enum Tag {
 	LOW = 'low',
 	EXPIRES = 'expires',
 	ONORDER = 'onOrder',
+	NONE = 'none',
 }
 
 export enum PackageType {

@@ -32,12 +32,7 @@ export const itemColumns: ColumnDef<Item>[] = [
 			const tags = [];
 			if (isExpiring(row.original.expires)) tags.push(Tag.EXPIRES);
 			if (row.original.onOrder) tags.push(Tag.ONORDER);
-			if (tags.length === 0)
-				return (
-					<Badge variant='ghost' color='gray'>
-						None
-					</Badge>
-				);
+			if (tags.length === 0) return <TagBadge tag={Tag.NONE} />;
 			return (
 				<div className='flex gap-2 flex-wrap'>
 					{tags.map((tag) => {

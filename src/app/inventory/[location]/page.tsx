@@ -64,7 +64,7 @@ export default async function Inventory({
 					</Button>
 				</Link>
 				<div className='flex justify-between items-center flex-wrap'>
-					<div className='flex gap-2'>
+					<div className='flex gap-4'>
 						<Header className='mb-4'>{name}</Header>
 						<EditLocation name={name!} id={params.location} />
 					</div>
