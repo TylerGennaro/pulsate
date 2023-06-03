@@ -2,7 +2,6 @@ import { authOptions } from '@lib/auth';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
 import { getServerSession } from 'next-auth';
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -49,10 +48,10 @@ export async function POST(req: Request) {
 				locationId,
 			},
 		});
+		console.log(newProduct);
 	} catch (e) {
 		return catchError(e);
 	} finally {
-		revalidatePath(`/inventory/${data.locationId}`);
 		return new NextResponse('Product created.', {
 			status: 200,
 		});
@@ -92,7 +91,6 @@ export async function PUT(req: Request) {
 	} catch (e) {
 		return catchError(e);
 	} finally {
-		revalidatePath(`/inventory/${data.id}`);
 		return new NextResponse('Product updated.', { status: 200 });
 	}
 }
@@ -110,23 +108,23 @@ export async function DELETE(req: Request) {
 
 	try {
 		const { id, userId } = schema.parse(data);
-		const location = await db.location.findFirst({
+		const product = await db.product.findFirst({
 			where: {
 				id,
-				userId,
+				location: {
+					userId,
+				},
 			},
 		});
-		if (!location)
-			return new NextResponse('Could not find location.', { status: 404 });
-		const deletedLocation = await db.location.delete({
+		if (!product)
+			return new NextResponse('Could not find product.', { status: 404 });
+		const deletedProduct = await db.product.delete({
 			where: {
 				id,
 			},
 		});
+		// redirect(`/inventory/${product.locationId}`);
 	} catch (e) {
 		return catchError(e);
-	} finally {
-		revalidatePath('/inventory');
-		redirect('/inventory');
 	}
 }

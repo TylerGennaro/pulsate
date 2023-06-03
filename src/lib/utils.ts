@@ -20,20 +20,26 @@ export async function crud({
 	method,
 	url,
 	data,
+	params,
 	notify = true,
 }: {
 	method: string;
 	url: string;
 	data?: object;
+	params?: { [key: string]: string };
 	notify?: boolean;
 }) {
-	const result = await fetch(`/api${url}`, {
-		method: method,
-		body: data ? JSON.stringify(data) : '',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	}).then(async (res) => {
+	const paramString = new URLSearchParams(params).toString();
+	const result = await fetch(
+		`/api${url}${paramString ? '?' + paramString : ''}`,
+		{
+			method: method,
+			body: data ? JSON.stringify(data) : '',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}
+	).then(async (res) => {
 		if (res.redirected) {
 			window.location.replace(res.url);
 			return { message: 'Redirecting...', status: 200, redirected: true };

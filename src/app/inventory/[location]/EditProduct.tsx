@@ -50,14 +50,25 @@ export default function EditProduct({
 		e.preventDefault();
 		setEditLoading(true);
 		const data = new FormData(e.currentTarget);
-		data.append('id', id);
 		const result = await crud({
 			url: '/products',
-			method: 'POST',
+			method: 'PUT',
 			data: formDataToObject(data),
+			params: { id },
 		});
 		if (result.status === 200) setOpen(false);
 		setEditLoading(false);
+	}
+
+	async function remove() {
+		setDeleteLoading(true);
+		const result = await crud({
+			url: '/products',
+			method: 'DELETE',
+			params: { id },
+		});
+		if (result.status === 200) setOpen(false);
+		setDeleteLoading(false);
 	}
 
 	return (
@@ -86,11 +97,7 @@ export default function EditProduct({
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<AlertDialogContent>
-					<form
-					// action={() => {
-					// 	deleteProduct(id, session.data?.user.id).then(handleResponse);
-					// }}
-					>
+					<form onSubmit={remove}>
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 							<AlertDialogDescription>
@@ -100,7 +107,11 @@ export default function EditProduct({
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<Button type='submit' variant='destructive'>
+							<Button
+								type='submit'
+								variant='destructive'
+								isLoading={deleteLoading}
+							>
 								Delete
 							</Button>
 						</AlertDialogFooter>

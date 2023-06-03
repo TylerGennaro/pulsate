@@ -1,15 +1,6 @@
 'use client';
 
 import { Button } from '@components/ui/button';
-import InputGroup from '@components/InputGroup';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@components/ui/select';
 import {
 	Sheet,
 	SheetContent,
@@ -20,7 +11,6 @@ import {
 	SheetTrigger,
 } from '@components/ui/sheet';
 import { Plus } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 import { FormEvent, useState } from 'react';
 import { crud, formDataToObject } from '@lib/utils';
 import ProductForm from './ProductForm';

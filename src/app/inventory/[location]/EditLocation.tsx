@@ -50,9 +50,10 @@ export default function EditLocation({
 			name: e.currentTarget['location-name'].value as string,
 		};
 		const result = await crud({
-			url: `/locations/${id}`,
+			url: `/locations`,
 			method: 'PUT',
 			data,
+			params: { id },
 		});
 		setEditLoading(false);
 		if (result?.status === 200) setOpen(false);
@@ -62,8 +63,9 @@ export default function EditLocation({
 		e.preventDefault();
 		setDeleteLoading(true);
 		const result = await crud({
-			url: `/locations/${id}`,
+			url: `/locations`,
 			method: 'DELETE',
+			params: { id },
 		});
 		setDeleteLoading(false);
 		if (result?.status === 200) setOpen(false);
