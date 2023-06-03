@@ -36,7 +36,6 @@ const IndeterminateCheckbox = React.forwardRef<
 	const internalRef = React.useRef<HTMLInputElement>(null!);
 
 	React.useEffect(() => {
-		console.log('indeterminate', indeterminate);
 		if (typeof indeterminate === 'boolean' && internalRef.current) {
 			internalRef.current.indeterminate = !props.checked && indeterminate;
 		}

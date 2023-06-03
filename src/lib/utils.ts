@@ -55,8 +55,8 @@ export async function crud({
 }
 
 export function catchError(e: any) {
+	console.log(e);
 	if (e instanceof z.ZodError) {
-		console.log(e);
 		return new NextResponse(
 			e.issues[0]?.message || 'Invalid request. Try again.',
 			{

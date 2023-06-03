@@ -14,10 +14,12 @@ import { Plus } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { crud, formDataToObject } from '@lib/utils';
 import ProductForm from './ProductForm';
+import { useRouter } from 'next/navigation';
 
 export default function NewItemSheet({ location }: { location: string }) {
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const router = useRouter();
 
 	async function submit(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -29,7 +31,10 @@ export default function NewItemSheet({ location }: { location: string }) {
 			method: 'POST',
 			data: formDataToObject(data),
 		});
-		if (result.status === 200) setOpen(false);
+		if (result.status === 200) {
+			setOpen(false);
+			router.refresh();
+		}
 		setLoading(false);
 	}
 	return (

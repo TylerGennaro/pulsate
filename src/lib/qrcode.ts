@@ -11,7 +11,6 @@ const style = `
 		body {
 			display: flex;
 			flex-wrap: wrap;
-			justify-content: center;
 		}
 		div {
 			page-break-inside: avoid;
@@ -58,7 +57,7 @@ export async function printQRCode(code: CodeData) {
 	const win = window.open('', 'width=340,height=260')!;
 	win.document.write(content);
 	win.document.close();
-	win.print();
+	setTimeout(() => win.print(), 200);
 }
 
 export async function printQRCodes(codes: CodeData[]) {
@@ -70,6 +69,16 @@ export async function printQRCodes(codes: CodeData[]) {
 			name: code.name,
 		};
 	});
+	const imageContent = await Promise.all(images).then((images) =>
+		images
+			.map((image) => {
+				return `<div>
+					<img src="${image.image}" />
+					<span>${image.name}</span>
+				</div>`;
+			})
+			.join('')
+	);
 	const content = `
 		<!DOCTYPE html>
 		<html>
@@ -79,21 +88,12 @@ export async function printQRCodes(codes: CodeData[]) {
 				${style}
 			</head>
 			<body>
-				${await Promise.all(images).then((images) =>
-					images
-						.map((image) => {
-							return `<div>
-					<img src="${image.image}" />
-					<span>${image.name}</span>
-				</div>`;
-						})
-						.join('')
-				)}
+				${imageContent}
 			</body>
 		</html>
 	`;
 	const win = window.open('', 'width=340,height=260')!;
 	win.document.write(content);
 	win.document.close();
-	win.print();
+	setTimeout(() => win.print(), 200);
 }

@@ -1,5 +1,5 @@
 import { ArrowDownCircle, CalendarClock, Package2 } from 'lucide-react';
-import { Tag } from './enum';
+import { PackageType, Tag } from './enum';
 
 export const tags = {
 	[Tag.LOW]: {
@@ -20,4 +20,11 @@ export const tags = {
 		icon: Package2,
 		color: 'blue',
 	},
+};
+
+export const packageTypes = {
+	[PackageType.SINGLE]: 'items',
+	[PackageType.PACK]: 'packs',
+	[PackageType.BOX]: 'boxes',
+	[PackageType.CASE]: 'cases',
 };

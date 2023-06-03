@@ -1,32 +1,68 @@
 import QRCode from '@components/QRCode';
 import Header from '@components/ui/Header';
-import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { cn } from '@lib/utils';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
 import ItemTable from './ItemTable';
-import NewItemDialog from './NewItemDialog';
+import NewItem from './NewItem';
 import { Item, Product } from '@prisma/client';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from '@components/ui/tooltip';
-import { Tag } from '@lib/enum';
+import { PackageType, Tag } from '@lib/enum';
 import { isExpiring } from '@lib/date';
-import { tags as tagList } from '@lib/tags';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@lib/auth';
+import SignIn from '@components/SignIn';
+import { notFound } from 'next/navigation';
+import TagBadge from '@components/TagBadge';
+import { packageTypes } from '@lib/relations';
 
 function Container({
 	children,
 	className,
+	header,
+	description,
+	divider = false,
 }: {
 	children: React.ReactNode;
 	className?: string;
+	header?: string;
+	description?: string;
+	divider?: boolean;
 }) {
 	return (
-		<div className={cn('border rounded-md p-8', className)}>{children}</div>
+		<div className={cn('border rounded-md p-8', className)}>
+			<div className='flex flex-col gap-2'>
+				<Header size='sm' weight='medium'>
+					{header}
+				</Header>
+				<span className='text-muted-foreground'>{description}</span>
+			</div>
+			{divider && <hr className='my-6' />}
+			{children}
+		</div>
+	);
+}
+
+function InfoBlock({
+	label,
+	value,
+	className,
+}: {
+	label: string;
+	value: string;
+	className?: string;
+}) {
+	return (
+		<div className={cn('flex flex-col gap-2', className)}>
+			<span>{label}</span>
+			<span className='text-muted-foreground'>{value}</span>
+		</div>
 	);
 }
 
@@ -68,14 +104,36 @@ async function getData(
 	return { data, tags };
 }
 
+async function getUser(id: string) {
+	const location = await db.product.findFirst({
+		select: {
+			location: {
+				select: {
+					userId: true,
+				},
+			},
+		},
+		where: {
+			id,
+		},
+	});
+	return location?.location.userId;
+}
+
 export default async function Inventory({
 	params,
 }: {
 	params: { location: string; item: string };
 }) {
+	const session = await getServerSession(authOptions);
+	if (!session) return <SignIn />;
+	const userId = await getUser(params.item);
+	if (userId !== session.user?.id) return notFound();
+
 	const { data, tags } = await getData(params.item);
-	// console.dir(data, { depth: Infinity });
 	if (!data) return null;
+
+	const units = packageTypes[data.package as PackageType];
 	return (
 		<div className='container py-8'>
 			<Link href={`/inventory/${params.location}`}>
@@ -88,45 +146,53 @@ export default async function Inventory({
 				</Button>
 			</Link>
 			<div className='flex flex-col gap-8'>
-				<Container>
-					<Header size='lg'>{data.name}</Header>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<span className='text-muted-foreground mt-2 block w-fit'>
-								{data.id}
-							</span>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>The item's unique ID</p>
-						</TooltipContent>
-					</Tooltip>
-					<div className={tags.length ? 'mt-8 flex gap-2' : 'hidden'}>
-						{tags.map((tag) => {
-							const tagData = tagList[tag];
-							return (
-								<Badge
-									key={tagData.label}
-									color={tagData.color}
-									variant='outline'
-								>
-									{tagData.label}
-								</Badge>
-							);
-						})}
+				<Container
+					header='Information'
+					description='General product information'
+					divider
+				>
+					<div className='grid md:grid-cols-2 grid-cols-1 gap-8'>
+						<InfoBlock label='Name' value={data.name} />
+						<InfoBlock label='Unique ID' value={data.id} />
+						<InfoBlock
+							label='Minimum quantity'
+							value={data.min.toString() + ` ${units}`}
+						/>
+						<InfoBlock
+							label='Maximum quantity'
+							value={
+								data.max ? data.max?.toString() + ` ${units}` : 'Unlimited'
+							}
+						/>
+						<InfoBlock
+							label='Package type'
+							value={
+								data.package.charAt(0).toUpperCase() + data.package.slice(1)
+							}
+						/>
+						<div className='flex flex-col gap-2'>
+							<span>Tags</span>
+							<div className={tags.length ? 'flex gap-2' : 'hidden'}>
+								{tags.map((tag) => {
+									return <TagBadge key={tag} tag={tag} />;
+								})}
+							</div>
+						</div>
 					</div>
 				</Container>
 				<div className='flex flex-col md:flex-row gap-8'>
 					<div className='w-full'>
 						<Container className='w-full'>
-							<div className='mb-4 flex justify-between flex-wrap gap-4'>
-								<Header size='md'>
-									Total:{' '}
-									{data.items.reduce((acc, val) => (acc += val.quantity), 0)}
-								</Header>
-								<NewItemDialog
-									location={params.location}
-									product={params.item}
-								/>
+							<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
+								<div className='flex flex-col gap-1'>
+									<span className='text-muted-foreground text-md'>Total</span>
+									<span className='text-xl font-semibold'>
+										{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
+										{packageTypes[data.package as PackageType]}
+									</span>
+								</div>
+
+								<NewItem product={params.item} />
 							</div>
 							<ItemTable data={data.items} />
 						</Container>

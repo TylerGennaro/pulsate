@@ -3,7 +3,7 @@ import { VariantProps, cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-const headerVariants = cva('text-foreground font-bold', {
+const headerVariants = cva('text-foreground', {
 	variants: {
 		size: {
 			default: 'text-3xl',
@@ -12,9 +12,19 @@ const headerVariants = cva('text-foreground font-bold', {
 			lg: 'text-4xl',
 			xl: 'text-5xl',
 		},
+		weight: {
+			default: 'font-bold',
+			thin: 'font-thin',
+			light: 'font-light',
+			normal: 'font-normal',
+			medium: 'font-medium',
+			semibold: 'font-semibold',
+			bold: 'font-bold',
+		},
 	},
 	defaultVariants: {
 		size: 'default',
+		weight: 'default',
 	},
 });
 
@@ -23,10 +33,10 @@ interface HeaderProps
 		VariantProps<typeof headerVariants> {}
 
 const Header = React.forwardRef<HTMLHeadingElement, HeaderProps>(
-	({ className, children, size, ...props }, ref) => {
+	({ className, children, size, weight, ...props }, ref) => {
 		return (
 			<h1
-				className={cn(headerVariants({ size, className }))}
+				className={cn(headerVariants({ size, weight, className }))}
 				ref={ref}
 				{...props}
 			>

@@ -34,17 +34,24 @@ import InputGroup from '@components/InputGroup';
 import { FormEvent, useState } from 'react';
 import { crud, formDataToObject } from '@lib/utils';
 import ProductForm from './ProductForm';
+import { PackageType } from '@lib/enum';
 
 export default function EditProduct({
-	name,
+	defaultValues,
 	id,
 }: {
-	name: string;
+	defaultValues?: {
+		name?: string;
+		min?: number;
+		max?: number;
+		packageType?: PackageType;
+	};
 	id: string;
 }) {
 	const [open, setOpen] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
+	const router = useRouter();
 
 	async function update(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -56,18 +63,25 @@ export default function EditProduct({
 			data: formDataToObject(data),
 			params: { id },
 		});
-		if (result.status === 200) setOpen(false);
+		if (result.status === 200) {
+			setOpen(false);
+			router.refresh();
+		}
 		setEditLoading(false);
 	}
 
-	async function remove() {
+	async function remove(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
 		setDeleteLoading(true);
 		const result = await crud({
 			url: '/products',
 			method: 'DELETE',
 			params: { id },
 		});
-		if (result.status === 200) setOpen(false);
+		if (result.status === 200) {
+			setOpen(false);
+			router.refresh();
+		}
 		setDeleteLoading(false);
 	}
 
@@ -123,10 +137,10 @@ export default function EditProduct({
 					<DialogHeader>
 						<DialogTitle>Edit product</DialogTitle>
 						<DialogDescription>
-							Change the name of this product.
+							Change the product's information.
 						</DialogDescription>
 					</DialogHeader>
-					<ProductForm />
+					<ProductForm defaultValues={defaultValues} />
 					<DialogFooter>
 						<Button icon={Save} type='submit' isLoading={editLoading}>
 							Save

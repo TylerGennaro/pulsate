@@ -6,7 +6,14 @@ export enum LogType {
 }
 
 export enum Tag {
-	LOW,
-	EXPIRES,
-	ONORDER,
+	LOW = 'low',
+	EXPIRES = 'expires',
+	ONORDER = 'onOrder',
+}
+
+export enum PackageType {
+	SINGLE = 'single',
+	PACK = 'pack',
+	BOX = 'box',
+	CASE = 'case',
 }

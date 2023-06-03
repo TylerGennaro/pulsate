@@ -4,6 +4,8 @@ import NewLocation from './NewLocation';
 import { getServerSession } from 'next-auth';
 import { Metadata } from 'next';
 import { isExpiring } from '@lib/date';
+import SignIn from '@components/SignIn';
+import { authOptions } from '@lib/auth';
 
 export const metadata: Metadata = {
 	title: 'Locations | LFHRS Inventory',
@@ -86,8 +88,8 @@ async function getData(id: string): Promise<LocationInfo[]> {
 }
 
 export default async function Page() {
-	const session = await getServerSession();
-	if (!session) return null;
+	const session = await getServerSession(authOptions);
+	if (!session) return <SignIn />;
 	const data = await getData(session.user?.id);
 
 	return (

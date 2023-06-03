@@ -11,29 +11,34 @@ import { isExpiring } from '@lib/date';
 import EditLocation from './EditLocation';
 import { Suspense } from 'react';
 import TableLoading from './TableLoading';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@lib/auth';
+import SignIn from '@components/SignIn';
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata({
 	params,
 }: {
 	params: { location: string };
 }) {
-	const name = await getLocationName(params.location);
+	const { name, userId } = await getLocationInfo(params.location);
 	return {
 		title: `${name} | LFHRS Inventory`,
 		description: `Manage medical supply inventory for ${name}.`,
 	};
 }
 
-async function getLocationName(id: string) {
+async function getLocationInfo(id: string) {
 	const data = await db.location.findFirst({
 		select: {
 			name: true,
+			userId: true,
 		},
 		where: {
 			id,
 		},
 	});
-	return data?.name;
+	return { name: data?.name, userId: data?.userId };
 }
 
 export default async function Inventory({
@@ -41,7 +46,10 @@ export default async function Inventory({
 }: {
 	params: { location: string };
 }) {
-	const name = await getLocationName(params.location);
+	const session = await getServerSession(authOptions);
+	if (!session) return <SignIn />;
+	const { name, userId } = await getLocationInfo(params.location);
+	if (userId !== session.user.id) return notFound();
 
 	return (
 		<>

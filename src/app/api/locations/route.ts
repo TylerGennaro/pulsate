@@ -76,10 +76,9 @@ export async function PUT(req: Request) {
 				name,
 			},
 		});
+		return new NextResponse('Location updated.', { status: 200 });
 	} catch (e) {
 		return catchError(e);
-	} finally {
-		return new NextResponse('Location updated.', { status: 200 });
 	}
 }
 
@@ -109,9 +108,8 @@ export async function DELETE(req: Request) {
 				id,
 			},
 		});
+		redirect('/inventory');
 	} catch (e) {
 		return catchError(e);
-	} finally {
-		redirect('/inventory');
 	}
 }

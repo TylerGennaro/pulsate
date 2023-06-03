@@ -7,12 +7,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@components/ui/select';
+import { PackageType } from '@lib/enum';
 
 interface Props {
-	name: string;
-	min: number;
-	max: number;
-	packageType: 'single' | 'pack' | 'box' | 'case';
+	name?: string;
+	min?: number;
+	max?: number;
+	packageType?: PackageType;
 }
 
 export default function ProductForm({
@@ -50,7 +51,10 @@ export default function ProductForm({
 					Packaging<span className='text-red-500 ml-1'>*</span>
 				</label>
 				<div className='col-span-3'>
-					<Select name='packageType' defaultValue={defaultValues?.packageType}>
+					<Select
+						name='packageType'
+						defaultValue={defaultValues?.packageType as string}
+					>
 						<SelectTrigger>
 							<SelectValue placeholder='Select the packaging' />
 						</SelectTrigger>

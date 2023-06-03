@@ -7,7 +7,7 @@ import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import { printQRCodes } from '@lib/qrcode';
 import { DataTableFacetedFilter } from '@components/ui/data-table-faceted-filter';
-import { tags } from '@lib/tags';
+import { tags } from '@lib/relations';
 import { X } from 'lucide-react';
 import { Product } from '@prisma/client';
 

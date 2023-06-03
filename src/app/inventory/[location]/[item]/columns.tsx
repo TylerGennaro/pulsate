@@ -3,11 +3,11 @@
 import { Badge } from '@components/ui/badge';
 import { formatDate, isExpiring } from '@lib/date';
 import { Tag } from '@lib/enum';
-import { tags } from '@lib/tags';
 import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import EditItem from './EditItem';
+import TagBadge from '@components/TagBadge';
 
 export type Log = {
 	user: string;
@@ -29,19 +29,19 @@ export const itemColumns: ColumnDef<Item>[] = [
 	{
 		header: 'Tags',
 		cell: ({ row }: { row: any }) => {
-			const t = [];
-			if (isExpiring(row.original.expires)) t.push(Tag.EXPIRES);
-			if (row.original.onOrder) t.push(Tag.ONORDER);
-			if (t.length === 0) return <Badge variant='outline'>None</Badge>;
+			const tags = [];
+			if (isExpiring(row.original.expires)) tags.push(Tag.EXPIRES);
+			if (row.original.onOrder) tags.push(Tag.ONORDER);
+			if (tags.length === 0)
+				return (
+					<Badge variant='ghost' color='gray'>
+						None
+					</Badge>
+				);
 			return (
 				<div className='flex gap-2 flex-wrap'>
-					{t.map((tag) => {
-						const data = tags[tag];
-						return (
-							<Badge variant='outline' color={data.color} key={data.value}>
-								{data.label}
-							</Badge>
-						);
+					{tags.map((tag) => {
+						return <TagBadge tag={tag} key={tag} />;
 					})}
 				</div>
 			);

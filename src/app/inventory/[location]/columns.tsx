@@ -5,10 +5,11 @@ import { Button } from '@components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
 import { Eye, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { tags } from '@lib/tags';
-import { Tag } from '@lib/enum';
+import { packageTypes, tags } from '@lib/relations';
+import { PackageType, Tag } from '@lib/enum';
 import { formatDate } from '@lib/date';
 import EditProduct from './EditProduct';
+import TagBadge from '@components/TagBadge';
 
 export const columns: ColumnDef<ProductInfo>[] = [
 	{ header: 'Product Name', accessorKey: 'name' },
@@ -17,7 +18,8 @@ export const columns: ColumnDef<ProductInfo>[] = [
 		accessorKey: 'quantity',
 		cell: ({ row }: { row: any }) => (
 			<span>
-				{row.original.quantity}
+				{row.original.quantity}{' '}
+				{packageTypes[row.original.package as PackageType]}
 				{row.original.max && row.original.max > 0 ? (
 					<span className='text-xs text-muted-foreground ml-1'>
 						{'/'}
@@ -38,14 +40,10 @@ export const columns: ColumnDef<ProductInfo>[] = [
 		header: 'Tags',
 		accessorKey: 'tags',
 		cell: ({ row }: { row: any }) => {
-			const formattedTags = row.original.tags.map((tag: Tag) => tags[tag]);
 			return (
 				<div className='flex flex-wrap gap-2'>
-					{formattedTags.map((tag: any) => (
-						<Badge key={tag.label} color={tag.color} variant='ghost'>
-							{tag.icon && <tag.icon className='mr-1 w-3 h-3' />}
-							{tag.label}
-						</Badge>
+					{row.original.tags.map((tag: any) => (
+						<TagBadge tag={tag} key={tag} />
 					))}
 				</div>
 			);
@@ -71,7 +69,15 @@ export const columns: ColumnDef<ProductInfo>[] = [
 							<Eye size={20} />
 						</Link>
 					</Button>
-					<EditProduct id={row.original.id} name={row.original.name} />
+					<EditProduct
+						id={row.original.id}
+						defaultValues={{
+							name: row.original.name,
+							min: row.original.min,
+							max: row.original.max,
+							packageType: row.original.package,
+						}}
+					/>
 				</div>
 			);
 		},
