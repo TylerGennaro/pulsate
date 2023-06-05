@@ -1,5 +1,4 @@
 import QRCode from '@components/QRCode';
-import Header from '@components/ui/Header';
 import { Button } from '@components/ui/button';
 import { cn } from '@lib/utils';
 import { ChevronLeft } from 'lucide-react';
@@ -8,11 +7,6 @@ import { db } from '@lib/prisma';
 import ItemTable from './ItemTable';
 import NewItem from './NewItem';
 import { Item, Product } from '@prisma/client';
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from '@components/ui/tooltip';
 import { PackageType, Tag } from '@lib/enum';
 import { isExpiring } from '@lib/date';
 import { getServerSession } from 'next-auth';
@@ -21,41 +15,10 @@ import SignIn from '@components/SignIn';
 import { notFound } from 'next/navigation';
 import TagBadge from '@components/TagBadge';
 import { packageTypes } from '@lib/relations';
-import { Badge } from '@components/ui/badge';
 import LogEntry from '@components/LogEntry';
 import { Suspense } from 'react';
 import { Skeleton } from '@components/ui/skeleton';
-
-function Container({
-	children,
-	className,
-	header,
-	description,
-	divider = false,
-}: {
-	children: React.ReactNode;
-	className?: string;
-	header?: string;
-	description?: string;
-	divider?: boolean;
-}) {
-	return (
-		<div
-			className={cn('bg-foreground border rounded-md p-8 shadow-md', className)}
-		>
-			{header && (
-				<div className='flex flex-col gap-2'>
-					<Header size='sm' weight='medium'>
-						{header}
-					</Header>
-					<span className='text-muted-text'>{description}</span>
-				</div>
-			)}
-			{divider && <hr className='my-6' />}
-			{children}
-		</div>
-	);
-}
+import Container from '@components/Container';
 
 function InfoBlock({
 	label,

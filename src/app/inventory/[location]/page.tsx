@@ -15,6 +15,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
 import SignIn from '@components/SignIn';
 import { notFound } from 'next/navigation';
+import Container from '@components/Container';
 
 export async function generateMetadata({
 	params,
@@ -52,29 +53,18 @@ export default async function Inventory({
 	if (userId !== session.user.id) return notFound();
 
 	return (
-		<>
-			<div className='container py-8 flex flex-col gap-4'>
-				<Link href='/inventory' className='w-fit mb-4'>
-					<Button
-						variant='ghost'
-						className='p-0 hover:bg-background hover:text-muted-foreground'
-					>
-						<ChevronLeft className='w-4 h-4 mr-2' />
-						Locations
-					</Button>
-				</Link>
-				<div className='flex justify-between items-center flex-wrap'>
-					<div className='flex gap-4'>
-						<Header className='mb-4'>{name}</Header>
-						<EditLocation name={name!} id={params.location} />
-					</div>
-					<NewProduct location={params.location} />
+		<Container>
+			<div className='flex justify-between items-center flex-wrap'>
+				<div className='flex gap-4'>
+					<Header className='mb-4'>{name}</Header>
+					<EditLocation name={name!} id={params.location} />
 				</div>
-				<Suspense fallback={<TableLoading />}>
-					{/* @ts-ignore */}
-					<InventoryTable id={params.location} />
-				</Suspense>
+				<NewProduct location={params.location} />
 			</div>
-		</>
+			<Suspense fallback={<TableLoading />}>
+				{/* @ts-ignore */}
+				<InventoryTable id={params.location} />
+			</Suspense>
+		</Container>
 	);
 }

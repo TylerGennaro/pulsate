@@ -82,9 +82,9 @@ export default async function LogEntry({ entry }: { entry: string }) {
 		return str;
 	});
 	return (
-		<div className='flex justify-between items-center'>
+		<div className='flex justify-between items-center leading-8'>
 			<div>{joint}</div>
-			<span className='text-muted-text'>1d ago</span>
+			<span className='text-muted-text shrink-0'>1d ago</span>
 		</div>
 	);
 }

@@ -7,8 +7,7 @@ declare global {
 		userId: string;
 		user?: User;
 		products?: Product[];
-		hasLow?: boolean;
-		hasExpired?: boolean;
+		tags?: Tag[];
 	}
 
 	export interface ProductInfo extends Product {

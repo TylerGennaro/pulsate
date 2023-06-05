@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { cn } from '@lib/utils';
+import SideNav from '@components/Sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,11 +24,7 @@ export default function RootLayout({
 			<body className={cn(inter.className, 'overflow-hidden')}>
 				<Providers>
 					<Toaster position='bottom-right' />
-					<div className='h-screen flex flex-col'>
-						{/* @ts-expect-error */}
-						<SiteHeader />
-						{children}
-					</div>
+					{children}
 				</Providers>
 			</body>
 		</html>
