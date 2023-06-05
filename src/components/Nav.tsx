@@ -20,7 +20,7 @@ export function Nav() {
 						(href === '/' && pathname === '/') ||
 						(href !== '/' && pathname.startsWith(href))
 							? 'text-white'
-							: 'text-muted-foreground'
+							: 'text-muted-text'
 					} sm:text-sm`}
 				>
 					{name}

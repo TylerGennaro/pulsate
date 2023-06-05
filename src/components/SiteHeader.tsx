@@ -9,8 +9,8 @@ export default async function SiteHeader() {
 	const session = await getServerSession();
 
 	return (
-		<header className='sticky top-0 w-full z-40 border-b bg-background'>
-			<div className='container flex h-16 items-center space-x-4 justify-between'>
+		<header className='w-full h-16 border-b bg-foreground shadow-lg z-40'>
+			<div className='container h-16 flex items-center space-x-4 justify-between'>
 				<div className='flex gap-6 md:gap-10'>
 					<Link href='/' className='hidden items-center space-x-2 md:flex'>
 						<span className='hidden font-bold text-xl sm:inline-block'>
@@ -22,7 +22,7 @@ export default async function SiteHeader() {
 				<div className='flex items-center gap-2'>
 					{session ? (
 						<>
-							<p className='text-sm text-muted-foreground font-semibold mr-2'>
+							<p className='text-sm text-muted-text font-semibold mr-2'>
 								{session?.user?.name}
 							</p>
 							{/* @ts-expect-error */}

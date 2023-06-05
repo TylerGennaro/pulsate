@@ -3,7 +3,7 @@ import { VariantProps, cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-const headerVariants = cva('text-foreground', {
+const headerVariants = cva('text-foreground-text', {
 	variants: {
 		size: {
 			default: 'text-3xl',

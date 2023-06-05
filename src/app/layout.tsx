@@ -4,6 +4,7 @@ import '@styles/globals.css';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
+import { cn } from '@lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,10 +20,10 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang='en'>
-			<body className={inter.className}>
+			<body className={cn(inter.className, 'overflow-hidden')}>
 				<Providers>
 					<Toaster position='bottom-right' />
-					<div className='flex flex-col h-screen'>
+					<div className='h-screen flex flex-col'>
 						{/* @ts-expect-error */}
 						<SiteHeader />
 						{children}

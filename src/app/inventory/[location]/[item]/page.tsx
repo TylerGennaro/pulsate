@@ -22,6 +22,9 @@ import { notFound } from 'next/navigation';
 import TagBadge from '@components/TagBadge';
 import { packageTypes } from '@lib/relations';
 import { Badge } from '@components/ui/badge';
+import LogEntry from '@components/LogEntry';
+import { Suspense } from 'react';
+import { Skeleton } from '@components/ui/skeleton';
 
 function Container({
 	children,
@@ -37,13 +40,15 @@ function Container({
 	divider?: boolean;
 }) {
 	return (
-		<div className={cn('border rounded-md p-8', className)}>
+		<div
+			className={cn('bg-foreground border rounded-md p-8 shadow-md', className)}
+		>
 			{header && (
 				<div className='flex flex-col gap-2'>
 					<Header size='sm' weight='medium'>
 						{header}
 					</Header>
-					<span className='text-muted-foreground'>{description}</span>
+					<span className='text-muted-text'>{description}</span>
 				</div>
 			)}
 			{divider && <hr className='my-6' />}
@@ -64,7 +69,7 @@ function InfoBlock({
 	return (
 		<div className={cn('flex flex-col gap-2', className)}>
 			<span>{label}</span>
-			<span className='text-muted-foreground'>{value}</span>
+			<span className='text-muted-text'>{value}</span>
 		</div>
 	);
 }
@@ -206,9 +211,16 @@ export default async function Inventory({
 						</Container>
 						<Container
 							className='w-full mt-8'
-							header='Log'
+							header='Change Log'
 							description='All changes made to the product'
+							divider
 						>
+							<Suspense fallback={<Skeleton className='w-full h-16' />}>
+								{/* @ts-ignore */}
+								<LogEntry
+									entry={`{"type": "User", "id": "clig6qhpb0000vgnom3bafngl"} removed {"type": "Product", "id": "clhk4wje70003vocghlimcp97", "quantity": 3} from inventory`}
+								/>
+							</Suspense>
 							{/* <DataTable columns={columns} data={data} /> */}
 						</Container>
 					</div>

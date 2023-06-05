@@ -4,10 +4,10 @@
 
 @layer base {
 	:root {
-		--background: 0 0% 100%;
+		--background: 210 40% 96.1%;
 		--foreground: 222.2 47.4% 11.2%;
 
-		--muted: 210 40% 96.1%;
+		--muted: 0 0% 100%;
 		--muted-foreground: 215.4 16.3% 46.9%;
 
 		--popover: 0 0% 100%;
@@ -38,10 +38,11 @@
 
 	.dark {
 		--background: 218 32% 15%;
-		--foreground: 213 31% 91%;
+		--foreground: 215 28% 17%;
+		--muted: 215 28% 32%;
 
-		--muted: 215 28% 17%;
-		--muted-foreground: 215.4 16.3% 56.9%;
+		--foreground-text: 215.4 16.3% 90%;
+		--muted-text: 215.4 16.3% 56.9%;
 
 		--popover: 224 71% 4%;
 		--popover-foreground: 215 20.2% 65.1%;
@@ -49,7 +50,7 @@
 		--card: 215 28% 17%;
 		--card-foreground: 213 31% 91%;
 
-		--border: 218 19% 20%;
+		--border: 218 19% 22%;
 		--input: 216 34% 17%;
 
 		--primary: 244 75% 59%;
@@ -75,7 +76,7 @@
 		@apply border-border;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background text-foreground-text;
 		font-feature-settings: 'rlig' 1, 'calt' 1;
 	}
 }
