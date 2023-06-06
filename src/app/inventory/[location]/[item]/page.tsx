@@ -107,10 +107,10 @@ export default async function Inventory({
 
 	const units = packageTypes[data.package as PackageType];
 	return (
-		<div className='container py-8'>
+		<div className='container'>
 			<Link href={`/inventory/${params.location}`}>
 				<Button
-					className='w-fit mb-8 p-0 hover:bg-background hover:text-muted-foreground'
+					className='w-fit mb-8 p-2 text-muted-text hover:bg-foreground hover:text-foreground-text'
 					variant='ghost'
 				>
 					<ChevronLeft className='w-4 h-4 mr-2' />
@@ -156,12 +156,12 @@ export default async function Inventory({
 						</div>
 					</div>
 				</Container>
-				<div className='flex flex-col md:flex-row gap-8'>
+				<div className='flex flex-col xl:flex-row gap-8'>
 					<div className='w-full'>
 						<Container className='w-full'>
 							<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
 								<div className='flex flex-col gap-1'>
-									<span className='text-muted-foreground text-md'>Total</span>
+									<span className='text-muted-text text-md'>Total</span>
 									<span className='text-xl font-semibold'>
 										{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
 										{packageTypes[data.package as PackageType]}

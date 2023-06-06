@@ -48,8 +48,8 @@ function NavButton({
 			<TooltipTrigger asChild>
 				<Link href={link}>
 					<Button
-						className={`w-full flex text-foreground-text/70 bg-foreground hover:bg-muted hover:text-white ${
-							selected ? 'bg-muted text-white' : ''
+						className={`w-full flex text-foreground-text/70 bg-foreground hover:bg-muted hover:text-black dark:hover:text-white ${
+							selected ? 'bg-muted text-black dark:text-white' : ''
 						}`}
 					>
 						{props.icon && <props.icon className='mr-2 shrink-0' />}
@@ -64,6 +64,7 @@ function NavButton({
 											tagRelations[tag]
 												.color as typeof indicatorVariants.prototype.props.color
 										}
+										key={tag}
 									/>
 								))}
 							</div>
@@ -89,7 +90,7 @@ const navItems = [
 	},
 ];
 
-export function Nav({ locations }: { locations: LocationInfo[] }) {
+export function Nav({ locations }: { locations: LocationInfo[] | null }) {
 	const pathname = usePathname();
 	return (
 		<div className='flex flex-col gap-8'>
@@ -106,17 +107,18 @@ export function Nav({ locations }: { locations: LocationInfo[] }) {
 				))}
 			</NavBlock>
 			<NavBlock label='Locations'>
-				{locations.map((location) => (
-					<NavButton
-						key={location.id}
-						link={`/inventory/${location.id}`}
-						icon={Warehouse}
-						tags={location.tags}
-						selected={pathname.startsWith(`/inventory/${location.id}`)}
-					>
-						{location.name}
-					</NavButton>
-				))}
+				{locations &&
+					locations.map((location) => (
+						<NavButton
+							key={location.id}
+							link={`/inventory/${location.id}`}
+							icon={Warehouse}
+							tags={location.tags}
+							selected={pathname.startsWith(`/inventory/${location.id}`)}
+						>
+							{location.name}
+						</NavButton>
+					))}
 			</NavBlock>
 		</div>
 	);

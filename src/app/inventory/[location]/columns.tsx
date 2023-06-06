@@ -22,7 +22,7 @@ export const columns: ColumnDef<ProductInfo>[] = [
 				{packageTypes[row.original.package as PackageType]}
 				{row.original.max && row.original.max > 0 ? (
 					<span className='text-xs text-muted-text ml-1'>
-						{'/'}
+						{'/ '}
 						{row.original.max || ''}
 					</span>
 				) : null}
