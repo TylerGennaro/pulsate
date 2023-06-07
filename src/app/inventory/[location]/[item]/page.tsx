@@ -19,6 +19,7 @@ import LogEntry from '@components/LogEntry';
 import { Suspense } from 'react';
 import { Skeleton } from '@components/ui/skeleton';
 import Container from '@components/Container';
+import Logs from './Logs';
 
 function InfoBlock({
 	label,
@@ -156,43 +157,39 @@ export default async function Inventory({
 						</div>
 					</div>
 				</Container>
-				<div className='flex flex-col xl:flex-row gap-8'>
-					<div className='w-full'>
-						<Container className='w-full'>
-							<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
-								<div className='flex flex-col gap-1'>
-									<span className='text-muted-text text-md'>Total</span>
-									<span className='text-xl font-semibold'>
-										{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
-										{packageTypes[data.package as PackageType]}
-									</span>
-								</div>
-
-								<NewItem product={params.item} />
+				<div className='grid grid-cols-1 xl:grid-cols-2 gap-8'>
+					<Container>
+						<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
+							<div className='flex flex-col gap-1'>
+								<span className='text-muted-text text-md'>Total</span>
+								<span className='text-xl font-semibold'>
+									{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
+									{packageTypes[data.package as PackageType]}
+								</span>
 							</div>
-							<ItemTable data={data.items} />
-						</Container>
-						<Container
-							className='w-full mt-8'
-							header='Change Log'
-							description='All changes made to the product'
-							divider
-						>
-							<Suspense fallback={<Skeleton className='w-full h-16' />}>
-								{/* @ts-ignore */}
-								<LogEntry
-									entry={`{"type": "User", "id": "clig6qhpb0000vgnom3bafngl"} removed {"type": "Product", "id": "clhk4wje70003vocghlimcp97", "quantity": 3} from inventory`}
-								/>
-							</Suspense>
-							{/* <DataTable columns={columns} data={data} /> */}
-						</Container>
-					</div>
+
+							<NewItem product={params.item} />
+						</div>
+						<ItemTable data={data.items} />
+					</Container>
 					<Container className='flex flex-col items-center h-fit'>
 						<QRCode
 							location={params.location}
 							uid={params.item}
 							name={data.name}
 						/>
+					</Container>
+					<Container
+						className='w-full col-span-2'
+						header='Feed'
+						description='All changes made to the product'
+						divider
+					>
+						<Suspense fallback={<Skeleton className='w-full h-16' />}>
+							{/* @ts-expect-error */}
+							<Logs />
+						</Suspense>
+						{/* <DataTable columns={columns} data={data} /> */}
 					</Container>
 				</div>
 			</div>

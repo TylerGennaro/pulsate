@@ -15,12 +15,4 @@ declare global {
 		items: Item[];
 		tags: Tag[];
 	}
-
-	interface Log {
-		id: string;
-		timestamp: Date;
-		productId: string;
-		userId: string;
-		type: LogType;
-	}
 }

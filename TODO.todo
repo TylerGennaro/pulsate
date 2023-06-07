@@ -16,6 +16,13 @@
 - [✅] Checkbox if items don't expire
 - [✅] Show items on order
 - [] Product logs
+	- [] User adds item
+	- [] User removes item
+	- [] User updates item
+	- [] User adds product
+	- [] User removes product
+	- [] User updates product
+	- [] User checks item out
 - [] Last order date
 - [] Checkout page
 
