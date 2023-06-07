@@ -118,7 +118,7 @@ export default async function Inventory({
 					Go back
 				</Button>
 			</Link>
-			<div className='flex flex-col gap-8'>
+			<div className='grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-8'>
 				<Container
 					header='Information'
 					description='General product information'
@@ -157,41 +157,40 @@ export default async function Inventory({
 						</div>
 					</div>
 				</Container>
-				<div className='grid grid-cols-1 xl:grid-cols-2 gap-8'>
-					<Container>
-						<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
-							<div className='flex flex-col gap-1'>
-								<span className='text-muted-text text-md'>Total</span>
-								<span className='text-xl font-semibold'>
-									{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
-									{packageTypes[data.package as PackageType]}
-								</span>
-							</div>
+				<Container className='flex flex-col items-center h-fit'>
+					<QRCode
+						location={params.location}
+						uid={params.item}
+						name={data.name}
+					/>
+				</Container>
 
-							<NewItem product={params.item} />
+				<Container>
+					<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
+						<div className='flex flex-col gap-1'>
+							<span className='text-muted-text text-md'>Total</span>
+							<span className='text-xl font-semibold'>
+								{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
+								{packageTypes[data.package as PackageType]}
+							</span>
 						</div>
-						<ItemTable data={data.items} />
-					</Container>
-					<Container className='flex flex-col items-center h-fit'>
-						<QRCode
-							location={params.location}
-							uid={params.item}
-							name={data.name}
-						/>
-					</Container>
-					<Container
-						className='w-full col-span-2'
-						header='Feed'
-						description='All changes made to the product'
-						divider
-					>
-						<Suspense fallback={<Skeleton className='w-full h-16' />}>
-							{/* @ts-expect-error */}
-							<Logs />
-						</Suspense>
-						{/* <DataTable columns={columns} data={data} /> */}
-					</Container>
-				</div>
+
+						<NewItem product={params.item} />
+					</div>
+					<ItemTable data={data.items} />
+				</Container>
+				<Container
+					className='w-full'
+					header='Feed'
+					description='All changes made to the product'
+					divider
+				>
+					<Suspense fallback={<Skeleton className='w-full h-16' />}>
+						{/* @ts-expect-error */}
+						<Logs />
+					</Suspense>
+					{/* <DataTable columns={columns} data={data} /> */}
+				</Container>
 			</div>
 		</div>
 	);

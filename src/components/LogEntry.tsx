@@ -7,6 +7,7 @@ import { templates } from '@lib/logTemplates';
 import { Prisma } from '@prisma/client';
 import { format } from 'date-fns';
 import { ArrowRight, Package, PackagePlus } from 'lucide-react';
+import { timeSince } from '@lib/date';
 
 function InlineBadge({
 	children,
@@ -113,14 +114,20 @@ export default function LogEntry({
 				<span className='font-semibold mb-1'>
 					{log.user?.name}
 					<span className='ml-4 text-muted-text font-normal text-sm'>
-						2d ago
+						{timeSince(log.timestamp)} ago
 					</span>
 				</span>
-				<span className='mb-2 text-foreground-text/75'>{note}</span>
-				<span className='mb-8 flex items-center'>
-					Expiration date: Jul 4, 2021 <ArrowRight className='w-4 h-4 mx-2' />{' '}
-					Sep 18, 2024
-				</span>
+				<div className='mb-2'>
+					<Badge variant='ghost' color='purple'>
+						Updated
+					</Badge>
+					<span className='ml-2 text-foreground-text/75'>
+						4 Cervical Collar
+					</span>
+				</div>
+				{log.footnote && (
+					<span className='mb-8 flex items-center text-sm'>{log.footnote}</span>
+				)}
 			</div>
 		</div>
 	);

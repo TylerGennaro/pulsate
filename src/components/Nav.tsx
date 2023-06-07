@@ -1,6 +1,12 @@
 'use client';
 
-import { LayoutDashboard, LucideIcon, Settings, Warehouse } from 'lucide-react';
+import {
+	LayoutDashboard,
+	LucideIcon,
+	Plus,
+	Settings,
+	Warehouse,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
@@ -119,6 +125,9 @@ export function Nav({ locations }: { locations: LocationInfo[] | null }) {
 							{location.name}
 						</NavButton>
 					))}
+				<Button icon={Plus} className='bg-transparent border-2 hover:bg-muted'>
+					New Location
+				</Button>
 			</NavBlock>
 		</div>
 	);

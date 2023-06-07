@@ -23,7 +23,9 @@ const badgeVariants = cva(
 				red: 'border-red-500 text-red-500',
 				blue: 'border-blue-500 text-blue-500',
 				yellow: 'border-yellow-500 text-yellow-500',
+				green: 'border-green-500 text-green-500',
 				gray: 'border-gray-500 text-gray-500',
+				purple: 'border-purple-500 text-purple-500',
 			},
 		},
 		compoundVariants: [
@@ -51,9 +53,21 @@ const badgeVariants = cva(
 			},
 			{
 				variant: 'ghost',
+				color: 'green',
+				class:
+					'bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30',
+			},
+			{
+				variant: 'ghost',
 				color: 'gray',
 				class:
 					'bg-gray-500/20 text-gray-700 dark:text-gray-400 border-gray-500/30',
+			},
+			{
+				variant: 'ghost',
+				color: 'purple',
+				class:
+					'bg-purple-500/20 text-purple-700 dark:text-purple-400 border-purple-500/30',
 			},
 		],
 		defaultVariants: {
