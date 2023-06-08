@@ -17,10 +17,10 @@ export default function SiteHeader({
 			<Button
 				variant='ghost'
 				size='sm'
-				className='lg:hidden'
+				className='lg:hidden sidebar-toggle'
 				onClick={() => sidebarToggle(!sidebarOpen)}
 			>
-				<Menu />
+				<Menu className='pointer-events-none' />
 				<span className='sr-only'>Toggle sidebar</span>
 			</Button>
 			<div>

@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Nav } from './Nav';
 import { useSession } from 'next-auth/react';
 import { Skeleton } from './ui/skeleton';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Session } from 'next-auth';
 import { Button } from './ui/button';
 import { X } from 'lucide-react';
@@ -20,9 +20,20 @@ export default function Sidebar({
 	locations: LocationInfo[] | null;
 }) {
 	const { data: session, status } = useSession();
+	const sidebarRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		window.addEventListener('resize', () => {
 			if (open) toggle(false);
+		});
+		window.addEventListener('click', (e) => {
+			const target = e.target as Element;
+			if (
+				open &&
+				!sidebarRef.current?.contains(e.target as Node) &&
+				(typeof target.className !== 'string' ||
+					!target.className.includes('sidebar-toggle'))
+			)
+				toggle(false);
 		});
 	}, []);
 	return (
@@ -30,6 +41,7 @@ export default function Sidebar({
 			className={`flex w-80 h-full bg-foreground border-r shadow-lg flex-col justify-between z-40 shrink-0 absolute lg:left-0 lg:opacity-100 lg:relative transition-all duration-300 ${
 				open ? 'left-0 opacity-100' : '-left-80 opacity-0'
 			}`}
+			ref={sidebarRef}
 		>
 			<Button
 				className='lg:hidden absolute top-4 right-4'
@@ -45,7 +57,7 @@ export default function Sidebar({
 					</Header>
 				</div>
 				<hr />
-				<Nav locations={locations} />
+				<Nav locations={locations} toggle={toggle} />
 			</div>
 			{status === 'loading' ? (
 				<Skeleton className='w-full h-12 rounded-none' />

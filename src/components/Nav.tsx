@@ -48,11 +48,11 @@ function NavButton({
 	children,
 	link,
 	...props
-}: NavButtonProps) {
+}: NavButtonProps & React.ComponentPropsWithoutRef<'a'>) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
-				<Link href={link}>
+				<Link href={link} onClick={props.onClick}>
 					<Button
 						className={`w-full flex text-foreground-text/70 bg-foreground hover:bg-muted hover:text-black dark:hover:text-white ${
 							selected ? 'bg-muted text-black dark:text-white' : ''
@@ -96,7 +96,13 @@ const navItems = [
 	},
 ];
 
-export function Nav({ locations }: { locations: LocationInfo[] | null }) {
+export function Nav({
+	locations,
+	toggle,
+}: {
+	locations: LocationInfo[] | null;
+	toggle: (open: boolean) => void;
+}) {
 	const pathname = usePathname();
 	return (
 		<div className='flex flex-col gap-8'>
@@ -107,6 +113,7 @@ export function Nav({ locations }: { locations: LocationInfo[] | null }) {
 						link={`/inventory${item.link}`}
 						icon={item.icon}
 						selected={pathname.startsWith(`/inventory${item.link}`)}
+						onClick={() => toggle(false)}
 					>
 						{item.label}
 					</NavButton>
@@ -121,6 +128,7 @@ export function Nav({ locations }: { locations: LocationInfo[] | null }) {
 							icon={Warehouse}
 							tags={location.tags}
 							selected={pathname.startsWith(`/inventory/${location.id}`)}
+							onClick={() => toggle(false)}
 						>
 							{location.name}
 						</NavButton>
