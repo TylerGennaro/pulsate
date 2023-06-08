@@ -111,7 +111,7 @@ export default async function Inventory({
 		<div className='container'>
 			<Link href={`/inventory/${params.location}`}>
 				<Button
-					className='w-fit mb-8 p-2 text-muted-text hover:bg-foreground hover:text-foreground-text'
+					className='w-fit mb-4 p-2 text-muted-text hover:bg-foreground hover:text-foreground-text'
 					variant='ghost'
 				>
 					<ChevronLeft className='w-4 h-4 mr-2' />
