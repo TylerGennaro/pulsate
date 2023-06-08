@@ -13,38 +13,74 @@ import {
 
 export const templates: Record<
 	LogType,
-	{ icon: LucideIcon; template: string }
+	{
+		icon: LucideIcon;
+		quantity: boolean;
+		badge: { color: string; text: string };
+	}
 > = {
 	[LogType.ITEM_ORDER]: {
 		icon: Package,
-		template: 'Ordered {quantity} {product}',
+		quantity: true,
+		badge: {
+			color: 'blue',
+			text: 'Ordered',
+		},
 	},
 	[LogType.ITEM_ADD]: {
 		icon: PackagePlus,
-		template: 'Added {quantity} {product}',
+		quantity: true,
+		badge: {
+			color: 'green',
+			text: 'Added',
+		},
 	},
 	[LogType.ITEM_REMOVE]: {
 		icon: PackageX,
-		template: '{user} removed {quantity}x {product}.',
+		quantity: true,
+		badge: {
+			color: 'red',
+			text: 'Removed',
+		},
 	},
 	[LogType.ITEM_UPDATE]: {
 		icon: PackageCheck,
-		template: '{user} updated the stock for {product}.',
+		quantity: true,
+		badge: {
+			color: 'purple',
+			text: 'Updated',
+		},
 	},
 	[LogType.ITEM_CHECKOUT]: {
 		icon: PackageMinus,
-		template: '{user} checked out {product}.',
+		quantity: true,
+		badge: {
+			color: 'yellow',
+			text: 'Checkout',
+		},
 	},
 	[LogType.PRODUCT_ADD]: {
 		icon: FolderPlus,
-		template: '{user} created {product}.',
+		quantity: false,
+		badge: {
+			color: 'green',
+			text: 'Added',
+		},
 	},
 	[LogType.PRODUCT_REMOVE]: {
 		icon: FolderMinus,
-		template: '{user} removed {product}.',
+		quantity: false,
+		badge: {
+			color: 'red',
+			text: 'Removed',
+		},
 	},
 	[LogType.PRODUCT_UPDATE]: {
 		icon: FolderCheck,
-		template: '{user} updated {product}.',
+		quantity: false,
+		badge: {
+			color: 'purple',
+			text: 'Updated',
+		},
 	},
 };

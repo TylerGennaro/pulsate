@@ -1,6 +1,9 @@
 import { authOptions } from '@lib/auth';
+import { log } from '@lib/log';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
+import { LogType } from '@prisma/client';
+import { format } from 'date-fns';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -32,6 +35,20 @@ export async function POST(req: Request) {
 			},
 		});
 
+		if (onOrder)
+			log(LogType.ITEM_ORDER, {
+				product: data.productId,
+				quantity,
+			});
+		else
+			log(LogType.ITEM_ADD, {
+				product: data.productId,
+				quantity,
+				footnote: `Expiration date: ${
+					date !== null ? format(date, 'MMM d, yyyy') : 'Never'
+				}`,
+			});
+
 		return new NextResponse('Item added', {
 			status: 200,
 		});
@@ -51,7 +68,7 @@ export async function PUT(req: Request) {
 
 	try {
 		const { date, quantity, onOrder } = schema.parse(data);
-		const item = db.item.findFirst({
+		const item = await db.item.findFirst({
 			where: {
 				id,
 			},
@@ -67,6 +84,35 @@ export async function PUT(req: Request) {
 				onOrder,
 			},
 		});
+
+		const footnote = [
+			...(date?.getTime() !== item.expires?.getTime()
+				? [
+						`Expiration date: ${
+							item.expires !== null
+								? format(item.expires, 'MMM d, yyyy')
+								: 'Never'
+						} → ${date !== null ? format(date, 'MMM d, yyyy') : 'Never'}`,
+				  ]
+				: []),
+			...(quantity !== item.quantity
+				? [`Quantity: ${item.quantity} → ${quantity}`]
+				: []),
+			...(onOrder !== item.onOrder
+				? [
+						`On order: ${item.onOrder ? 'Yes' : 'No'} → ${
+							onOrder ? 'Yes' : 'No'
+						}`,
+				  ]
+				: []),
+		].join(', ');
+
+		log(LogType.ITEM_UPDATE, {
+			product: item.productId,
+			quantity,
+			footnote,
+		});
+
 		return new NextResponse('Item updated.', { status: 200 });
 	} catch (e) {
 		return catchError(e);
@@ -82,7 +128,7 @@ export async function DELETE(req: Request) {
 	const id = searchParams.get('id') || '';
 
 	try {
-		const item = db.item.findFirst({
+		const item = await db.item.findFirst({
 			where: {
 				id,
 			},
@@ -93,6 +139,12 @@ export async function DELETE(req: Request) {
 				id,
 			},
 		});
+
+		log(LogType.ITEM_REMOVE, {
+			product: item.productId,
+			quantity: item.quantity,
+		});
+
 		return new NextResponse('Item deleted.', { status: 200 });
 	} catch (e) {
 		return catchError(e);

@@ -87,11 +87,6 @@ export default function LogEntry({
 	const template = templates[log.type];
 	if (!template) return null;
 
-	let note = template.template.replace('{product}', log.product.name);
-	if (log.quantity !== null) {
-		note = note.replace('{quantity}', log.quantity.toString());
-	}
-
 	return (
 		<div className='flex gap-2'>
 			<div className='relative'>
@@ -118,11 +113,12 @@ export default function LogEntry({
 					</span>
 				</span>
 				<div className='mb-2'>
-					<Badge variant='ghost' color='purple'>
-						Updated
+					<Badge variant='ghost' color={template.badge.color}>
+						{template.badge.text}
 					</Badge>
 					<span className='ml-2 text-foreground-text/75'>
-						4 Cervical Collar
+						{template.quantity && <span>{log.quantity}</span>}{' '}
+						{log.product.name}
 					</span>
 				</div>
 				{log.footnote && (

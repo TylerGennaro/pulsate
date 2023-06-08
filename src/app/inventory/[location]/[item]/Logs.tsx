@@ -23,7 +23,11 @@ export default async function Logs({ productId }: { productId: string }) {
 	return (
 		<div className='flex flex-col'>
 			{logs.map((log, index, arr) => (
-				<LogEntry log={log} last={index === arr.length - 1} />
+				<LogEntry
+					key={log.timestamp.toString()}
+					log={log}
+					last={index === arr.length - 1}
+				/>
 			))}
 		</div>
 	);

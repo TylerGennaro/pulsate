@@ -113,14 +113,14 @@ export default function EditProduct({ item }: { item: Item }) {
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Are you sure?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This item and all its data will be
+							removed from the system.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
 					<form onSubmit={remove}>
-						<AlertDialogHeader>
-							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
-							<AlertDialogDescription>
-								This action cannot be undone. This item and all its data will be
-								removed from the system.
-							</AlertDialogDescription>
-						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
 							<AlertDialogAction asChild>

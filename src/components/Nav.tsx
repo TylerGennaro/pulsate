@@ -125,7 +125,10 @@ export function Nav({ locations }: { locations: LocationInfo[] | null }) {
 							{location.name}
 						</NavButton>
 					))}
-				<Button icon={Plus} className='bg-transparent border-2 hover:bg-muted'>
+				<Button
+					icon={Plus}
+					className='bg-transparent border-2 hover:bg-muted text-foreground-text'
+				>
 					New Location
 				</Button>
 			</NavBlock>

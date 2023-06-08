@@ -118,11 +118,12 @@ export default async function Inventory({
 					Go back
 				</Button>
 			</Link>
-			<div className='grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-8'>
+			<div className='grid grid-cols-1 xl:grid-cols-2 gap-8'>
 				<Container
 					header='Information'
 					description='General product information'
 					divider
+					className='xl:col-span-2'
 				>
 					<div className='grid md:grid-cols-2 grid-cols-1 gap-8'>
 						<InfoBlock label='Name' value={data.name} />
@@ -157,6 +158,17 @@ export default async function Inventory({
 						</div>
 					</div>
 				</Container>
+				<Container
+					header='Feed'
+					description='All changes made to the product'
+					divider
+				>
+					<Suspense fallback={<Skeleton className='w-full h-16' />}>
+						{/* @ts-expect-error */}
+						<Logs />
+					</Suspense>
+					{/* <DataTable columns={columns} data={data} /> */}
+				</Container>
 				<Container className='flex flex-col items-center h-fit'>
 					<QRCode
 						location={params.location}
@@ -164,8 +176,7 @@ export default async function Inventory({
 						name={data.name}
 					/>
 				</Container>
-
-				<Container>
+				<Container className='xl:col-span-2'>
 					<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
 						<div className='flex flex-col gap-1'>
 							<span className='text-muted-text text-md'>Total</span>
@@ -178,18 +189,6 @@ export default async function Inventory({
 						<NewItem product={params.item} />
 					</div>
 					<ItemTable data={data.items} />
-				</Container>
-				<Container
-					className='w-full'
-					header='Feed'
-					description='All changes made to the product'
-					divider
-				>
-					<Suspense fallback={<Skeleton className='w-full h-16' />}>
-						{/* @ts-expect-error */}
-						<Logs />
-					</Suspense>
-					{/* <DataTable columns={columns} data={data} /> */}
 				</Container>
 			</div>
 		</div>
