@@ -20,11 +20,16 @@ export default function Sidebar({
 	locations: LocationInfo[] | null;
 }) {
 	const { data: session, status } = useSession();
+	useEffect(() => {
+		window.addEventListener('resize', () => {
+			if (open) toggle(false);
+		});
+	}, []);
 	return (
 		<div
-			className={`${
-				open ? 'flex' : 'hidden'
-			} lg:flex w-80 h-full bg-foreground border-r shadow-lg flex-col justify-between z-40 shrink-0 absolute lg:relative`}
+			className={`flex w-80 h-full bg-foreground border-r shadow-lg flex-col justify-between z-40 shrink-0 absolute lg:left-0 lg:opacity-100 lg:relative transition-all duration-300 ${
+				open ? 'left-0 opacity-100' : '-left-80 opacity-0'
+			}`}
 		>
 			<Button
 				className='lg:hidden absolute top-4 right-4'
