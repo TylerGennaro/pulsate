@@ -8,7 +8,7 @@ import { Skeleton } from './ui/skeleton';
 import { useEffect, useRef, useState } from 'react';
 import { Session } from 'next-auth';
 import { Button } from './ui/button';
-import { X } from 'lucide-react';
+import { LogOut, X } from 'lucide-react';
 
 export default function Sidebar({
 	open,
@@ -62,12 +62,17 @@ export default function Sidebar({
 			{status === 'loading' ? (
 				<Skeleton className='w-full h-12 rounded-none' />
 			) : (
-				<div className='hover:bg-muted cursor-pointer py-2 px-8 flex gap-4 items-center'>
-					<Avatar>
-						<AvatarImage src={session?.user.image || undefined} />
-						<AvatarFallback>{session?.user.name?.[0]}</AvatarFallback>
-					</Avatar>
-					<span className='font-semibold text-sm'>{session?.user.name}</span>
+				<div className='flex justify-between p-2 gap-2 items-center'>
+					<div className='hover:bg-muted cursor-pointer py-1 px-2 flex gap-4 items-center rounded grow'>
+						<Avatar>
+							<AvatarImage src={session?.user.image || undefined} />
+							<AvatarFallback>{session?.user.name?.[0]}</AvatarFallback>
+						</Avatar>
+						<span className='font-semibold text-sm'>{session?.user.name}</span>
+					</div>
+					<Button variant='ghost'>
+						<LogOut />
+					</Button>
 				</div>
 			)}
 		</div>
