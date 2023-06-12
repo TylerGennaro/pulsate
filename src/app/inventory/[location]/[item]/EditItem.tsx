@@ -129,7 +129,7 @@ export default function EditItem({ item }: { item: Item }) {
 					<DialogHeader>
 						<DialogTitle>Edit item</DialogTitle>
 						<DialogDescription>
-							Change the items's information.
+							Change the items&apos;s information.
 						</DialogDescription>
 					</DialogHeader>
 					<ItemForm item={item} />

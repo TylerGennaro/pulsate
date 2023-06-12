@@ -6,7 +6,6 @@ import { Nav } from './Nav';
 import { useSession } from 'next-auth/react';
 import { Skeleton } from './ui/skeleton';
 import { useEffect, useRef, useState } from 'react';
-import { Session } from 'next-auth';
 import { Button } from './ui/button';
 import { LogOut, X } from 'lucide-react';
 

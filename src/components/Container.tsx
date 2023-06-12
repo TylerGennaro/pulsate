@@ -1,5 +1,4 @@
 import { cn } from '@lib/utils';
-import Header from './ui/header';
 import Heading from './ui/heading';
 
 export default function Container({

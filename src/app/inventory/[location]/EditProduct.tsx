@@ -137,7 +137,7 @@ export default function EditProduct({
 					<DialogHeader>
 						<DialogTitle>Edit product</DialogTitle>
 						<DialogDescription>
-							Change the product's information.
+							Change the product&apos;s information.
 						</DialogDescription>
 					</DialogHeader>
 					<ProductForm defaultValues={defaultValues} />

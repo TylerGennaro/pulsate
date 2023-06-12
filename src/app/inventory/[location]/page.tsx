@@ -1,13 +1,9 @@
 import InventoryTable from './InventoryTable';
 import { Button } from '@components/ui/button';
-import { ChevronLeft, ScrollText } from 'lucide-react';
+import { ScrollText } from 'lucide-react';
 import NewProduct from './NewProduct';
 import Link from 'next/link';
-import Header from '@components/ui/header';
 import { db } from '@lib/prisma';
-import { Item, Location, Product } from '@prisma/client';
-import { Tag } from '@lib/enum';
-import { isExpiring } from '@lib/date';
 import EditLocation from './EditLocation';
 import { Suspense } from 'react';
 import TableLoading from './TableLoading';

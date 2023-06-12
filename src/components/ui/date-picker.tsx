@@ -91,8 +91,8 @@ export function DatePicker({
 										<SelectContent>
 											<ScrollArea className='h-52'>
 												{React.Children.toArray(props.children).map(
-													(option: any) => (
-														<SelectItem value={option.props.value}>
+													(option: any, index) => (
+														<SelectItem value={option.props.value} key={index}>
 															{option.props.children}
 														</SelectItem>
 													)

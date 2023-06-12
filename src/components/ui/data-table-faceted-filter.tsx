@@ -28,6 +28,7 @@ interface DataTableFacetedFilter<TData, TValue> {
 		label: string;
 		value: string;
 		icon?: LucideIcon;
+		color: string;
 	}[];
 }
 

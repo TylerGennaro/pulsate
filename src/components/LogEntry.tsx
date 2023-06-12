@@ -5,13 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { templates } from '@lib/logTemplates';
 import { timeSince } from '@lib/date';
 import Link from 'next/link';
+import { VariantProps } from 'class-variance-authority';
 
 function InlineBadge({
 	children,
 	color,
 }: {
 	children: React.ReactNode;
-	color?: string;
+	color?: VariantProps<typeof Badge>['color'];
 }) {
 	return (
 		<Badge variant='ghost' color={color} className='mx-1'>
@@ -82,7 +83,10 @@ export default function LogEntry({
 					</span>
 				</span>
 				<div className={log.footnote === null ? 'mb-8' : 'mb-2'}>
-					<Badge variant='ghost' color={template.badge.color}>
+					<Badge
+						variant='ghost'
+						color={template.badge.color as VariantProps<typeof Badge>['color']}
+					>
 						{template.badge.text}
 					</Badge>
 					<span className='ml-2 text-foreground-text/75'>

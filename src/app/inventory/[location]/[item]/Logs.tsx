@@ -1,7 +1,11 @@
 import LogEntry from '@components/LogEntry';
-import { Log } from '@prisma/client';
+import { Log, Product, User } from '@prisma/client';
 
-export default async function Logs({ logs }: { logs: Log[] }) {
+export default async function Logs({
+	logs,
+}: {
+	logs: (Log & { user: User | null; product: Product })[];
+}) {
 	return (
 		<div className='flex flex-col'>
 			{!logs.length && (

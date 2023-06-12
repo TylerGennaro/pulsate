@@ -183,7 +183,7 @@ export default async function Inventory({
 				<Container className='flex flex-col items-center h-fit'>
 					<QRCode
 						location={params.location}
-						uid={params.item}
+						id={params.item}
 						name={data.name}
 					/>
 				</Container>

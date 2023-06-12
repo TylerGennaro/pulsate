@@ -48,7 +48,12 @@ function Toolbar({
 						<DataTableFacetedFilter
 							column={table.getColumn('tags')}
 							title='Tags'
-							options={Object.values(tags)}
+							options={Object.values(tags).map((tag) => ({
+								value: tag.value,
+								label: tag.label,
+								icon: tag.icon || undefined,
+								color: tag.color,
+							}))}
 						/>
 					)}
 					{isFiltered && (
