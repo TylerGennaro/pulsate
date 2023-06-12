@@ -1,4 +1,3 @@
-import { siteConfig } from '@config/siteconfig';
 import QRCode from 'qrcode';
 
 export interface CodeData {
