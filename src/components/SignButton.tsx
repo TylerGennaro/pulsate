@@ -5,12 +5,23 @@ import { signIn, signOut } from 'next-auth/react';
 import { DropdownMenuItem } from './ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
 
-export function SignInButton() {
-	return <Button onClick={() => signIn('google')}>Sign In</Button>;
+export function SignInButton({ redirect = true }: { redirect?: boolean }) {
+	return <Button onClick={() => signIn()}>Sign In</Button>;
 }
 
-export function SignOutButton() {
-	return <Button onClick={() => signOut()}>Sign Out</Button>;
+export function SignOutButton({ redirect = true }: { redirect?: boolean }) {
+	return (
+		<Button
+			variant='outline'
+			onClick={() =>
+				signOut({
+					redirect,
+				})
+			}
+		>
+			Sign Out
+		</Button>
+	);
 }
 
 export function DropdownSignOutButton() {

@@ -1,13 +1,10 @@
-import { db } from '@lib/prisma';
 import { Log, Product, User } from '@prisma/client';
 import { Badge } from './ui/badge';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { templates } from '@lib/logTemplates';
-import { Prisma } from '@prisma/client';
-import { format } from 'date-fns';
-import { ArrowRight, Package, PackagePlus } from 'lucide-react';
 import { timeSince } from '@lib/date';
+import Link from 'next/link';
 
 function InlineBadge({
 	children,
@@ -48,34 +45,6 @@ function UserPopover({ user }: { user: User | null }) {
 	);
 }
 
-function ProductPopover({
-	product,
-	data,
-}: {
-	product: Product | null;
-	data: object;
-}) {
-	if (!product) return <span>Unknown Product</span>;
-	return <InlineBadge color='blue'>{product.name}</InlineBadge>;
-	// return (
-	// 	<HoverCard openDelay={0} closeDelay={0}>
-	// 		<HoverCardTrigger asChild>
-	// 			<InlineBadge color='blue'>{product.name}</InlineBadge>
-	// 		</HoverCardTrigger>
-	// 		<HoverCardContent>
-	// 			<div className='grid grid-cols-2'>
-	// 				{Object.entries(data).map(([key, value]) => (
-	// 					<div className='flex flex-col'>
-	// 						<span>{key}</span>
-	// 						<span className='text-muted-text'>{value}</span>
-	// 					</div>
-	// 				))}
-	// 			</div>
-	// 		</HoverCardContent>
-	// 	</HoverCard>
-	// );
-}
-
 export default function LogEntry({
 	log,
 	last,
@@ -112,13 +81,17 @@ export default function LogEntry({
 						{timeSince(log.timestamp)} ago
 					</span>
 				</span>
-				<div className='mb-2'>
+				<div className={log.footnote === null ? 'mb-8' : 'mb-2'}>
 					<Badge variant='ghost' color={template.badge.color}>
 						{template.badge.text}
 					</Badge>
 					<span className='ml-2 text-foreground-text/75'>
-						{template.quantity && <span>{log.quantity}</span>}{' '}
-						{log.product.name}
+						{template.quantity && <span>{log.quantity} </span>}
+						<Link
+							href={`/inventory/${log.product.locationId}/${log.productId}`}
+						>
+							{log.product.name}
+						</Link>
 					</span>
 				</div>
 				{log.footnote && (

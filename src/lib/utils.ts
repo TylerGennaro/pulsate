@@ -1,4 +1,5 @@
 import { ClassValue, clsx } from 'clsx';
+import { format } from 'date-fns';
 import { NextResponse } from 'next/server';
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
@@ -67,4 +68,9 @@ export function catchError(e: any) {
 	return new NextResponse('Could not complete request.', {
 		status: 500,
 	});
+}
+
+export function formatExpirationDate(date: Date | null) {
+	if (date === null) return 'Never';
+	return format(date, 'MMM d, yyyy');
 }

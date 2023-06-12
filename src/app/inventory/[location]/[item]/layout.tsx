@@ -1,4 +1,4 @@
-import Header from '@components/ui/Header';
+import Header from '@components/ui/header';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Button } from '@components/ui/button';
 import { authOptions } from '@lib/auth';

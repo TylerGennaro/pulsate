@@ -51,7 +51,13 @@ export default function ItemForm({ item }: { item?: Item }) {
 			<label className='col-span-3' htmlFor='on-order'>
 				Item is on order
 			</label>
-			<input value={date.toISOString()} name='expires' hidden aria-hidden />
+			<input
+				value={date.toISOString()}
+				name='date'
+				hidden
+				aria-hidden
+				readOnly
+			/>
 		</div>
 	);
 }

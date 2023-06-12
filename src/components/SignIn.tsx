@@ -1,29 +1,65 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import Header from './ui/Header';
+import { FaGoogle, FaMicrosoft } from 'react-icons/fa';
 
-export default function SignIn() {
+import { IconType } from 'react-icons';
+import Heading from './ui/heading';
+
+interface ProviderProps {
+	name: string;
+	icon: IconType;
+	color: string;
+	provider: string;
+	callbackUrl?: string;
+}
+
+function Provider({
+	name,
+	icon: Icon,
+	color,
+	provider,
+	callbackUrl,
+}: ProviderProps) {
 	return (
-		<div className='w-full h-full grid place-items-center'>
-			<div className='text-center flex flex-col gap-4'>
-				<div>
-					<Header size='md'>Sign In to continue</Header>
-					<span className='text-muted-foreground'>
-						Continue by signing in with Google
-					</span>
-				</div>
-				<button
-					className='flex items-center bg-primary text-primary-foreground'
-					onClick={() => signIn('google')}
-				>
-					<img
-						src='/google.svg'
-						alt='G'
-						className='w-10 h-10 bg-white m-[1px]'
-					/>
-					<span className='px-4 font-semibold'>Sign in with Google</span>
-				</button>
+		<button
+			className={`flex items-center justify-center ${color} text-primary-foreground p-2 rounded-md hover:brightness-110 transition-all`}
+			onClick={() =>
+				signIn(provider, {
+					callbackUrl,
+				})
+			}
+		>
+			<Icon size={24} />
+			<span className='px-4 font-semibold'>{name}</span>
+		</button>
+	);
+}
+
+export default function SignIn({ callbackUrl }: { callbackUrl?: string }) {
+	return (
+		<div className='w-screen h-screen grid place-items-center'>
+			<div className='max-w-sm w-full flex flex-col gap-4'>
+				<img src='/logo.svg' alt='logo' width={64} />
+				<Heading
+					header='Sign In'
+					description='Choose a provider to sign in with'
+				/>
+				<hr />
+				<Provider
+					name='Google'
+					provider='google'
+					callbackUrl={callbackUrl}
+					icon={FaGoogle}
+					color='bg-blue-600'
+				/>
+				<Provider
+					name='Microsoft'
+					provider='azure-ad'
+					callbackUrl={callbackUrl}
+					icon={FaMicrosoft}
+					color='bg-gray-900'
+				/>
 			</div>
 		</div>
 	);

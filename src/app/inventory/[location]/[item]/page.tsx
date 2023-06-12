@@ -1,7 +1,7 @@
 import QRCode from '@components/QRCode';
 import { Button } from '@components/ui/button';
 import { cn } from '@lib/utils';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
 import ItemTable from './ItemTable';
@@ -48,6 +48,16 @@ async function getData(
 					expires: 'asc',
 				},
 			},
+			logs: {
+				include: {
+					product: true,
+					user: true,
+				},
+				take: 5,
+				orderBy: {
+					timestamp: 'desc',
+				},
+			},
 		},
 		where: {
 			id,
@@ -57,6 +67,7 @@ async function getData(
 		await db.item.aggregate({
 			where: {
 				productId: id,
+				onOrder: false,
 			},
 			_sum: {
 				quantity: true,
@@ -165,7 +176,7 @@ export default async function Inventory({
 				>
 					<Suspense fallback={<Skeleton className='w-full h-16' />}>
 						{/* @ts-expect-error */}
-						<Logs />
+						<Logs logs={data.logs} />
 					</Suspense>
 					{/* <DataTable columns={columns} data={data} /> */}
 				</Container>
@@ -185,8 +196,15 @@ export default async function Inventory({
 								{packageTypes[data.package as PackageType]}
 							</span>
 						</div>
-
-						<NewItem product={params.item} />
+						<div className='flex gap-2'>
+							<Link href={`/checkout/${params.item}`}>
+								<Button variant='outline'>
+									<ShoppingCart className='w-4 h-4 mr-2' />
+									Checkout
+								</Button>
+							</Link>
+							<NewItem product={params.item} />
+						</div>
 					</div>
 					<ItemTable data={data.items} />
 				</Container>

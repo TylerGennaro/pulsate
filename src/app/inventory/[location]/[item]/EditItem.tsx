@@ -9,11 +9,9 @@ import {
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
 	AlertDialog,
-	AlertDialogAction,
 	AlertDialogCancel,
 	AlertDialogContent,
 	AlertDialogDescription,
@@ -32,20 +30,15 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 import { FormEvent, useState } from 'react';
-import { DatePicker } from '@components/ui/date-picker';
-import { Checkbox } from '@components/ui/checkbox';
-import { Item } from '@prisma/client';
 import { crud, formDataToObject } from '@lib/utils';
-import { Input } from '@components/ui/input';
 import ItemForm from './ItemForm';
+import { Item } from '@prisma/client';
 
-export default function EditProduct({ item }: { item: Item }) {
+export default function EditItem({ item }: { item: Item }) {
 	const [open, setOpen] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
 	const router = useRouter();
-	const session = useSession();
-	if (!session) return null;
 
 	async function update(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -55,13 +48,12 @@ export default function EditProduct({ item }: { item: Item }) {
 			url: '/items',
 			method: 'PUT',
 			data: {
-				date: data.get('no-expire') !== 'on' ? data.get('expires') : null,
+				productId: item.productId,
+				date: data.get('no-expire') !== 'on' ? data.get('date') : null,
 				quantity: data.get('quantity'),
 				onOrder: data.get('on-order'),
 			},
-			params: {
-				id: item.id,
-			},
+			params: { id: item.id },
 		});
 		if (result.status === 200) {
 			setOpen(false);
@@ -76,9 +68,7 @@ export default function EditProduct({ item }: { item: Item }) {
 		const result = await crud({
 			url: '/items',
 			method: 'DELETE',
-			params: {
-				id: item.id,
-			},
+			params: { id: item.id },
 		});
 		if (result.status === 200) {
 			setOpen(false);
@@ -113,37 +103,35 @@ export default function EditProduct({ item }: { item: Item }) {
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Are you sure?</AlertDialogTitle>
-						<AlertDialogDescription>
-							This action cannot be undone. This item and all its data will be
-							removed from the system.
-						</AlertDialogDescription>
-					</AlertDialogHeader>
 					<form onSubmit={remove}>
+						<AlertDialogHeader>
+							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone. This item and all its data will be
+								removed from the system.
+							</AlertDialogDescription>
+						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<AlertDialogAction asChild>
-								<Button
-									type='submit'
-									variant='destructive'
-									isLoading={deleteLoading}
-								>
-									Delete
-								</Button>
-							</AlertDialogAction>
+							<Button
+								type='submit'
+								variant='destructive'
+								isLoading={deleteLoading}
+							>
+								Delete
+							</Button>
 						</AlertDialogFooter>
 					</form>
 				</AlertDialogContent>
 			</AlertDialog>
 			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Edit item</DialogTitle>
-					<DialogDescription>
-						Change the information of this item.
-					</DialogDescription>
-				</DialogHeader>
 				<form className='flex flex-col gap-4' onSubmit={update}>
+					<DialogHeader>
+						<DialogTitle>Edit item</DialogTitle>
+						<DialogDescription>
+							Change the items's information.
+						</DialogDescription>
+					</DialogHeader>
 					<ItemForm item={item} />
 					<DialogFooter>
 						<Button icon={Save} type='submit' isLoading={editLoading}>

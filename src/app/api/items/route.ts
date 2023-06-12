@@ -8,6 +8,11 @@ import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
+function formatDate(date: Date | null) {
+	if (date === null) return 'Never';
+	return format(date, 'MMM d, yyyy');
+}
+
 const schema = z.object({
 	date: z.coerce.date().nullable(),
 	quantity: z.coerce.number().int().positive(),
@@ -26,6 +31,39 @@ export async function POST(req: Request) {
 		if (!data.productId)
 			return new NextResponse('Invalid product ID.', { status: 400 });
 
+		const item = await db.item.findFirst({
+			where: {
+				expires: date,
+				onOrder,
+			},
+		});
+		if (item) {
+			const updatedItem = await db.item.update({
+				where: {
+					id: item.id,
+				},
+				data: {
+					quantity: item.quantity + quantity,
+				},
+			});
+
+			if (onOrder)
+				log(LogType.ITEM_ORDER, {
+					product: item.productId,
+					quantity: item.quantity + quantity,
+					footnote: `Duplicate items merged`,
+				});
+			else
+				log(LogType.ITEM_UPDATE, {
+					product: item.productId,
+					quantity: item.quantity + quantity,
+					footnote: `Quantity: ${item.quantity} → ${
+						item.quantity + quantity
+					}, Duplicate items merged`,
+				});
+
+			return new NextResponse('Item added.', { status: 200 });
+		}
 		const newItem = await db.item.create({
 			data: {
 				productId: data.productId,
@@ -44,9 +82,7 @@ export async function POST(req: Request) {
 			log(LogType.ITEM_ADD, {
 				product: data.productId,
 				quantity,
-				footnote: `Expiration date: ${
-					date !== null ? format(date, 'MMM d, yyyy') : 'Never'
-				}`,
+				footnote: `Expiration date: ${formatDate(date)}`,
 			});
 
 		return new NextResponse('Item added', {
@@ -74,6 +110,38 @@ export async function PUT(req: Request) {
 			},
 		});
 		if (!item) return new NextResponse('Could not find item.', { status: 404 });
+		const duplicateItem = await db.item.findFirst({
+			where: {
+				expires: date,
+				onOrder,
+			},
+		});
+		if (duplicateItem) {
+			const updatedItem = await db.item.update({
+				where: {
+					id: duplicateItem.id,
+				},
+				data: {
+					quantity: duplicateItem.quantity + quantity,
+				},
+			});
+			const deletedItem = await db.item.delete({
+				where: {
+					id,
+				},
+			});
+			log(LogType.ITEM_UPDATE, {
+				product: duplicateItem.productId,
+				quantity: duplicateItem.quantity + quantity,
+				footnote: `Expiration date: ${formatDate(
+					duplicateItem.expires
+				)}, Quantity: ${duplicateItem.quantity} → ${
+					duplicateItem.quantity + quantity
+				}, Duplicate items merged`,
+			});
+			return new NextResponse('Item updated.', { status: 200 });
+		}
+
 		const updatedItem = await db.item.update({
 			where: {
 				id,
@@ -88,11 +156,9 @@ export async function PUT(req: Request) {
 		const footnote = [
 			...(date?.getTime() !== item.expires?.getTime()
 				? [
-						`Expiration date: ${
-							item.expires !== null
-								? format(item.expires, 'MMM d, yyyy')
-								: 'Never'
-						} → ${date !== null ? format(date, 'MMM d, yyyy') : 'Never'}`,
+						`Expiration date: ${formatDate(item.expires)} → ${formatDate(
+							date
+						)}}`,
 				  ]
 				: []),
 			...(quantity !== item.quantity

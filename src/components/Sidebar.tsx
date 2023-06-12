@@ -1,6 +1,6 @@
 'use client';
 
-import Header from '@components/ui/Header';
+import Header from '@components/ui/header';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Nav } from './Nav';
 import { useSession } from 'next-auth/react';

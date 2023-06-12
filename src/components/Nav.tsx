@@ -87,7 +87,7 @@ const navItems = [
 	{
 		label: 'Dashboard',
 		icon: LayoutDashboard,
-		link: '/dashboard',
+		link: '/',
 	},
 	{
 		label: 'Settings',
@@ -112,7 +112,10 @@ export function Nav({
 						key={item.label}
 						link={`/inventory${item.link}`}
 						icon={item.icon}
-						selected={pathname.startsWith(`/inventory${item.link}`)}
+						selected={
+							(item.link === '/' && pathname === '/inventory') ||
+							pathname == `/inventory${item.link}`
+						}
 						onClick={() => toggle(false)}
 					>
 						{item.label}

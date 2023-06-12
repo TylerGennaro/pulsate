@@ -20,6 +20,8 @@ model Account {
   refresh_token     String? @db.Text
   access_token      String? @db.Text
   expires_at        Int?
+  expires_in        Int?
+  ext_expires_in    Int?
   token_type        String?
   scope             String?
   id_token          String? @db.Text
@@ -47,8 +49,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-	locations Location[]
-  logs Log[]
+  locations Location[]
+  logs      Log[]
 }
 
 model VerificationToken {
@@ -60,10 +62,10 @@ model VerificationToken {
 }
 
 model Location {
-  id   String @id @default(cuid())
-  name String
-	user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-	userId String
+  id     String @id @default(cuid())
+  name   String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   products Product[]
 }
@@ -78,16 +80,16 @@ model Product {
   locationId String
 
   items Item[]
-	logs Log[]
+  logs  Log[]
 }
 
 model Item {
-  id        String   @id @default(cuid())
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id        String    @id @default(cuid())
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
   quantity  Int
   expires   DateTime?
-	onOrder Boolean @default(false)
+  onOrder   Boolean   @default(false)
 }
 
 model Log {
@@ -95,20 +97,20 @@ model Log {
   timestamp DateTime @default(now())
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?
-	product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-	productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
   type      LogType
-	quantity	Int?
-  footnote	String?
+  quantity  Int?
+  footnote  String?
 }
 
 enum LogType {
-	ITEM_ORDER
-	ITEM_ADD
-	ITEM_REMOVE
-	ITEM_UPDATE
-	PRODUCT_ADD
-	PRODUCT_REMOVE
-	PRODUCT_UPDATE
-	ITEM_CHECKOUT
+  ITEM_ORDER
+  ITEM_ADD
+  ITEM_REMOVE
+  ITEM_UPDATE
+  PRODUCT_ADD
+  PRODUCT_REMOVE
+  PRODUCT_UPDATE
+  ITEM_CHECKOUT
 }

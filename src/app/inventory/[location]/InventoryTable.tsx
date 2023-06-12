@@ -17,7 +17,8 @@ async function getData(location: string) {
 	const extended: ProductInfo[] = data.map(
 		(product: Product & { items: Item[] }) => {
 			const quantity = product.items.reduce(
-				(acc: number, item: Item) => acc + item.quantity,
+				(acc: number, item: Item) =>
+					!item.onOrder ? acc + item.quantity : acc,
 				0
 			);
 			const exp = product.items.reduce(

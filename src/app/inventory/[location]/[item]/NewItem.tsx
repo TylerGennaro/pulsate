@@ -37,7 +37,7 @@ export default function NewItemDialog({ product }: { product: string }) {
 			method: 'POST',
 			data: {
 				productId: product,
-				date: data.get('no-expire') !== 'on' ? data.get('expires') : null,
+				date: data.get('no-expire') !== 'on' ? data.get('date') : null,
 				quantity: data.get('quantity'),
 				onOrder: data.get('on-order'),
 			},

@@ -19,7 +19,7 @@ const badgeVariants = cva(
 				ghost: 'bg-primary/20 text-primary-foreground border-primary/20',
 			},
 			color: {
-				default: 'text-foreground',
+				default: 'text-foreground-text',
 				red: 'border-red-500 text-red-500',
 				blue: 'border-blue-500 text-blue-500',
 				yellow: 'border-yellow-500 text-yellow-500',

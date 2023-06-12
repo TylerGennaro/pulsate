@@ -2,6 +2,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import { db } from './prisma';
 import GoogleProvider from 'next-auth/providers/google';
+import AzureADProvider from 'next-auth/providers/azure-ad';
 
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 	const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -10,6 +11,16 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 		throw new Error('Missing Google Client ID or Client Secret');
 	}
 	return { clientId, clientSecret };
+}
+
+function getAzureCredentials() {
+	const clientId = process.env.AZURE_AD_CLIENT_ID;
+	const clientSecret = process.env.AZURE_AD_CLIENT_SECRET;
+	const tenantId = process.env.AZURE_AD_TENANT_ID;
+	if (!clientId || !clientSecret || !tenantId) {
+		throw new Error('Missing Azure AD Client ID, Client Secret, or Tenant ID');
+	}
+	return { clientId, clientSecret, tenantId };
 }
 
 export const authOptions: NextAuthOptions = {
@@ -24,6 +35,11 @@ export const authOptions: NextAuthOptions = {
 		GoogleProvider({
 			clientId: getGoogleCredentials().clientId,
 			clientSecret: getGoogleCredentials().clientSecret,
+		}),
+		AzureADProvider({
+			clientId: getAzureCredentials().clientId,
+			clientSecret: getAzureCredentials().clientSecret,
+			tenantId: getAzureCredentials().tenantId,
 		}),
 	],
 	callbacks: {
@@ -56,8 +72,8 @@ export const authOptions: NextAuthOptions = {
 				picture: dbUser.image,
 			};
 		},
-		redirect() {
-			return '/inventory';
+		redirect({ url, baseUrl }) {
+			return url.startsWith(baseUrl) ? url : baseUrl;
 		},
 	},
 };

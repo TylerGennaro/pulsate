@@ -1,6 +1,8 @@
 import { authOptions } from '@lib/auth';
+import { log } from '@lib/log';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
+import { LogType } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
@@ -44,6 +46,9 @@ export async function POST(req: Request) {
 				locationId: data.locationId,
 			},
 		});
+		log(LogType.PRODUCT_ADD, {
+			product: newProduct.id,
+		});
 		return new NextResponse('Product created.', {
 			status: 200,
 		});
@@ -81,6 +86,23 @@ export async function PUT(req: Request) {
 				package: packageType,
 			},
 		});
+		log(LogType.PRODUCT_UPDATE, {
+			product: updatedProduct.id,
+			footnote: [
+				...(product.name !== updatedProduct.name
+					? [`Name: ${product.name} → ${updatedProduct.name}`]
+					: []),
+				...(product.min !== updatedProduct.min
+					? [`Min: ${product.min} → ${updatedProduct.min}`]
+					: []),
+				...(product.max !== updatedProduct.max
+					? [`Max: ${product.max} → ${updatedProduct.max}`]
+					: []),
+				...(product.package !== updatedProduct.package
+					? [`Package: ${product.package} → ${updatedProduct.package}`]
+					: []),
+			].join(', '),
+		});
 		return new NextResponse('Product updated.', { status: 200 });
 	} catch (e) {
 		return catchError(e);
@@ -111,6 +133,9 @@ export async function DELETE(req: Request) {
 			where: {
 				id,
 			},
+		});
+		log(LogType.PRODUCT_REMOVE, {
+			product: deletedProduct.id,
 		});
 		return new NextResponse('Product deleted.', { status: 200 });
 	} catch (e) {

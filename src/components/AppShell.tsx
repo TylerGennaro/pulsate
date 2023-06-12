@@ -12,7 +12,7 @@ export default function AppShell({
 	locations: LocationInfo[] | null;
 	children: React.ReactNode;
 }) {
-	const [sidebarOpen, setSidebarOpen] = useState(true);
+	const [sidebarOpen, setSidebarOpen] = useState(false);
 	return (
 		<div className='flex h-screen'>
 			<Sidebar

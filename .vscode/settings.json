@@ -1,5 +1,5 @@
 {
 	"vscode.tsc.compiler.alertTSConfigChanges": "never",
 	"vscode.tsc.compiler.alertOnError": "never",
-	"svg.preview.background": "transparent"
+	"svg.preview.background": "editor"
 }

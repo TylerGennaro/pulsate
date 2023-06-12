@@ -1,5 +1,6 @@
 import { cn } from '@lib/utils';
-import Header from './ui/Header';
+import Header from './ui/header';
+import Heading from './ui/heading';
 
 export default function Container({
 	children,
@@ -18,14 +19,7 @@ export default function Container({
 		<div
 			className={cn('bg-foreground border rounded-md p-8 shadow-md', className)}
 		>
-			{header && (
-				<div className='flex flex-col gap-2'>
-					<Header size='sm' weight='medium'>
-						{header}
-					</Header>
-					<span className='text-muted-text'>{description}</span>
-				</div>
-			)}
+			{header && <Heading header={header} description={description} />}
 			{divider && <hr className='my-6' />}
 			{children}
 		</div>
