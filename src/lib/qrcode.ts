@@ -28,7 +28,7 @@ const style = `
 	</style>
 `;
 
-const urlTemplate = 'http://localhost:3000/inventory/%location/%item/edit';
+const urlTemplate = `${process.env.NEXTAUTH_URL}/inventory/%location/%item/edit`;
 
 export function getUrl(location: string, code: string) {
 	return urlTemplate.replace('%location', location).replace('%item', code);
