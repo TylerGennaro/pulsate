@@ -11,7 +11,7 @@ export default function Providers({
 	session,
 }: ThemeProviderProps & { session: Session | null }) {
 	return (
-		<SessionProvider>
+		<SessionProvider session={session}>
 			<NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
 				<TooltipProvider delayDuration={0}>{children}</TooltipProvider>
 			</NextThemesProvider>
