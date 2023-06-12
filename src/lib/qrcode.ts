@@ -1,3 +1,4 @@
+import { siteConfig } from '@config/siteconfig';
 import QRCode from 'qrcode';
 
 export interface CodeData {
@@ -28,7 +29,7 @@ const style = `
 	</style>
 `;
 
-const urlTemplate = `${process.env.NEXTAUTH_URL}/inventory/%location/%item/edit`;
+const urlTemplate = `${process.env.NEXT_PUBLIC_PROJECT_URL}/checkout/%item`;
 
 export function getUrl(location: string, code: string) {
 	return urlTemplate.replace('%location', location).replace('%item', code);
