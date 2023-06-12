@@ -97,8 +97,8 @@ model Log {
   timestamp DateTime @default(now())
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String?
   type      LogType
   quantity  Int?
   footnote  String?

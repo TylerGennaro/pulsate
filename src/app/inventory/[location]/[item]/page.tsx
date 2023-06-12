@@ -15,11 +15,29 @@ import SignIn from '@components/SignIn';
 import { notFound } from 'next/navigation';
 import TagBadge from '@components/TagBadge';
 import { packageTypes } from '@lib/relations';
-import LogEntry from '@components/LogEntry';
 import { Suspense } from 'react';
 import { Skeleton } from '@components/ui/skeleton';
 import Container from '@components/Container';
 import Logs from './Logs';
+
+export async function generateMetadata({
+	params,
+}: {
+	params: { item: string };
+}) {
+	const data = await db.product.findFirst({
+		select: {
+			name: true,
+		},
+		where: {
+			id: params.item,
+		},
+	});
+	return {
+		title: `${data?.name} | Pulsate`,
+		description: 'View and manage your inventory',
+	};
+}
 
 function InfoBlock({
 	label,

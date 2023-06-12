@@ -4,7 +4,10 @@ import Link from 'next/link';
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<div className='h-screen flex flex-col'>
-			<SiteHeader className='absolute top-0 left-0 right-0 shadow-sm'>
+			<SiteHeader
+				showSignIn
+				className='absolute top-0 left-0 right-0 shadow-sm'
+			>
 				<Link href='/'>Home</Link>
 				<Link href='/inventory'>Inventory</Link>
 			</SiteHeader>

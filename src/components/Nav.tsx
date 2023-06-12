@@ -14,6 +14,7 @@ import { Button } from './ui/button';
 import Indicator, { indicatorVariants } from './ui/indicator';
 import { tags as tagRelations } from '@lib/relations';
 import { Tag } from '@lib/enum';
+import NewLocation from './NewLocation';
 
 function NavBlock({
 	label,
@@ -136,12 +137,7 @@ export function Nav({
 							{location.name}
 						</NavButton>
 					))}
-				<Button
-					icon={Plus}
-					className='bg-transparent border-2 hover:bg-muted text-foreground-text'
-				>
-					New Location
-				</Button>
+				<NewLocation />
 			</NavBlock>
 		</div>
 	);

@@ -56,7 +56,6 @@ export async function crud({
 }
 
 export function catchError(e: any) {
-	console.log(e);
 	if (e instanceof z.ZodError) {
 		return new NextResponse(
 			e.issues[0]?.message || 'Invalid request. Try again.',
@@ -65,9 +64,12 @@ export function catchError(e: any) {
 			}
 		);
 	}
-	return new NextResponse('Could not complete request.', {
-		status: 500,
-	});
+	return new NextResponse(
+		`Could not complete request${e.message ? `: ${e.message}.` : '.'}`,
+		{
+			status: 500,
+		}
+	);
 }
 
 export function formatExpirationDate(date: Date | null) {

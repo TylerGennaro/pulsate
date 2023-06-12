@@ -16,6 +16,7 @@ export default async function Logs({
 					key={log.timestamp.toString()}
 					log={log}
 					last={index === arr.length - 1}
+					noLink
 				/>
 			))}
 		</div>

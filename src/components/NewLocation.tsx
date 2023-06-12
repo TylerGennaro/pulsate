@@ -48,8 +48,10 @@ export default function NewLocationDialog() {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button className='mb-4'>
-					<Plus className='w-4 h-4 mr-2' />
+				<Button
+					icon={Plus}
+					className='bg-transparent border-2 hover:bg-muted text-foreground-text'
+				>
 					New Location
 				</Button>
 			</DialogTrigger>

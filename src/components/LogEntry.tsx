@@ -49,9 +49,11 @@ function UserPopover({ user }: { user: User | null }) {
 export default function LogEntry({
 	log,
 	last,
+	noLink = false,
 }: {
-	log: Log & { user: User | null; product: Product };
+	log: Log & { user: User | null; product: Product | null };
 	last: boolean;
+	noLink?: boolean;
 }) {
 	// await new Promise((resolve) => setTimeout(resolve, 4000));
 	const template = templates[log.type];
@@ -64,7 +66,7 @@ export default function LogEntry({
 					<Avatar>
 						<AvatarImage src={log.user?.image || undefined} />
 						<AvatarFallback>
-							{log.user?.name?.charAt(0).toUpperCase()}
+							{log.user?.name?.charAt(0).toUpperCase() || 'G'}
 						</AvatarFallback>
 					</Avatar>
 					<div className='w-1/2 h-1/2 absolute bottom-0 right-0 bg-foreground z-[2] grid place-items-center rounded-tl'>
@@ -77,7 +79,7 @@ export default function LogEntry({
 			</div>
 			<div className='flex flex-col'>
 				<span className='font-semibold mb-1'>
-					{log.user?.name}
+					{log.user?.name || 'Guest'}
 					<span className='ml-4 text-muted-text font-normal text-sm'>
 						{timeSince(log.timestamp)} ago
 					</span>
@@ -89,14 +91,20 @@ export default function LogEntry({
 					>
 						{template.badge.text}
 					</Badge>
-					<span className='ml-2 text-foreground-text/75'>
-						{template.quantity && <span>{log.quantity} </span>}
-						<Link
-							href={`/inventory/${log.product.locationId}/${log.productId}`}
-						>
-							{log.product.name}
-						</Link>
-					</span>
+					{log.product !== null && (
+						<span className='ml-2 text-foreground-text/75'>
+							{template.quantity && <span>{log.quantity} </span>}
+							{noLink ? (
+								<span>{log.product?.name}</span>
+							) : (
+								<Link
+									href={`/inventory/${log.product?.locationId}/${log.productId}`}
+								>
+									{log.product?.name}
+								</Link>
+							)}
+						</span>
+					)}
 				</div>
 				{log.footnote && (
 					<span className='mb-8 flex items-center text-sm'>{log.footnote}</span>

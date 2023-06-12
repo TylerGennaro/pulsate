@@ -3,11 +3,12 @@
 import Header from '@components/ui/header';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Nav } from './Nav';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { Skeleton } from './ui/skeleton';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { LogOut, X } from 'lucide-react';
+import { SignInButton } from './SignButton';
 
 export default function Sidebar({
 	open,
@@ -58,22 +59,35 @@ export default function Sidebar({
 				<hr />
 				<Nav locations={locations} toggle={toggle} />
 			</div>
-			{status === 'loading' ? (
-				<Skeleton className='w-full h-12 rounded-none' />
-			) : (
-				<div className='flex justify-between p-2 gap-2 items-center'>
-					<div className='hover:bg-muted cursor-pointer py-1 px-2 flex gap-4 items-center rounded grow'>
-						<Avatar>
-							<AvatarImage src={session?.user.image || undefined} />
-							<AvatarFallback>{session?.user.name?.[0]}</AvatarFallback>
-						</Avatar>
-						<span className='font-semibold text-sm'>{session?.user.name}</span>
+			<div className='flex justify-between p-2 gap-2 items-center'>
+				{status === 'loading' && (
+					<div className='flex gap-4 items-center'>
+						<Skeleton className='w-10 h-10 rounded-full' />
+						<Skeleton className='w-36 h-6' />
 					</div>
-					<Button variant='ghost'>
-						<LogOut />
-					</Button>
-				</div>
-			)}
+				)}
+				{status === 'unauthenticated' && <SignInButton className='w-full' />}
+				{status === 'authenticated' && (
+					<>
+						<div className='hover:bg-muted cursor-pointer py-1 px-2 flex gap-4 items-center rounded grow'>
+							<Avatar>
+								<AvatarImage src={session?.user.image || undefined} />
+								<AvatarFallback>{session?.user.name?.[0]}</AvatarFallback>
+							</Avatar>
+							<span className='font-semibold text-sm'>
+								{session?.user.name}
+							</span>
+						</div>
+						<Button
+							variant='ghost'
+							className='text-red-500 hover:text-red-400 hover:bg-red-400/20'
+							onClick={() => signOut()}
+						>
+							<LogOut />
+						</Button>
+					</>
+				)}
+			</div>
 		</div>
 	);
 }

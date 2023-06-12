@@ -5,8 +5,18 @@ import { signIn, signOut } from 'next-auth/react';
 import { DropdownMenuItem } from './ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
 
-export function SignInButton({ redirect = true }: { redirect?: boolean }) {
-	return <Button onClick={() => signIn()}>Sign In</Button>;
+export function SignInButton({
+	redirect = true,
+	className,
+}: {
+	redirect?: boolean;
+	className?: string;
+}) {
+	return (
+		<Button className={className} onClick={() => signIn()}>
+			Sign In
+		</Button>
+	);
 }
 
 export function SignOutButton({ redirect = true }: { redirect?: boolean }) {

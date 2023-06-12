@@ -15,11 +15,13 @@ export default function SiteHeader({
 	sidebarOpen,
 	children,
 	className,
+	showSignIn = false,
 }: {
 	sidebarToggle?: (open: boolean) => void;
 	sidebarOpen?: boolean;
 	children?: React.ReactNode;
 	className?: string;
+	showSignIn?: boolean;
 }) {
 	const { status } = useSession();
 	return (
@@ -48,10 +50,20 @@ export default function SiteHeader({
 				</div>
 			)}
 			<div className='flex gap-2 items-center'>
-				{status === 'authenticated' && <SignOutButton redirect={false} />}
-				{status === 'unauthenticated' && <SignInButton redirect={false} />}
-				{status === 'loading' && <Skeleton className='w-32 h-10' />}
-				<Notifications />
+				{showSignIn ? (
+					<>
+						{status === 'authenticated' && (
+							<>
+								<SignOutButton />
+								<Notifications />
+							</>
+						)}
+						{status === 'unauthenticated' && <SignInButton />}
+						{status === 'loading' && <Skeleton className='w-32 h-10' />}
+					</>
+				) : (
+					<Notifications />
+				)}
 				<ThemeToggle />
 			</div>
 		</div>

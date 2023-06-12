@@ -3,6 +3,25 @@ import Checkout from './Checkout';
 import { notFound } from 'next/navigation';
 import Heading from '@components/ui/heading';
 
+export async function generateMetadata({
+	params,
+}: {
+	params: { product: string };
+}) {
+	const product = await db.product.findFirst({
+		select: {
+			name: true,
+		},
+		where: {
+			id: params.product,
+		},
+	});
+	return {
+		title: `Checkout ${product?.name} | Pulsate`,
+		description: `Checkout ${product?.name} from the medical supplies inventory.`,
+	};
+}
+
 async function getData(productId: string) {
 	const product = await db.product.findFirst({
 		select: {

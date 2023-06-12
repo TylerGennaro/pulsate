@@ -20,6 +20,7 @@ export default function Checkout({
 	const [selectedItems, setSelectedItems] = useState<Item[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [recorded, setRecorded] = useState(false);
+	const [error, setError] = useState('');
 	const router = useRouter();
 
 	async function submit(e: FormEvent<HTMLFormElement>) {
@@ -39,9 +40,14 @@ export default function Checkout({
 			},
 			notify: false,
 		});
+		if (result.status === 500) {
+			setError(result.message);
+			setSelectedItems(selectedItems);
+		} else {
+			setSelectedItems([]);
+			setRecorded(true);
+		}
 		setLoading(false);
-		setSelectedItems([]);
-		setRecorded(true);
 	}
 
 	if (recorded)
@@ -101,14 +107,17 @@ export default function Checkout({
 					</div>
 				</div>
 				<div className='flex justify-end'>
-					<Button
-						icon={ShoppingCart}
-						className='mt-4'
-						disabled={!selectedItems.length}
-						isLoading={loading}
-					>
-						Checkout
-					</Button>
+					<div className='flex flex-col gap-2 text-right items-end'>
+						<Button
+							icon={ShoppingCart}
+							className='mt-4 w-fit'
+							disabled={!selectedItems.length}
+							isLoading={loading}
+						>
+							Checkout
+						</Button>
+						{error && <span className='text-red-500'>{error}</span>}
+					</div>
 				</div>
 			</form>
 		</div>

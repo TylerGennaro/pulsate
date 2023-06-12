@@ -5,6 +5,7 @@ import { FaGoogle, FaMicrosoft } from 'react-icons/fa';
 
 import { IconType } from 'react-icons';
 import Heading from './ui/heading';
+import Image from 'next/image';
 
 interface ProviderProps {
 	name: string;
@@ -39,8 +40,11 @@ function Provider({
 export default function SignIn({ callbackUrl }: { callbackUrl?: string }) {
 	return (
 		<div className='w-screen h-screen grid place-items-center'>
-			<div className='max-w-sm w-full flex flex-col gap-4'>
-				<img src='/logo.svg' alt='logo' width={64} />
+			<div className='max-w-sm w-full flex flex-col gap-4 bg-foreground p-8 rounded-md shadow-md'>
+				<div className='flex items-center mb-4'>
+					<Image src='/logo.svg' alt='logo' width={64} height={64} />
+					<span className='text-2xl font-semibold'>Pulsate</span>
+				</div>
 				<Heading
 					header='Sign In'
 					description='Choose a provider to sign in with'
