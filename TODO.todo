@@ -22,7 +22,7 @@
 	- [✅] User adds product
 	- [✅] User removes product
 	- [✅] User updates product
-	- [] User checks item out
+	- [✅] User checks item out
 - [] Last order date
 - [✅] Checkout page
 - [✅] Better responsive sidebar
@@ -30,6 +30,7 @@
 - [] Notification system
 - [] Management sharing
 - [] Global location log w/ filters
+- [] Link to product order page
 
 Benefits:
 	- Goes live instantly
@@ -46,3 +47,5 @@ Benefits:
 pulsate.app
 
 https://play.tailwindcss.com/DpwOpnJ7F2 -- Gradient button
+
+$299.99 + $9.99/month
