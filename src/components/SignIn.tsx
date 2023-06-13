@@ -25,7 +25,11 @@ function Provider({
 	return (
 		<button
 			className={`flex items-center justify-center ${color} text-primary-foreground p-2 rounded-md hover:brightness-110 transition-all`}
-			onClick={() => signIn()}
+			onClick={() =>
+				signIn(provider, {
+					callbackUrl,
+				})
+			}
 		>
 			<Icon size={24} />
 			<span className='px-4 font-semibold'>{name}</span>

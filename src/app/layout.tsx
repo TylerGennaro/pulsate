@@ -19,10 +19,11 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
+	const session = await getServerSession(authOptions);
 	return (
 		<html lang='en'>
 			<body className={cn(inter.className, 'overflow-hidden')}>
-				<Providers>
+				<Providers session={session}>
 					<Toaster position='bottom-right' />
 					{children}
 				</Providers>
