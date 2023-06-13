@@ -23,5 +23,4 @@ export const authOptions: NextAuthOptions = {
 			clientSecret: getGoogleCredentials().clientSecret,
 		}),
 	],
-	debug: true,
 };
