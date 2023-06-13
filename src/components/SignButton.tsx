@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from './ui/button';
+import { Button, ButtonProps } from './ui/button';
 import { signIn, signOut } from 'next-auth/react';
 import { DropdownMenuItem } from './ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
@@ -8,13 +8,12 @@ import { LogOut } from 'lucide-react';
 export function SignInButton({
 	redirect = true,
 	className,
-}: {
-	redirect?: boolean;
-	className?: string;
-}) {
+	children,
+	...props
+}: ButtonProps & { redirect?: boolean; className?: string }) {
 	return (
-		<Button className={className} onClick={() => signIn()}>
-			Sign In
+		<Button className={className} onClick={() => signIn()} {...props}>
+			{children || 'Sign In'}
 		</Button>
 	);
 }
