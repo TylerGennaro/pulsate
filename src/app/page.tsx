@@ -18,7 +18,7 @@ export default async function Home() {
 					<Link href='#'>Testimonials</Link>
 				</div>
 				{session ? (
-					<Link href='/dashboard'>
+					<Link href='/inventory'>
 						<Button variant='outline'>Dashboard</Button>
 					</Link>
 				) : (
