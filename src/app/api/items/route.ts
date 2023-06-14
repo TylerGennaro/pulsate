@@ -33,6 +33,7 @@ export async function POST(req: Request) {
 
 		const item = await db.item.findFirst({
 			where: {
+				productId: data.productId,
 				expires: date,
 				onOrder,
 			},
