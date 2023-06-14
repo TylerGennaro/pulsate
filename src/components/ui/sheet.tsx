@@ -45,7 +45,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
 	<SheetPrimitive.Overlay
 		className={cn(
-			'fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in',
+			'fixed inset-0 z-50 bg-zinc-100/80 dark:bg-zinc-950/80 backdrop-blur-sm transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in',
 			className
 		)}
 		{...props}
@@ -55,7 +55,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
-	'fixed z-50 scale-100 gap-4 bg-background p-6 opacity-100 shadow-lg border',
+	'fixed z-50 scale-100 gap-4 bg-zinc-50 dark:bg-zinc-900 p-6 opacity-100 shadow-lg border',
 	{
 		variants: {
 			position: {
@@ -158,8 +158,8 @@ const SheetContent = React.forwardRef<
 			{...props}
 		>
 			{children}
-			<SheetPrimitive.Close className='absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary'>
-				<X className='h-4 w-4' />
+			<SheetPrimitive.Close className='absolute right-4 top-4 rounded-sm opacity-70 ring-offset-zinc-100 dark:ring-offset-zinc-900 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:focus:ring-zinc-700 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary'>
+				<X className='w-4 h-4' />
 				<span className='sr-only'>Close</span>
 			</SheetPrimitive.Close>
 		</SheetPrimitive.Content>
@@ -201,7 +201,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<SheetPrimitive.Title
 		ref={ref}
-		className={cn('text-lg font-semibold text-foreground-text', className)}
+		className={cn('text-lg font-semibold', className)}
 		{...props}
 	/>
 ));
@@ -213,7 +213,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<SheetPrimitive.Description
 		ref={ref}
-		className={cn('text-sm text-muted-foreground', className)}
+		className={cn('text-sm text-muted', className)}
 		{...props}
 	/>
 ));

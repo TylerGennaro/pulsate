@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth';
 import { Metadata } from 'next';
 import SignIn from '@components/SignIn';
 import { authOptions } from '@lib/auth';
+import Container from '@components/Container';
+import Heading from '@components/ui/heading';
 
 export const metadata: Metadata = {
 	title: 'Dashboard | LFHRS Inventory',
@@ -13,10 +15,8 @@ export default async function Page() {
 	if (!session) return <SignIn />;
 
 	return (
-		<div className='w-full h-full grid place-items-center'>
-			<div className='bg-foreground border p-8 rounded'>
-				<span className='text-lg'>Page under development</span>
-			</div>
-		</div>
+		<Container>
+			<Heading header='Dashboard' description='Under development' />
+		</Container>
 	);
 }

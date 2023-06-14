@@ -38,19 +38,19 @@ export default function Sidebar({
 	}, []);
 	return (
 		<div
-			className={`flex w-80 h-full bg-foreground border-r shadow-lg flex-col justify-between z-40 shrink-0 absolute lg:left-0 lg:opacity-100 lg:relative transition-all duration-300 ${
+			className={`flex w-80 h-full bg-zinc-50 dark:bg-zinc-900 border-r shadow-lg flex-col justify-between z-40 shrink-0 absolute lg:left-0 lg:opacity-100 lg:relative transition-all duration-300 ${
 				open ? 'left-0 opacity-100' : '-left-80 opacity-0'
 			}`}
 			ref={sidebarRef}
 		>
 			<Button
-				className='lg:hidden absolute top-4 right-4'
+				className='absolute lg:hidden top-4 right-4'
 				variant='ghost'
 				onClick={() => toggle(false)}
 			>
 				<X />
 			</Button>
-			<div className='px-8 py-4 flex flex-col gap-8 w-full'>
+			<div className='flex flex-col w-full gap-8 px-8 py-4'>
 				<div>
 					<Header size='md' className='mt-4'>
 						Pulsate
@@ -59,22 +59,22 @@ export default function Sidebar({
 				<hr />
 				<Nav locations={locations} toggle={toggle} />
 			</div>
-			<div className='flex justify-between p-2 gap-2 items-center'>
+			<div className='flex items-center justify-between gap-2 p-2'>
 				{status === 'loading' && (
-					<div className='flex gap-4 items-center'>
+					<div className='flex items-center gap-4'>
 						<Skeleton className='w-10 h-10 rounded-full' />
-						<Skeleton className='w-36 h-6' />
+						<Skeleton className='h-6 w-36' />
 					</div>
 				)}
 				{status === 'unauthenticated' && <SignInButton className='w-full' />}
 				{status === 'authenticated' && (
 					<>
-						<div className='hover:bg-muted cursor-pointer py-1 px-2 flex gap-4 items-center rounded grow'>
+						<div className='flex items-center gap-4 px-2 py-1 rounded cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 grow'>
 							<Avatar>
 								<AvatarImage src={session?.user.image || undefined} />
 								<AvatarFallback>{session?.user.name?.[0]}</AvatarFallback>
 							</Avatar>
-							<span className='font-semibold text-sm'>
+							<span className='text-sm font-semibold'>
 								{session?.user.name}
 							</span>
 						</div>

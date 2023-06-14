@@ -38,7 +38,7 @@ function UserPopover({ user }: { user: User | null }) {
 					</Avatar>
 					<div className='flex flex-col gap-2'>
 						<span>{user.name}</span>
-						<span className='text-muted-text text-sm'>{user.email}</span>
+						<span className='text-sm text-muted-text'>{user.email}</span>
 					</div>
 				</div>
 			</HoverCardContent>
@@ -62,25 +62,25 @@ export default function LogEntry({
 	return (
 		<div className='flex gap-2'>
 			<div className='relative'>
-				<div className='z-[1] relative rounded-full border-foreground border-8'>
+				<div className='z-[1] relative rounded-full border-8 border-zinc-50 dark:border-zinc-900'>
 					<Avatar>
 						<AvatarImage src={log.user?.image || undefined} />
 						<AvatarFallback>
 							{log.user?.name?.charAt(0).toUpperCase() || 'G'}
 						</AvatarFallback>
 					</Avatar>
-					<div className='w-1/2 h-1/2 absolute bottom-0 right-0 bg-foreground z-[2] grid place-items-center rounded-tl'>
+					<div className='w-1/2 h-1/2 absolute bottom-0 right-0 bg-zinc-50 dark:bg-zinc-900 z-[2] grid place-items-center rounded-tl'>
 						<template.icon className='w-4 h-4 text-muted-text' />
 					</div>
 				</div>
 				{!last && (
-					<div className='absolute w-[1px] left-1/2 top-2 bg-border h-full' />
+					<div className='absolute w-[1px] left-1/2 top-2 bg-zinc-300 dark:bg-zinc-700 h-full' />
 				)}
 			</div>
 			<div className='flex flex-col'>
-				<span className='font-semibold mb-1'>
+				<span className='mb-1 font-semibold'>
 					{log.user?.name || 'Guest'}
-					<span className='ml-4 text-muted-text font-normal text-sm'>
+					<span className='ml-4 text-sm font-normal text-muted'>
 						{timeSince(log.timestamp)} ago
 					</span>
 				</span>
@@ -92,7 +92,7 @@ export default function LogEntry({
 						{template.badge.text}
 					</Badge>
 					{log.product !== null && (
-						<span className='ml-2 text-foreground-text/75'>
+						<span className='ml-2 text-zinc-600 dark:text-zinc-400'>
 							{template.quantity && <span>{log.quantity} </span>}
 							{noLink ? (
 								<span>{log.product?.name}</span>
@@ -105,7 +105,7 @@ export default function LogEntry({
 					)}
 				</div>
 				{log.footnote && (
-					<span className='mb-8 flex items-center text-sm'>{log.footnote}</span>
+					<span className='flex items-center mb-8 text-sm'>{log.footnote}</span>
 				)}
 			</div>
 		</div>

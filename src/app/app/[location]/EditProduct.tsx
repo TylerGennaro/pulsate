@@ -6,6 +6,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
@@ -92,6 +93,7 @@ export default function EditProduct({
 					<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
+						<DropdownMenuSeparator />
 						<DialogTrigger asChild>
 							<DropdownMenuItem>
 								<Pencil className='w-4 h-4 mr-2' />
@@ -99,7 +101,7 @@ export default function EditProduct({
 							</DropdownMenuItem>
 						</DialogTrigger>
 						<AlertDialogTrigger asChild>
-							<DropdownMenuItem className='text-red-500'>
+							<DropdownMenuItem className='text-red-500 focus:text-red-500 dark:focus:text-red-500'>
 								<Trash2 className='w-4 h-4 mr-2' /> Delete
 							</DropdownMenuItem>
 						</AlertDialogTrigger>

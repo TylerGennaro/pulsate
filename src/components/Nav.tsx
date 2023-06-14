@@ -26,7 +26,7 @@ function NavBlock({
 	return (
 		<div className='flex flex-col gap-1'>
 			{label && (
-				<span className='text-foreground-text/70 text-xs mb-2 font-semibold'>
+				<span className='mb-2 text-xs font-semibold text-zinc-500'>
 					{label}
 				</span>
 			)}
@@ -55,16 +55,18 @@ function NavButton({
 			<TooltipTrigger asChild>
 				<Link href={link} onClick={props.onClick}>
 					<Button
-						className={`w-full flex text-foreground-text/70 bg-foreground hover:bg-muted hover:text-black dark:hover:text-white ${
-							selected ? 'bg-muted text-black dark:text-white' : ''
+						className={`w-full flex bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-50 ${
+							selected
+								? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50'
+								: ''
 						}`}
 					>
 						{props.icon && <props.icon className='mr-2 shrink-0' />}
-						<div className='w-full overflow-hidden overflow-ellipsis text-left'>
+						<div className='w-full overflow-hidden text-left overflow-ellipsis'>
 							<span className='whitespace-nowrap'>{children}</span>
 						</div>
 						{tags && (
-							<div className='ml-2 flex gap-1 shrink-0'>
+							<div className='flex gap-1 ml-2 shrink-0'>
 								{tags.map((tag) => (
 									<Indicator
 										color={

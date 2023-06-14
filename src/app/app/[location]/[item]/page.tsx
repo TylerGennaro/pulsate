@@ -52,7 +52,7 @@ function InfoBlock({
 	return (
 		<div className={cn('flex flex-col gap-2', className)}>
 			<span>{label}</span>
-			<span className='text-muted-text'>{value}</span>
+			<span className='text-muted'>{value}</span>
 		</div>
 	);
 }
@@ -140,10 +140,7 @@ export default async function Inventory({
 	return (
 		<div className='container'>
 			<Link href={`/app/${params.location}`}>
-				<Button
-					className='p-2 mb-4 w-fit text-muted-text hover:bg-foreground hover:text-foreground-text'
-					variant='ghost'
-				>
+				<Button className='p-2 mb-4 w-fit' variant='ghost'>
 					<ChevronLeft className='w-4 h-4 mr-2' />
 					Go back
 				</Button>
@@ -226,7 +223,7 @@ export default async function Inventory({
 				<Container className='xl:col-span-2'>
 					<div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
 						<div className='flex flex-col gap-1'>
-							<span className='text-muted-text text-md'>Total</span>
+							<span className='text-muted text-md'>Total</span>
 							<span className='text-xl font-semibold'>
 								{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
 								{packageTypes[data.package as PackageType]}

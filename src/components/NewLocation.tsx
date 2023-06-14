@@ -50,7 +50,7 @@ export default function NewLocationDialog() {
 			<DialogTrigger asChild>
 				<Button
 					icon={Plus}
-					className='bg-transparent border-2 hover:bg-muted text-foreground-text'
+					className='bg-transparent border-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:text-zinc-950 dark:hover:text-zinc-50'
 				>
 					New Location
 				</Button>

@@ -52,7 +52,7 @@ export default function Checkout({
 
 	if (recorded)
 		return (
-			<div className='mt-8 flex justify-between items-center gap-4 flex-wrap'>
+			<div className='flex flex-wrap items-center justify-between gap-4 mt-8'>
 				<div className='flex flex-col'>
 					<span className='text-lg'>Checked out</span>
 					<span className='text-muted-text'>
@@ -73,53 +73,56 @@ export default function Checkout({
 
 	return (
 		<div>
-			{!items.length && (
-				<div className='flex flex-col gap-2'>
+			{!items.length ? (
+				<div className='flex flex-col gap-2 mt-8'>
 					<span className='text-lg'>Out of stock</span>
-					<span className='text-muted-text'>Contact your manager</span>
+					<span className='text-muted'>Contact your manager</span>
 				</div>
-			)}
-			{items.map((item, index) => (
-				<div key={index}>
-					<ItemCard
-						item={item}
-						canAdd={!selectedItems.includes(item)}
-						setSelected={setSelectedItems}
-					/>
-					<hr />
-				</div>
-			))}
-			<Heading
-				header='Cart'
-				description='Review and checkout'
-				className='mt-8 mb-4'
-			/>
-			<form onSubmit={submit}>
-				<div className='flex justify-end'>
-					<div className='flex flex-col gap-4'>
-						{selectedItems.map((item) => (
-							<CartItem
+			) : (
+				<>
+					{items.map((item, index) => (
+						<div key={index}>
+							<ItemCard
 								item={item}
+								canAdd={!selectedItems.includes(item)}
 								setSelected={setSelectedItems}
-								key={item.id}
 							/>
-						))}
-					</div>
-				</div>
-				<div className='flex justify-end'>
-					<div className='flex flex-col gap-2 text-right items-end'>
-						<Button
-							icon={ShoppingCart}
-							className='mt-4 w-fit'
-							disabled={!selectedItems.length}
-							isLoading={loading}
-						>
-							Checkout
-						</Button>
-						{error && <span className='text-red-500'>{error}</span>}
-					</div>
-				</div>
-			</form>
+							<hr />
+						</div>
+					))}
+					<Heading
+						header='Cart'
+						description='Review and checkout'
+						className='mt-8 mb-4'
+					/>
+					<form onSubmit={submit}>
+						<div className='flex justify-end'>
+							<div className='flex flex-col gap-4'>
+								{selectedItems.map((item) => (
+									<CartItem
+										item={item}
+										setSelected={setSelectedItems}
+										key={item.id}
+									/>
+								))}
+							</div>
+						</div>
+						<div className='flex justify-end'>
+							<div className='flex flex-col items-end gap-2 text-right'>
+								<Button
+									icon={ShoppingCart}
+									className='mt-4 w-fit'
+									disabled={!selectedItems.length}
+									isLoading={loading}
+								>
+									Checkout
+								</Button>
+								{error && <span className='text-red-500'>{error}</span>}
+							</div>
+						</div>
+					</form>
+				</>
+			)}
 		</div>
 	);
 }

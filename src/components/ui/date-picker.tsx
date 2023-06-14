@@ -46,15 +46,15 @@ export function DatePicker({
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
-					variant={'outline'}
+					variant='outline'
 					className={cn(
 						'w-[280px] justify-start text-left font-normal',
-						!date && 'text-muted-foreground',
+						!date && 'text-muted',
 						className
 					)}
 					disabled={disabled}
 				>
-					<CalendarIcon className='mr-2 h-4 w-4' />
+					<CalendarIcon className='w-4 h-4 mr-2' />
 					{date ? format(date, 'PPP') : <span>Pick a date</span>}
 				</Button>
 			</PopoverTrigger>
@@ -77,8 +77,8 @@ export function DatePicker({
 						toYear={2050}
 						initialFocus
 						components={{
-							IconLeft: ({ ...props }) => <ChevronLeft className='h-4 w-4' />,
-							IconRight: ({ ...props }) => <ChevronRight className='h-4 w-4' />,
+							IconLeft: ({ ...props }) => <ChevronLeft className='w-4 h-4' />,
+							IconRight: ({ ...props }) => <ChevronRight className='w-4 h-4' />,
 							Dropdown: ({ ...props }) => {
 								if (props['aria-label'] === 'Month: ') {
 									return <p>{format(new Date(0, month), 'MMMM')}</p>;

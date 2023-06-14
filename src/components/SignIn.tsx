@@ -24,7 +24,7 @@ function Provider({
 }: ProviderProps) {
 	return (
 		<button
-			className={`flex items-center justify-center ${color} text-primary-foreground p-2 rounded-md hover:brightness-110 transition-all`}
+			className={`flex items-center justify-center ${color} text-zinc-50 p-2 rounded-md hover:brightness-110 transition-all`}
 			onClick={() =>
 				signIn(provider, {
 					callbackUrl,
@@ -39,8 +39,8 @@ function Provider({
 
 export default function SignIn({ callbackUrl }: { callbackUrl?: string }) {
 	return (
-		<div className='w-screen h-screen grid place-items-center'>
-			<div className='max-w-sm w-full flex flex-col gap-4 bg-foreground p-8 rounded-md shadow-md'>
+		<div className='grid w-screen h-screen place-items-center'>
+			<div className='flex flex-col w-full max-w-sm gap-4 p-8 rounded-md shadow-md bg-zinc-50 dark:bg-zinc-900'>
 				<div className='flex items-center mb-4'>
 					<Image src='/logo.svg' alt='logo' width={64} height={64} />
 					<span className='text-2xl font-semibold'>Pulsate</span>
@@ -62,7 +62,7 @@ export default function SignIn({ callbackUrl }: { callbackUrl?: string }) {
 					provider='azure-ad'
 					callbackUrl={callbackUrl}
 					icon={FaMicrosoft}
-					color='bg-gray-900'
+					color='bg-emerald-700'
 				/>
 			</div>
 		</div>

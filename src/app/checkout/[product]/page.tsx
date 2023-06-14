@@ -67,7 +67,7 @@ export default async function Page({
 	const { location, product } = await getData(params.product);
 	if (!product || !location) return notFound();
 	return (
-		<div className='max-w-screen-md w-full h-fit bg-foreground py-4 px-2 md:my-4 md:rounded-md md:shadow-md md:p-4'>
+		<div className='w-full max-w-screen-md px-2 py-4 h-fit bg-zinc-50 dark:bg-zinc-900 md:my-4 md:rounded-md md:shadow-md md:p-4'>
 			<div className='flex flex-col gap-2'>
 				<Heading
 					header={product?.name}

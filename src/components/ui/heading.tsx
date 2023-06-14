@@ -14,7 +14,7 @@ export default function Heading({
 			<Header size='sm' weight='medium' className='mb-2'>
 				{header}
 			</Header>
-			{description && <span className='text-muted-text'>{description}</span>}
+			{description && <span className='text-muted'>{description}</span>}
 		</div>
 	);
 }

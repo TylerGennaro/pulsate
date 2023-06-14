@@ -27,7 +27,7 @@ export default function SiteHeader({
 	return (
 		<div
 			className={cn(
-				`w-full h-16 bg-foreground border-b shadow-md flex items-center justify-between ${
+				`w-full h-16 bg-zinc-50 dark:bg-zinc-900 border-b shadow-md flex items-center justify-between ${
 					sidebarToggle && 'lg:justify-end'
 				} px-4 z-30`,
 				className
@@ -45,11 +45,11 @@ export default function SiteHeader({
 				</Button>
 			)}
 			{children !== undefined && (
-				<div className='flex gap-4 justify-self-start font-semibold text-muted-text'>
+				<div className='flex gap-4 font-semibold justify-self-start text-muted'>
 					{children}
 				</div>
 			)}
-			<div className='flex gap-2 items-center'>
+			<div className='flex items-center gap-2'>
 				{showSignIn ? (
 					<>
 						{status === 'authenticated' && (

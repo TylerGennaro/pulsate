@@ -50,7 +50,7 @@ export default function LandingHeader() {
 			<div
 				className={`absolute top-0 left-0 flex flex-col h-screen gap-4 p-8 pr-16 font-semibold ${
 					sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-				} justify-center transition-transform shadow-md sm:translate-x-0 bg-foreground sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-left sm:gap-12 sm:static`}
+				} justify-center transition-transform shadow-md sm:translate-x-0 bg-zinc-50 dark:bg-zinc-900 sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-left sm:gap-12 sm:static`}
 			>
 				<Button
 					variant='ghost'
