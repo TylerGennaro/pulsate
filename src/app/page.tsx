@@ -14,7 +14,7 @@ export default async function Home() {
 					Effortlessly organize your medical closet and manage inventory with
 					ease using this intuitive solution.
 				</h3>
-				<Link href='/inventory'>
+				<Link href='/app'>
 					<Button className='mx-auto mt-8 shadow-md w-fit'>Get started</Button>
 				</Link>
 			</div>

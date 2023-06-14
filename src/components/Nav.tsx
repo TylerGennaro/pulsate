@@ -111,11 +111,11 @@ export function Nav({
 				{navItems.map((item) => (
 					<NavButton
 						key={item.label}
-						link={`/inventory${item.link}`}
+						link={`/app${item.link}`}
 						icon={item.icon}
 						selected={
-							(item.link === '/' && pathname === '/inventory') ||
-							pathname == `/inventory${item.link}`
+							(item.link === '/' && pathname === '/app') ||
+							pathname == `/app${item.link}`
 						}
 						onClick={() => toggle(false)}
 					>
@@ -128,10 +128,10 @@ export function Nav({
 					locations.map((location) => (
 						<NavButton
 							key={location.id}
-							link={`/inventory/${location.id}`}
+							link={`/app/${location.id}`}
 							icon={Warehouse}
 							tags={location.tags}
-							selected={pathname.startsWith(`/inventory/${location.id}`)}
+							selected={pathname.startsWith(`/app/${location.id}`)}
 							onClick={() => toggle(false)}
 						>
 							{location.name}

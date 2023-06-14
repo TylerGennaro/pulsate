@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				className='absolute top-0 left-0 right-0 shadow-sm'
 			>
 				<Link href='/'>Home</Link>
-				<Link href='/inventory'>Inventory</Link>
+				<Link href='/app'>Inventory</Link>
 			</SiteHeader>
 			<div className='mt-16 flex justify-center h-full overflow-auto'>
 				{children}

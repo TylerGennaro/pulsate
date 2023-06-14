@@ -3,7 +3,7 @@
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, MoreVertical, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { packageTypes, tags } from '@lib/relations';
 import { PackageType, Tag } from '@lib/enum';
@@ -21,7 +21,7 @@ export const columns: ColumnDef<ProductInfo>[] = [
 				{row.original.quantity}{' '}
 				{packageTypes[row.original.package as PackageType]}
 				{row.original.max && row.original.max > 0 ? (
-					<span className='text-xs text-muted-text ml-1'>
+					<span className='ml-1 text-xs text-muted-text'>
 						{'/ '}
 						{row.original.max || ''}
 					</span>
@@ -63,9 +63,7 @@ export const columns: ColumnDef<ProductInfo>[] = [
 			return (
 				<div className='flex'>
 					<Button variant='ghost' asChild>
-						<Link
-							href={`/inventory/${row.original.locationId}/${row.original.id}`}
-						>
+						<Link href={`/app/${row.original.locationId}/${row.original.id}`}>
 							<Eye size={20} />
 						</Link>
 					</Button>
@@ -77,7 +75,12 @@ export const columns: ColumnDef<ProductInfo>[] = [
 							max: row.original.max,
 							packageType: row.original.package,
 						}}
-					/>
+					>
+						<Button variant='ghost'>
+							<span className='sr-only'>Open menu</span>
+							<MoreVertical size={20} />
+						</Button>
+					</EditProduct>
 				</div>
 			);
 		},

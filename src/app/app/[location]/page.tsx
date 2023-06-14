@@ -54,10 +54,10 @@ export default async function Inventory({
 			description={`Managed by ${session.user.name}`}
 			divider
 		>
-			<div className='flex items-center flex-wrap gap-2 mb-4'>
+			<div className='flex flex-wrap items-center gap-2 mb-4'>
 				<NewProduct location={params.location} />
 				<EditLocation name={name!} id={params.location} />
-				<Link href={`/inventory/${params.location}/activity`}>
+				<Link href={`/app/${params.location}/activity`}>
 					<Button variant='outline'>
 						<ScrollText className='w-4 h-4 mr-2' />
 						Activity

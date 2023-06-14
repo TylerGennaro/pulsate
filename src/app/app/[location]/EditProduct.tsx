@@ -1,6 +1,6 @@
 'use client';
 
-import { MoreVertical, Pencil, Save, Trash2 } from 'lucide-react';
+import { Pencil, Save, Trash2 } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -9,7 +9,6 @@ import {
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
 	AlertDialog,
@@ -30,7 +29,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import InputGroup from '@components/InputGroup';
 import { FormEvent, useState } from 'react';
 import { crud, formDataToObject } from '@lib/utils';
 import ProductForm from './ProductForm';
@@ -39,6 +37,7 @@ import { PackageType } from '@lib/enum';
 export default function EditProduct({
 	defaultValues,
 	id,
+	children,
 }: {
 	defaultValues?: {
 		name?: string;
@@ -47,6 +46,7 @@ export default function EditProduct({
 		packageType?: PackageType;
 	};
 	id: string;
+	children: React.ReactNode;
 }) {
 	const [open, setOpen] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
@@ -89,12 +89,7 @@ export default function EditProduct({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<AlertDialog>
 				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant='ghost'>
-							<span className='sr-only'>Open menu</span>
-							<MoreVertical size={20} />
-						</Button>
-					</DropdownMenuTrigger>
+					<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
 						<DialogTrigger asChild>

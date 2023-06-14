@@ -97,9 +97,7 @@ export default function LogEntry({
 							{noLink ? (
 								<span>{log.product?.name}</span>
 							) : (
-								<Link
-									href={`/inventory/${log.product?.locationId}/${log.productId}`}
-								>
+								<Link href={`/app/${log.product?.locationId}/${log.productId}`}>
 									{log.product?.name}
 								</Link>
 							)}

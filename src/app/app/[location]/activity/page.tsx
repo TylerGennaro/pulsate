@@ -56,7 +56,7 @@ export default async function Page({
 	const name = await getName(params.location);
 	return (
 		<div>
-			<Link href={`/inventory/${params.location}`}>
+			<Link href={`/app/${params.location}`}>
 				<Button
 					className='w-fit mb-4 p-2 text-muted-text hover:bg-foreground hover:text-foreground-text'
 					variant='ghost'

@@ -108,7 +108,7 @@ export async function DELETE(req: Request) {
 				id,
 			},
 		});
-		redirect('/inventory');
+		redirect('/app');
 	} catch (e) {
 		return catchError(e);
 	}

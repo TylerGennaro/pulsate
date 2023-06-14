@@ -1,7 +1,7 @@
 import QRCode from '@components/QRCode';
 import { Button } from '@components/ui/button';
 import { cn } from '@lib/utils';
-import { ChevronLeft, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, Pencil, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
 import ItemTable from './ItemTable';
@@ -19,6 +19,7 @@ import { Suspense } from 'react';
 import { Skeleton } from '@components/ui/skeleton';
 import Container from '@components/Container';
 import Logs from './Logs';
+import EditProduct from '../EditProduct';
 
 export async function generateMetadata({
 	params,
@@ -138,23 +139,39 @@ export default async function Inventory({
 	const units = packageTypes[data.package as PackageType];
 	return (
 		<div className='container'>
-			<Link href={`/inventory/${params.location}`}>
+			<Link href={`/app/${params.location}`}>
 				<Button
-					className='w-fit mb-4 p-2 text-muted-text hover:bg-foreground hover:text-foreground-text'
+					className='p-2 mb-4 w-fit text-muted-text hover:bg-foreground hover:text-foreground-text'
 					variant='ghost'
 				>
 					<ChevronLeft className='w-4 h-4 mr-2' />
 					Go back
 				</Button>
 			</Link>
-			<div className='grid grid-cols-1 xl:grid-cols-2 gap-8'>
+			<div className='grid grid-cols-1 gap-8 xl:grid-cols-2'>
 				<Container
 					header='Information'
 					description='General product information'
 					divider
 					className='xl:col-span-2'
+					action={
+						<EditProduct
+							id={params.item}
+							defaultValues={{
+								name: data.name,
+								min: data.min,
+								max: data.max || undefined,
+								packageType: data.package as PackageType,
+							}}
+						>
+							<Button>
+								<Pencil className='w-4 h-4 mr-2' />
+								Update
+							</Button>
+						</EditProduct>
+					}
 				>
-					<div className='grid md:grid-cols-2 grid-cols-1 gap-8'>
+					<div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
 						<InfoBlock label='Name' value={data.name} />
 						<InfoBlock label='Unique ID' value={data.id} />
 						<InfoBlock
@@ -191,6 +208,7 @@ export default async function Inventory({
 					header='Feed'
 					description='All changes made to the product'
 					divider
+					className='overflow-hidden max-h-min'
 				>
 					<Suspense fallback={<Skeleton className='w-full h-16' />}>
 						{/* @ts-expect-error */}
@@ -206,7 +224,7 @@ export default async function Inventory({
 					/>
 				</Container>
 				<Container className='xl:col-span-2'>
-					<div className='mb-8 flex justify-between items-center flex-wrap gap-4'>
+					<div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
 						<div className='flex flex-col gap-1'>
 							<span className='text-muted-text text-md'>Total</span>
 							<span className='text-xl font-semibold'>

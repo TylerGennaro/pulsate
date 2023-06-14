@@ -70,7 +70,7 @@ export default function LandingHeader() {
 			<div className='flex items-center justify-end gap-2'>
 				<ThemeToggle />
 				{session ? (
-					<Link href='/inventory'>
+					<Link href='/app'>
 						<Button variant='outline'>Dashboard</Button>
 					</Link>
 				) : (
