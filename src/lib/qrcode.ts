@@ -22,7 +22,6 @@ const style = `
 		}
 		div > span {
 			font-family: Tahoma, sans-serif;
-			font-size: 1.5rem;
 			font-weight: 700;
 		}
 	</style>
@@ -34,7 +33,7 @@ export function getUrl(location: string, code: string) {
 	return urlTemplate.replace('%location', location).replace('%item', code);
 }
 
-export async function printQRCode(code: CodeData) {
+export async function printQRCode(size: number, code: CodeData) {
 	const image = await QRCode.toDataURL(getUrl(code.location, code.id), {
 		width: 256,
 	});
@@ -48,8 +47,8 @@ export async function printQRCode(code: CodeData) {
 			</head>
 			<body>
 				<div>
-					<img src="${image}" />
-					<span>${code.name}</span>
+					<img src="${image}" width="${size}" height="${size}" />
+					<span style="font-size: ${size / 10}px">${code.name}</span>
 				</div>
 			</body>
 		</html>
@@ -60,7 +59,7 @@ export async function printQRCode(code: CodeData) {
 	setTimeout(() => win.print(), 200);
 }
 
-export async function printQRCodes(codes: CodeData[]) {
+export async function printQRCodes(size: number, codes: CodeData[]) {
 	const images = codes.map(async (code) => {
 		return {
 			image: await QRCode.toDataURL(getUrl(code.location, code.id), {
@@ -73,8 +72,8 @@ export async function printQRCodes(codes: CodeData[]) {
 		images
 			.map((image) => {
 				return `<div>
-					<img src="${image.image}" />
-					<span>${image.name}</span>
+				<img src="${image.image}" width="${size}" height="${size}" />
+				<span style="font-size: ${size / 10}px">${image.name}</span>
 				</div>`;
 			})
 			.join('')

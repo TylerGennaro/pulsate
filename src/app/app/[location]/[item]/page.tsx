@@ -20,6 +20,8 @@ import { Skeleton } from '@components/ui/skeleton';
 import Container from '@components/Container';
 import Logs from './Logs';
 import EditProduct from '../EditProduct';
+import { printQRCode } from '@lib/qrcode';
+import PrintQRCode from './PrintQRCode';
 
 export async function generateMetadata({
 	params,
@@ -213,8 +215,13 @@ export default async function Inventory({
 					</Suspense>
 					{/* <DataTable columns={columns} data={data} /> */}
 				</Container>
-				<Container className='flex flex-col items-center h-fit'>
-					<QRCode
+				<Container
+					className='h-fit'
+					header='QR Code'
+					description='A redirect code to the checkout page'
+					divider
+				>
+					<PrintQRCode
 						location={params.location}
 						id={params.item}
 						name={data.name}

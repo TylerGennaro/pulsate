@@ -10,8 +10,18 @@ import { DataTableFacetedFilter } from '@components/ui/data-table-faceted-filter
 import { tags } from '@lib/relations';
 import { X } from 'lucide-react';
 import { Product } from '@prisma/client';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@components/ui/dialog';
+import QRCode from '@components/QRCode';
 
-function printSelectedCodes(rows: Row<Product>[]) {
+function printSelectedCodes(size: number, rows: Row<Product>[]) {
 	const codes = rows.map((row) => {
 		return {
 			location: row.original.locationId,
@@ -19,7 +29,7 @@ function printSelectedCodes(rows: Row<Product>[]) {
 			name: row.original.name,
 		};
 	});
-	printQRCodes(codes);
+	printQRCodes(size, codes);
 }
 
 function Toolbar({
@@ -33,8 +43,8 @@ function Toolbar({
 		table.getFilteredRowModel().rows.length;
 
 	return (
-		<div className='mb-4 flex justify-between gap-4 flex-wrap'>
-			<div className='flex flex-col justify-center gap-4 lg:flex-row lg:items-center lg:justify-start flex-grow'>
+		<div className='flex flex-wrap justify-between gap-4 mb-4'>
+			<div className='flex flex-col justify-center flex-grow gap-4 lg:flex-row lg:items-center lg:justify-start'>
 				<Input
 					placeholder='Search products'
 					className='max-w-xs'
@@ -63,19 +73,41 @@ function Toolbar({
 							className='h-8 px-2 lg:px-3'
 						>
 							Reset
-							<X className='ml-2 h-4 w-4' />
+							<X className='w-4 h-4 ml-2' />
 						</Button>
 					)}
 				</div>
 			</div>
-			<Button
-				disabled={selectedRows.length === 0}
-				onClick={() => printSelectedCodes(selectedRows)}
-				className='whitespace-nowrap'
-			>
-				Print {selectedRows.length > 0 ? selectedRows.length + ' ' : ''}QR
-				Code(s)
-			</Button>
+			<Dialog>
+				<DialogTrigger asChild>
+					<Button
+						disabled={selectedRows.length === 0}
+						// onClick={() => printSelectedCodes(selectedRows)}
+						className='whitespace-nowrap'
+					>
+						Print {selectedRows.length > 0 ? selectedRows.length + ' ' : ''}QR
+						Code(s)
+					</Button>
+				</DialogTrigger>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Print QR Codes</DialogTitle>
+						<DialogDescription>
+							Set the size of selected QR codes and print them.
+						</DialogDescription>
+					</DialogHeader>
+					<hr />
+					<QRCode
+						id={selectedRows[0]?.original.id || ''}
+						location={selectedRows[0]?.original.locationId || ''}
+						onPrint={(size) => printSelectedCodes(size, selectedRows)}
+						style={{
+							container: 'flex flex-col items-center',
+							button: 'self-end',
+						}}
+					/>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }
