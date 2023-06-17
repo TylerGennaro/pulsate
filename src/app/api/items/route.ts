@@ -113,6 +113,7 @@ export async function PUT(req: Request) {
 		if (!item) return new NextResponse('Could not find item.', { status: 404 });
 		const duplicateItem = await db.item.findFirst({
 			where: {
+				productId: item.productId,
 				expires: date,
 				onOrder,
 			},

@@ -31,6 +31,12 @@
 - [] Management sharing
 - [] Global location log w/ filters
 - [] Link to product order page
+- [] Dashboard
+	- [] Most used product per location
+	- [] Locations with low inventory
+	- [] Graphs on daily checkouts
+	- [] Activity feeds
+- [] Settings
 
 Benefits:
 	- Goes live instantly
