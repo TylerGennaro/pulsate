@@ -57,10 +57,7 @@ export default async function Page({
 	return (
 		<div>
 			<Link href={`/app/${params.location}`}>
-				<Button
-					className='w-fit mb-4 p-2 text-muted-text hover:bg-foreground hover:text-foreground-text'
-					variant='ghost'
-				>
+				<Button className='p-2 mb-4 w-fit' variant='ghost'>
 					<ChevronLeft className='w-4 h-4 mr-2' />
 					Go back
 				</Button>
