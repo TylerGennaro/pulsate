@@ -61,10 +61,10 @@ export const columns: ColumnDef<ProductInfo>[] = [
 		header: 'Actions',
 		cell: ({ row }: { row: any }) => {
 			return (
-				<div className='flex'>
-					<Button variant='ghost' asChild>
+				<div className='flex gap-2'>
+					<Button variant='outline' asChild>
 						<Link href={`/app/${row.original.locationId}/${row.original.id}`}>
-							<Eye size={20} />
+							View
 						</Link>
 					</Button>
 					<EditProduct
