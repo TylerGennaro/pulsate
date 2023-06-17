@@ -116,6 +116,9 @@ export async function PUT(req: Request) {
 				productId: item.productId,
 				expires: date,
 				onOrder,
+				id: {
+					not: item.id,
+				},
 			},
 		});
 		if (duplicateItem) {
