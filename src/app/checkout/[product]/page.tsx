@@ -2,6 +2,11 @@ import { db } from '@lib/prisma';
 import Checkout from './Checkout';
 import { notFound } from 'next/navigation';
 import Heading from '@components/ui/heading';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@lib/auth';
+import { Button } from '@components/ui/button';
+import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
 export async function generateMetadata({
 	params,
@@ -47,7 +52,9 @@ async function getData(productId: string) {
 	});
 	const location = await db.location.findFirst({
 		select: {
+			id: true,
 			name: true,
+			userId: true,
 		},
 		where: {
 			id: product?.locationId,
@@ -66,13 +73,22 @@ export default async function Page({
 }) {
 	const { location, product } = await getData(params.product);
 	if (!product || !location) return notFound();
+	const session = await getServerSession(authOptions);
 	return (
-		<div className='w-full max-w-screen-md px-2 py-4 h-fit bg-zinc-50 dark:bg-zinc-900 md:my-4 md:rounded-md md:shadow-md md:p-4'>
-			<div className='flex flex-col gap-2'>
+		<div className='w-full max-w-screen-md px-2 py-4 border h-fit bg-zinc-50 dark:bg-zinc-900 md:my-4 md:rounded-md md:shadow-md md:p-4'>
+			<div className='flex flex-wrap items-center justify-between gap-4'>
 				<Heading
 					header={product?.name}
 					description={`Checkout ${product?.name} from ${location?.name}`}
 				/>
+				{session?.user?.id === location.userId && (
+					<Link href={`/app/${location.id}/${product.id}`}>
+						<Button variant='outline'>
+							View Page
+							<ExternalLink className='w-4 h-4 ml-2' />
+						</Button>
+					</Link>
+				)}
 			</div>
 			<hr className='mt-6' />
 			<Checkout items={product!.items} productId={params.product} />

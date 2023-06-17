@@ -74,7 +74,7 @@ export default function Checkout({
 	return (
 		<div>
 			{!items.length ? (
-				<div className='flex flex-col gap-2 mt-8'>
+				<div className='flex flex-col items-center gap-2 mt-8'>
 					<span className='text-lg'>Out of stock</span>
 					<span className='text-muted'>Contact your manager</span>
 				</div>

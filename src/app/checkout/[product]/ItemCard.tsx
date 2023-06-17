@@ -16,15 +16,15 @@ export default function ItemCard({
 	setSelected: React.Dispatch<React.SetStateAction<Item[]>>;
 }) {
 	return (
-		<div className='py-6 px-2 flex flex-col gap-2 items-end'>
-			<div className='w-full flex justify-between items-center'>
+		<div className='flex flex-col items-end gap-2 px-2 py-6'>
+			<div className='flex items-center justify-between w-full'>
 				<div className='flex flex-col'>
 					<span className='text-lg'>Quantity</span>
-					<span className='text-muted-text'>{item.quantity}</span>
+					<span className='text-muted'>{item.quantity}</span>
 				</div>
 				<div className='flex flex-col'>
 					<span className='text-lg'>Expires</span>
-					<span className='text-muted-text'>
+					<span className='text-muted'>
 						{formatExpirationDate(item.expires)}
 					</span>
 				</div>
