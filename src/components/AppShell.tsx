@@ -14,7 +14,7 @@ export default function AppShell({
 }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	return (
-		<div className='flex h-screen'>
+		<div className='flex h-[100dvh]'>
 			<Sidebar
 				locations={locations}
 				open={sidebarOpen}
@@ -22,7 +22,7 @@ export default function AppShell({
 			/>
 			<div className='flex flex-col w-full shrink'>
 				<SiteHeader sidebarToggle={setSidebarOpen} sidebarOpen={sidebarOpen} />
-				<div className='w-full h-full overflow-y-scroll p-4'>{children}</div>
+				<div className='w-full h-full p-4 overflow-y-scroll'>{children}</div>
 			</div>
 		</div>
 	);
