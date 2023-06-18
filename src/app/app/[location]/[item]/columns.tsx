@@ -8,6 +8,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import EditItem from './EditItem';
 import TagBadge from '@components/TagBadge';
+import ItemArrived from './ItemArrived';
 
 export type Log = {
 	user: string;
@@ -34,7 +35,7 @@ export const itemColumns: ColumnDef<Item>[] = [
 			if (row.original.onOrder) tags.push(Tag.ONORDER);
 			if (tags.length === 0) return <TagBadge tag={Tag.NONE} />;
 			return (
-				<div className='flex gap-2 flex-wrap'>
+				<div className='flex flex-wrap gap-2'>
 					{tags.map((tag) => {
 						return <TagBadge tag={tag} key={tag} />;
 					})}
@@ -45,49 +46,12 @@ export const itemColumns: ColumnDef<Item>[] = [
 	{
 		id: 'actions',
 		cell: ({ row }: { row: { original: Item } }) => {
-			return <EditItem item={row.original} />;
-		},
-	},
-];
-
-export const columns: ColumnDef<Log>[] = [
-	{ header: 'User', accessorKey: 'user' },
-	{
-		header: 'Date',
-		accessorKey: 'date',
-		cell: ({ row }: { row: any }) => {
-			const date = new Date(row.original.date);
 			return (
-				<div className='flex flex-col'>
-					<span>
-						{`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`}
-					</span>
-					<span className='text-xs text-muted-foreground'>{` ${
-						date.getHours() % 12
-					}:${date.getMinutes()} ${date.getHours() >= 12 ? 'PM' : 'AM'}`}</span>
+				<div className='flex justify-end gap-2'>
+					{row.original.onOrder && <ItemArrived item={row.original} />}
+					<EditItem item={row.original} />
 				</div>
 			);
 		},
 	},
-	{
-		header: 'Change',
-		cell: ({ row }: { row: any }) => {
-			return (
-				<>
-					{row.original.change > 0 ? (
-						<div className='flex text-green-500'>
-							<ArrowUp />
-							<span>{row.original.change}</span>
-						</div>
-					) : (
-						<div className='flex text-red-500'>
-							<ArrowDown />
-							<span>{Math.abs(row.original.change)}</span>
-						</div>
-					)}
-				</>
-			);
-		},
-	},
-	{ header: 'New Quantity', accessorKey: 'newQuantity' },
 ];
