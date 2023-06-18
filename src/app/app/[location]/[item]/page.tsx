@@ -22,6 +22,7 @@ import Logs from './Logs';
 import EditProduct from '../EditProduct';
 import { printQRCode } from '@lib/qrcode';
 import PrintQRCode from './PrintQRCode';
+import OrderItem from './OrderItem';
 
 export async function generateMetadata({
 	params,
@@ -236,13 +237,14 @@ export default async function Inventory({
 								{packageTypes[data.package as PackageType]}
 							</span>
 						</div>
-						<div className='flex gap-2'>
+						<div className='flex flex-wrap gap-2'>
 							<Link href={`/checkout/${params.item}`}>
 								<Button variant='outline'>
 									<ShoppingCart className='w-4 h-4 mr-2' />
 									Checkout
 								</Button>
 							</Link>
+							<OrderItem product={data} />
 							<NewItem product={params.item} />
 						</div>
 					</div>
