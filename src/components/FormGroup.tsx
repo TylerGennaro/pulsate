@@ -2,18 +2,18 @@ import React from 'react';
 import { Input } from './ui/input';
 import { cn } from '@lib/utils';
 
-interface InputGroupProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface FormGroupProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	label: string;
 	desc?: string;
 }
 
-const InputGroup = React.forwardRef<HTMLInputElement, InputGroupProps>(
+const FormGroup = React.forwardRef<HTMLInputElement, FormGroupProps>(
 	({ label, desc, ...props }, ref) => {
 		return (
-			<div className='grid grid-cols-4 items-center gap-y-1'>
-				<label className='col-span-1 text-right mr-4'>
+			<div className='grid items-center grid-cols-4 gap-y-1'>
+				<label className='col-span-1 mr-4 text-right'>
 					{label}
-					{props.required && <span className='text-red-500 ml-1'>*</span>}
+					{props.required && <span className='ml-1 text-red-500'>*</span>}
 				</label>
 				<Input
 					className={cn('col-span-3', props.className)}
@@ -29,6 +29,6 @@ const InputGroup = React.forwardRef<HTMLInputElement, InputGroupProps>(
 		);
 	}
 );
-InputGroup.displayName = 'InputGroup';
+FormGroup.displayName = 'FormGroup';
 
-export default InputGroup;
+export default FormGroup;

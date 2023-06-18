@@ -28,7 +28,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import InputGroup from '@components/InputGroup';
+import InputGroup from '@components/FormGroup';
 import { FormEvent, useState } from 'react';
 import { crud } from '@lib/utils';
 

@@ -11,7 +11,7 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 import { Plus } from 'lucide-react';
-import InputGroup from '@components/InputGroup';
+import InputGroup from '@components/FormGroup';
 import { FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
