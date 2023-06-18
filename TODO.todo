@@ -27,6 +27,7 @@
 - [✅] Checkout page
 - [✅] Better responsive sidebar
 
+- [] Improve mobile UX
 - [] Notification system
 - [] Management sharing
 - [] Global location log w/ filters
@@ -54,4 +55,9 @@ pulsate.app
 
 https://play.tailwindcss.com/DpwOpnJ7F2 -- Gradient button
 
-$299.99 + $9.99/month
+$299 + $14.99/month
+	- 1 location
+	- 100 products
+$299 + $29.99/month
+	- 5 locations
+	- 300 products per location
