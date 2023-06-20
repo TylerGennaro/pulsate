@@ -26,6 +26,7 @@
 - [] Last order date
 - [✅] Checkout page
 - [✅] Better responsive sidebar
+- [] Add payment with Stripe
 
 - [] Improve mobile UX
 - [] Notification system
@@ -61,3 +62,18 @@ $299 + $14.99/month
 $299 + $29.99/month
 	- 5 locations
 	- 300 products per location
+
+
+Manager:
+Logs ~ 1500 MiB
+Items ~ 600 MiB
+Products ~ 30 MiB
+Locations ~ 1 MiB
+Total ~ 2,131 MiB ~ 2.1 GiB = $1.00/month
+
+Executive:
+Logs ~ 9,000 MiB
+Items ~ 2,700 MiB
+Products ~ 90 MiB
+Locations ~ 1 MiB
+Total ~ 11,791 MiB ~ 11.5 GiB = $6.00/month
