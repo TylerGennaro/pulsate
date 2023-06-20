@@ -4,7 +4,7 @@ import LandingHeader from './LandingHeader';
 
 export default async function Home() {
 	return (
-		<main className='flex flex-col items-center min-h-screen bg-zinc-50 dark:bg-zinc-900'>
+		<main className='flex flex-col items-center min-h-screen'>
 			<LandingHeader />
 			<div className='grid max-w-screen-sm p-4 text-center place-content-center grow'>
 				<h1 className='text-5xl font-bold'>
