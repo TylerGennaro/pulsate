@@ -22,7 +22,7 @@ export default async function RootLayout({
 	const session = await getServerSession(authOptions);
 	return (
 		<html lang='en'>
-			<body className={cn(inter.className, 'overflow-hidden')}>
+			<body className={inter.className}>
 				<Providers session={session}>
 					<Toaster position='bottom-right' />
 					{children}
