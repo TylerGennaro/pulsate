@@ -89,6 +89,7 @@ model Item {
   productId String
   quantity  Int
   expires   DateTime?
+	// expires   DateTime?  @db.Date @default(now()) // db.Date cuts space from 8 bytes to 4 bytes
   onOrder   Boolean   @default(false)
 }
 
