@@ -9,9 +9,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
-export default function LandingHeader() {
+export default function NavHeader({ children }: { children: React.ReactNode }) {
 	const { data: session } = useSession();
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [scrolled, setScrolled] = useState(false);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		window.addEventListener('resize', () => {
@@ -27,10 +28,16 @@ export default function LandingHeader() {
 			)
 				setSidebarOpen(false);
 		});
+		window.addEventListener('scroll', () => {
+			if (window.scrollY > 0) setScrolled(true);
+			else setScrolled(false);
+		});
 	}, [sidebarOpen]);
 	return (
 		<div
-			className='relative grid justify-between w-full grid-cols-2 p-6 border-r lg:grid-cols-3 sm:border-none'
+			className={`sticky top-0 z-50 grid items-center justify-between w-full bg-zinc-100 dark:bg-zinc-950 grid-cols-2 px-8 py-4 border-r lg:grid-cols-3 sm:border-none transition-shadow ${
+				scrolled ? 'shadow-md sm:border-b' : ''
+			}`}
 			ref={sidebarRef}
 		>
 			<Button
@@ -43,8 +50,8 @@ export default function LandingHeader() {
 			<Image
 				src='/logo.svg'
 				alt='logo'
-				width={64}
-				height={64}
+				width={32}
+				height={32}
 				className='hidden lg:block'
 			/>
 			<div
@@ -63,9 +70,7 @@ export default function LandingHeader() {
 					<Image src='/logo.svg' alt='logo' width={64} height={64} />
 					<hr className='my-4' />
 				</div>
-				<Link href='#'>Features</Link>
-				<Link href='#'>Pricing</Link>
-				<Link href='#'>Testimonials</Link>
+				{children}
 			</div>
 			<div className='flex items-center justify-end gap-2'>
 				<ThemeToggle />
