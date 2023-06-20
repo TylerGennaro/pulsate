@@ -57,7 +57,7 @@ const plans = {
 
 export default function Page() {
 	return (
-		<div className='h-[100dvh] flex flex-col gap-32 p-16 overflow-auto'>
+		<div className='h-[100dvh] flex flex-col gap-32 p-16 overflow-auto scroll-smooth'>
 			<div className='flex justify-center w-full'>
 				<div className='flex flex-col items-center max-w-screen-md gap-2'>
 					<Header size='xl' className='text-center'>
@@ -68,11 +68,15 @@ export default function Page() {
 						Plans are differentiated by scale and features.
 					</span>
 					<div className='flex gap-2 mt-2'>
-						<Button variant='outline'>FAQ</Button>
-						<Button>
-							Compare Plans
-							<ArrowRight className='w-4 h-4 ml-2' />
-						</Button>
+						<a href='#faq'>
+							<Button variant='outline'>FAQ</Button>
+						</a>
+						<a href='#compare'>
+							<Button>
+								Compare Plans
+								<ArrowRight className='w-4 h-4 ml-2' />
+							</Button>
+						</a>
 					</div>
 				</div>
 			</div>

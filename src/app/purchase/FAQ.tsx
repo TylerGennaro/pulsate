@@ -11,7 +11,7 @@ function FAQEntry({ question, answer }: { question: string; answer: string }) {
 
 export default function FAQ() {
 	return (
-		<div>
+		<div id='faq'>
 			<Header>Frequently Asked Questions</Header>
 			<ul className='flex flex-col'>
 				<FAQEntry
