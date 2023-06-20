@@ -190,6 +190,8 @@ export default async function Inventory({
 								data.package.charAt(0).toUpperCase() + data.package.slice(1)
 							}
 						/>
+						<InfoBlock label='Location' value='Shelf 1C' />
+						<InfoBlock label='Last Order Date' value='Jun 18, 2023' />
 						<div className='flex flex-col gap-2'>
 							<span>Tags</span>
 							<div className='flex gap-2'>
