@@ -12,7 +12,7 @@ import Plans from './Plans';
 export const metadata: Metadata = {
 	title: 'Plans and Pricing | Pulsate',
 	description:
-		"Choose the best plan for your orgnization and don't overpay. Plans are differentiated by scale and features.",
+		"Choose the best plan for your organization and don't overpay. Plans are differentiated by scale and features.",
 };
 
 export default function Page() {
@@ -30,7 +30,7 @@ export default function Page() {
 							Plans suited for your needs
 						</Header>
 						<span className='w-3/4 text-center text-muted'>
-							Choose the best plan for your orgnization and don&apos;t overpay.
+							Choose the best plan for your organization and don&apos;t overpay.
 							Plans are differentiated by scale and features.
 						</span>
 						<div className='flex gap-2 mt-2'>
