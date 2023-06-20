@@ -15,7 +15,7 @@ export default async function Home() {
 				<Link href='#pricing'>Pricing</Link>
 			</NavHeader>
 			<div className='flex flex-col items-center py-16'>
-				<div className='flex flex-col items-center h-[80dvh] max-w-screen-md gap-2 px-8'>
+				<div className='flex flex-col items-center h-[80vh] max-w-screen-md gap-2 px-8'>
 					<Header size='xl' className='text-center'>
 						The solution to organizing medical closets
 					</Header>
