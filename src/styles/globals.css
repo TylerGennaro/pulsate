@@ -83,4 +83,10 @@
 	.text-muted {
 		@apply text-zinc-600 dark:text-zinc-400;
 	}
+	.icon-left {
+		@apply w-4 h-4 mr-2;
+	}
+	.icon-right {
+		@apply w-4 h-4 ml-2;
+	}
 }
