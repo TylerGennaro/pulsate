@@ -42,7 +42,7 @@ export default function Features() {
 			/>
 			<div className='grid max-w-screen-md grid-cols-2 gap-16'>
 				{features.map((feature) => (
-					<div className='flex gap-4'>
+					<div className='flex gap-4' key={feature.title}>
 						<div className='p-2 bg-blue-700 rounded-lg text-zinc-50 h-fit'>
 							<feature.icon className='w-6 h-6' />
 						</div>
