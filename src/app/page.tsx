@@ -15,7 +15,7 @@ export default async function Home() {
 				<Link href='#pricing'>Pricing</Link>
 			</NavHeader>
 			<div className='flex flex-col items-center py-16'>
-				<div className='flex flex-col items-center h-[80vh] max-w-screen-md gap-2'>
+				<div className='flex flex-col items-center h-[80dvh] max-w-screen-md gap-2 px-8'>
 					<Header size='xl' className='text-center'>
 						The solution to organizing medical closets
 					</Header>
@@ -28,7 +28,7 @@ export default async function Home() {
 					</Link>
 				</div>
 				<Features />
-				<div id='pricing' className='flex flex-col items-center py-16'>
+				<div id='pricing' className='flex flex-col items-center px-8 py-16'>
 					<HeroHeading
 						title='Plans designed for you'
 						description="Our plans are tailored to your organization's needs. Spend less on closet organization so you can spend more on saving lives."
@@ -42,7 +42,6 @@ export default async function Home() {
 						</Link>
 					</HeroHeading>
 					<Plans />
-					hr
 				</div>
 			</div>
 		</main>
