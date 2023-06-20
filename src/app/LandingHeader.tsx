@@ -50,7 +50,7 @@ export default function LandingHeader() {
 			<div
 				className={`absolute top-0 left-0 flex flex-col h-screen gap-4 p-8 pr-32 font-semibold ${
 					sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-				} duration-300 sm:justify-center transition-transform shadow-md sm:translate-x-0 bg-zinc-100 dark:bg-zinc-900 sm:bg-zinc-50 sm:dark:bg-zinc-950 sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-start sm:gap-12 sm:static`}
+				} duration-300 sm:justify-center transition-transform shadow-md sm:translate-x-0 bg-zinc-50 dark:bg-zinc-900 sm:bg-zinc-100 sm:dark:bg-zinc-950 sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-start sm:gap-12 sm:static z-10`}
 			>
 				<Button
 					variant='ghost'
