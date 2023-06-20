@@ -67,7 +67,7 @@ export default function NavHeader({ children }: { children: React.ReactNode }) {
 					<X />
 				</Button>
 				<div className='relative sm:hidden'>
-					<Image src='/logo.svg' alt='logo' width={64} height={64} />
+					<Image src='/logo.svg' alt='logo' width={48} height={48} />
 					<hr className='my-4' />
 				</div>
 				{children}
