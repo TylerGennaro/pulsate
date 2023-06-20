@@ -104,7 +104,7 @@ function FeatureRow({
 
 export default function CompareTable() {
 	return (
-		<div id='compare' className='flex flex-col gap-4'>
+		<div id='compare' className='flex flex-col w-full gap-4'>
 			<Header className='mb-4'>Compare Plans</Header>
 			<Table>
 				<thead>
