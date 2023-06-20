@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // relationMode = "prisma"
 }
 
@@ -88,8 +88,8 @@ model Item {
   product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
   quantity  Int
-  expires   DateTime?
-	// expires   DateTime?  @db.Date @default(now()) // db.Date cuts space from 8 bytes to 4 bytes
+  // expires   DateTime?
+  expires   DateTime?  @db.Date @default(now()) // db.Date cuts space from 8 bytes to 4 bytes
   onOrder   Boolean   @default(false)
 }
 
@@ -98,7 +98,7 @@ model Log {
   timestamp DateTime @default(now())
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId    String?
-  product   Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String?
   type      LogType
   quantity  Int?
