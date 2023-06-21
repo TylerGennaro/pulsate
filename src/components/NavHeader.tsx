@@ -35,55 +35,59 @@ export default function NavHeader({ children }: { children: React.ReactNode }) {
 	}, [sidebarOpen]);
 	return (
 		<div
-			className={`sticky top-0 z-50 grid items-center justify-between w-full bg-zinc-100 dark:bg-zinc-950 grid-cols-2 px-8 py-4 border-r lg:grid-cols-3 sm:border-none transition-shadow ${
-				scrolled ? 'shadow-md sm:border-b' : ''
+			className={`sticky top-0 z-50 w-full bg-zinc-100 dark:bg-zinc-950 border-b transition ${
+				scrolled
+					? 'shadow-md border-zinc-200 dark:border-zinc-800'
+					: 'border-zinc-200/0'
 			}`}
 			ref={sidebarRef}
 		>
-			<Button
-				variant='ghost'
-				className='sm:hidden justify-self-start sidebar-toggle'
-				onClick={() => setSidebarOpen(!sidebarOpen)}
-			>
-				<Menu />
-			</Button>
-			<Image
-				src='/logo.svg'
-				alt='logo'
-				width={32}
-				height={32}
-				className='hidden lg:block'
-			/>
-			<div
-				className={`absolute top-0 left-0 flex flex-col h-screen gap-4 p-8 pr-32 font-semibold ${
-					sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-				} duration-300 sm:justify-center transition-transform shadow-md sm:translate-x-0 bg-zinc-50 dark:bg-zinc-900 sm:bg-zinc-100 sm:dark:bg-zinc-950 sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-start sm:gap-12 sm:static z-10`}
-			>
+			<div className='container grid items-center justify-between grid-cols-2 px-16 py-4 lg:grid-cols-3'>
 				<Button
 					variant='ghost'
-					className='absolute p-1 top-2 right-2 sm:hidden'
-					onClick={() => setSidebarOpen(false)}
+					className='sm:hidden justify-self-start sidebar-toggle'
+					onClick={() => setSidebarOpen(!sidebarOpen)}
 				>
-					<X />
+					<Menu />
 				</Button>
-				<div className='relative sm:hidden'>
-					<Image src='/logo.svg' alt='logo' width={48} height={48} />
-					<hr className='my-4' />
+				<Image
+					src='/logo.svg'
+					alt='logo'
+					width={32}
+					height={32}
+					className='hidden lg:block'
+				/>
+				<div
+					className={`absolute top-0 left-0 flex flex-col h-screen gap-4 p-8 pr-32 font-semibold ${
+						sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+					} duration-300 sm:justify-center transition-transform shadow-md sm:translate-x-0 bg-zinc-50 dark:bg-zinc-900 sm:bg-zinc-100 sm:dark:bg-zinc-950 sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-start sm:gap-12 sm:static z-10`}
+				>
+					<Button
+						variant='ghost'
+						className='absolute p-1 top-2 right-2 sm:hidden'
+						onClick={() => setSidebarOpen(false)}
+					>
+						<X />
+					</Button>
+					<div className='relative sm:hidden'>
+						<Image src='/logo.svg' alt='logo' width={48} height={48} />
+						<hr className='my-4' />
+					</div>
+					{children}
 				</div>
-				{children}
-			</div>
-			<div className='flex items-center justify-end gap-2'>
-				<ThemeToggle />
-				{session ? (
-					<Link href='/app'>
-						<Button variant='outline'>Dashboard</Button>
-					</Link>
-				) : (
-					<SignInButton variant='outline'>
-						Sign In
-						<ArrowRight className='w-4 h-4 ml-2' />
-					</SignInButton>
-				)}
+				<div className='flex items-center justify-end gap-2'>
+					<ThemeToggle />
+					{session ? (
+						<Link href='/app'>
+							<Button variant='outline'>Dashboard</Button>
+						</Link>
+					) : (
+						<SignInButton variant='outline'>
+							Sign In
+							<ArrowRight className='w-4 h-4 ml-2' />
+						</SignInButton>
+					)}
+				</div>
 			</div>
 		</div>
 	);
