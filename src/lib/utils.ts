@@ -55,6 +55,17 @@ export async function crud({
 	return result;
 }
 
+export async function fetchJSONPost(url: string, data?: object) {
+	const response = await fetch(url, {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+	return { data: await response.json(), status: response.status };
+}
+
 export function catchError(e: any) {
 	if (e instanceof z.ZodError) {
 		return new NextResponse(
