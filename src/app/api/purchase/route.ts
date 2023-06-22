@@ -3,19 +3,28 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-// const params: Stripe.Checkout.SessionCreateParams = {
-// 	payment_method_types: ["card"],
-// 	submit_type: "pay",
-// 	line_items: [
-// 		{
-// 			name: "Manager Package",
-// 			amount: formatAmountForStripe(399, CURRENCY),
-// 		}
-// 	]
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 	apiVersion: '2022-11-15',
 });
+
+export async function GET(req: Request) {
+	const { searchParams } = new URL(req.url);
+	const id = searchParams.get('id');
+	try {
+		if (!id?.startsWith('cs_')) {
+			throw new Error('Invalid session id');
+		}
+		const session = await stripe.checkout.sessions.retrieve(id, {
+			expand: ['payment_intent'],
+		});
+		console.log(session);
+		return NextResponse.json(session, { status: 200 });
+	} catch (err) {
+		const message =
+			err instanceof Error ? err.message : 'Internal server error';
+		return NextResponse.json({ message }, { status: 500 });
+	}
+}
 
 export async function POST(req: Request, res: Response) {
 	const body = await req.json();
