@@ -1,4 +1,4 @@
-import { PlanPurchaseButton } from '@components/PlanPurchaseButton';
+import PlanPurchaseButton from '@components/PlanPurchaseButton';
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { Check, X } from 'lucide-react';
