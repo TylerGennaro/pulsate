@@ -23,7 +23,7 @@ export default function Page() {
 				<a href='#compare'>Plans</a>
 				<a href='#faq'>FAQ</a>
 			</NavHeader>
-			<div className='container flex flex-col items-center gap-32 p-16'>
+			<div className='container flex flex-col items-center gap-32 py-16'>
 				<div className='flex justify-center w-full'>
 					<div className='flex flex-col items-center max-w-screen-md gap-2'>
 						<Header size='xl' className='text-center'>

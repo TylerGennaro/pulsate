@@ -5,9 +5,9 @@ import { ThemeToggle } from '@components/ThemeToggle';
 import { Button } from '@components/ui/button';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import Logo from './Logo';
 
 export default function NavHeader({ children }: { children: React.ReactNode }) {
 	const { data: session } = useSession();
@@ -42,7 +42,7 @@ export default function NavHeader({ children }: { children: React.ReactNode }) {
 			}`}
 			ref={sidebarRef}
 		>
-			<div className='container grid items-center justify-between grid-cols-2 px-16 py-4 lg:grid-cols-3'>
+			<div className='container grid items-center justify-between grid-cols-2 py-4 md:grid-cols-3'>
 				<Button
 					variant='ghost'
 					className='sm:hidden justify-self-start sidebar-toggle'
@@ -50,13 +50,7 @@ export default function NavHeader({ children }: { children: React.ReactNode }) {
 				>
 					<Menu />
 				</Button>
-				<Image
-					src='/logo.svg'
-					alt='logo'
-					width={32}
-					height={32}
-					className='hidden lg:block'
-				/>
+				<Logo className='hidden md:flex' />
 				<div
 					className={`absolute top-0 left-0 flex flex-col h-screen gap-4 p-8 pr-32 font-semibold ${
 						sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -69,10 +63,8 @@ export default function NavHeader({ children }: { children: React.ReactNode }) {
 					>
 						<X />
 					</Button>
-					<div className='relative sm:hidden'>
-						<Image src='/logo.svg' alt='logo' width={48} height={48} />
-						<hr className='my-4' />
-					</div>
+					<Logo className='flex sm:hidden' />
+					<hr className='sm:hidden' />
 					{children}
 				</div>
 				<div className='flex items-center justify-end gap-2'>

@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 import { LogOut, X } from 'lucide-react';
 import { SignInButton } from './SignButton';
+import Logo from './Logo';
 
 export default function Sidebar({
 	open,
@@ -51,11 +52,7 @@ export default function Sidebar({
 				<X />
 			</Button>
 			<div className='flex flex-col w-full gap-8 px-8 py-4'>
-				<div>
-					<Header size='md' className='mt-4'>
-						Pulsate
-					</Header>
-				</div>
+				<Logo />
 				<hr />
 				<Nav locations={locations} toggle={toggle} />
 			</div>
