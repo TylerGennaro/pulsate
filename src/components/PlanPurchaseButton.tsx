@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from './ui/button';
-import { fetchJSONPost } from '@lib/utils';
+import { fetchJSON } from '@lib/utils';
 import getStripe from '@lib/stripe';
 import React from 'react';
 
@@ -12,12 +12,12 @@ interface Props {
 	disabled?: boolean;
 }
 
-export const PlanPurchaseButton = React.forwardRef<HTMLButtonElement, Props>(
+const PlanPurchaseButton = React.forwardRef<HTMLButtonElement, Props>(
 	({ plan, children, ...props }, ref: any) => {
 		const [loading, setLoading] = useState(false);
 		async function handleClick() {
 			setLoading(true);
-			const response = await fetchJSONPost('/api/purchase', { plan });
+			const response = await fetchJSON('/api/purchase', 'POST', { plan });
 			if (response.status === 500) {
 				return console.error(response.data.message);
 			}
@@ -35,3 +35,7 @@ export const PlanPurchaseButton = React.forwardRef<HTMLButtonElement, Props>(
 		);
 	}
 );
+
+PlanPurchaseButton.displayName = 'PlanPurchaseButton';
+
+export default PlanPurchaseButton;

@@ -55,9 +55,9 @@ export async function crud({
 	return result;
 }
 
-export async function fetchJSONPost(url: string, data?: object) {
+export async function fetchJSON(url: string, method: string, data?: object) {
 	const response = await fetch(url, {
-		method: 'POST',
+		method,
 		body: JSON.stringify(data),
 		headers: {
 			'Content-Type': 'application/json',
