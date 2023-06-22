@@ -1,3 +1,4 @@
+import { PlanPurchaseButton } from '@components/PlanPurchaseButton';
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { Check, X } from 'lucide-react';
@@ -57,9 +58,9 @@ export default function PlanCard({ name, monthly, price, perks }: Props) {
 					</span>
 				</span>
 			</div>
-			<Button disabled={!canBuy}>
+			<PlanPurchaseButton plan={name.toLowerCase()} disabled={!canBuy}>
 				{canBuy ? 'Buy this plan' : 'You have this'}
-			</Button>
+			</PlanPurchaseButton>
 			<ul>
 				{Object.entries(perks).map(([name, included]) => (
 					<Perk key={name} included={included}>
