@@ -46,6 +46,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+	tier					Tier?   @default(FREE)
   accounts      Account[]
   // sessions      Session[]
 
@@ -103,6 +104,12 @@ model Log {
   type      LogType
   quantity  Int?
   footnote  String?
+}
+
+enum Tier {
+	FREE
+	MANAGER
+	EXECUTIVE
 }
 
 enum LogType {
