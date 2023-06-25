@@ -1,9 +1,19 @@
+import { toDateTime } from '@lib/date';
+import { db } from '@lib/prisma';
+import { Tier } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 	apiVersion: '2022-11-15',
 });
+
+const relevantEvents = new Set([
+	'checkout.session.completed',
+	'customer.subscription.created',
+	'customer.subscription.deleted',
+	'customer.subscription.updated',
+]);
 
 export async function POST(req: Request) {
 	const body = await req.text();
@@ -21,29 +31,73 @@ export async function POST(req: Request) {
 	}
 
 	// Handle the event
-	switch (event.type) {
-		case 'checkout.session.completed':
-			handleCheckoutSessionCompleted(event.data.object);
-			break;
-		case 'customer.subscription.created':
-			const customerSubscriptionCreated = event.data.object;
-			// Then define and call a function to handle the event customer.subscription.created
-			console.log('✅ Success subscription', customerSubscriptionCreated);
-			break;
-		case 'customer.subscription.deleted':
-			const customerSubscriptionDeleted = event.data.object;
-			// Then define and call a function to handle the event customer.subscription.deleted
-			console.log('❌ Deleted subscription');
-			break;
+	if (relevantEvents.has(event.type)) {
+		try {
+			switch (event.type) {
+				case 'checkout.session.completed':
+					// No operations necessary yet
+					// Send email/receipt/notification in the future
+					break;
+				case 'customer.subscription.created':
+				case 'customer.subscription.updated':
+				case 'customer.subscription.deleted':
+					// Upsert the subscription data from database
+					const subscription = event.data.object as Stripe.Subscription;
+					handleSubscriptionChange(
+						subscription.id,
+						subscription.customer as string
+					);
+					break;
+				default:
+					throw new Error('Unhandled relevant hook event.');
+			}
+		} catch (err) {
+			console.log(err);
+			return new NextResponse('Webhook handler error', { status: 500 });
+		}
+		return new NextResponse('Success', { status: 200 });
 	}
-
-	return new NextResponse('Success', { status: 200 });
+	return new NextResponse('Received', { status: 200 });
 }
 
-function handleCheckoutSessionCompleted(
-	checkoutSessionCompleted: Stripe.Event.Data.Object
+async function handleSubscriptionChange(
+	subscriptionId: string,
+	customerId: string
 ) {
-	console.log('✅ Success checkout', checkoutSessionCompleted);
+	const user = await db.user.findFirst({
+		where: {
+			stripe_customer_id: customerId,
+		},
+	});
+	if (!user) throw new Error('User not found');
+	const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+	if (!subscription) throw new Error('Subscription not found');
+	const subscriptionData = {
+		id: subscription.id,
+		status: subscription.status,
+		tier: subscription.metadata.plan as Tier,
+		cancel_at_period_end: subscription.cancel_at_period_end,
+		current_period_start: toDateTime(subscription.current_period_start),
+		current_period_end: toDateTime(subscription.current_period_end),
+		created: toDateTime(subscription.created),
+		ended_at: toDateTime(subscription.ended_at),
+	};
+	await db.subscription.upsert({
+		where: {
+			id: subscription.id,
+		},
+		create: {
+			...subscriptionData,
+			user: {
+				connect: {
+					id: user.id,
+				},
+			},
+		},
+		update: {
+			...subscriptionData,
+		},
+	});
 }
 
 /*

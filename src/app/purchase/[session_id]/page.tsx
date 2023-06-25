@@ -4,7 +4,7 @@ export default async function Page({
 	params: { session_id: string };
 }) {
 	const session = await fetch(
-		`http://localhost:3000/api/purchase?id=${params.session_id}`,
+		`${process.env.NEXT_PUBLIC_PROJECT_URL}/api/purchase?id=${params.session_id}`,
 		{
 			next: {
 				revalidate: 10,

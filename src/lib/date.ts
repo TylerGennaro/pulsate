@@ -1,5 +1,10 @@
 import { format } from 'date-fns';
 
+export function toDateTime(seconds: number | null) {
+	if (seconds === null) return null;
+	return new Date(seconds * 1000);
+}
+
 export function formatDate(date: Date | string) {
 	if (typeof date === 'string') {
 		if (date.length === 0) return '';

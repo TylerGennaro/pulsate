@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { fetchJSON } from '@lib/utils';
-import getStripe from '@lib/stripe';
+import getStripe from '@lib/stripe-client';
 import React from 'react';
 
 interface Props {

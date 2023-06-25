@@ -1,6 +1,7 @@
 // import { Stripe } from "@stripe/stripe-js";
 
 import { authOptions } from '@lib/auth';
+import { getCustomer } from '@lib/stripe-util';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
@@ -37,9 +38,11 @@ export async function POST(req: Request, res: Response) {
 		return NextResponse.redirect('/signin');
 	}
 	try {
+		const customerId = await getCustomer(userSession.user.id);
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ['card'],
 			mode: 'subscription',
+			customer: customerId,
 			line_items: [
 				{
 					price_data: {
@@ -69,9 +72,10 @@ export async function POST(req: Request, res: Response) {
 				'origin'
 			)}/purchase/{CHECKOUT_SESSION_ID}`,
 			cancel_url: `${req.headers.get('origin')}/plans`,
-			metadata: {
-				plan,
-				user: userSession?.user.id!,
+			subscription_data: {
+				metadata: {
+					plan,
+				},
 			},
 		});
 		return NextResponse.json(session, { status: 200 });

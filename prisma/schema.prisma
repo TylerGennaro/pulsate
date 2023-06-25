@@ -41,17 +41,20 @@ model Account {
 // }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-	tier					Tier?   @default(FREE)
-  accounts      Account[]
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String?   @unique
+  emailVerified      DateTime?
+  image              String?
+  stripe_customer_id String?
+  accounts           Account[]
   // sessions      Session[]
 
   locations Location[]
   logs      Log[]
+	subscriptions Subscription[]
+
+	@@index ([stripe_customer_id])
 }
 
 // model VerificationToken {
@@ -90,7 +93,7 @@ model Item {
   productId String
   quantity  Int
   // expires   DateTime?
-  expires   DateTime?  @db.Date @default(now()) // db.Date cuts space from 8 bytes to 4 bytes
+  expires   DateTime? @default(now()) @db.Date // db.Date cuts space from 8 bytes to 4 bytes
   onOrder   Boolean   @default(false)
 }
 
@@ -106,10 +109,25 @@ model Log {
   footnote  String?
 }
 
+model Subscription {
+	id String @id
+	user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+	userId String?
+	tier Tier
+	status String
+	cancel_at_period_end Boolean @default(false)
+	current_period_start DateTime? @db.Date
+	current_period_end DateTime? @db.Date
+	created DateTime? @db.Date
+	ended_at DateTime? @db.Date
+
+	@@index ([userId])
+}
+
 enum Tier {
-	FREE
-	MANAGER
-	EXECUTIVE
+  FREE
+  MANAGER
+  EXECUTIVE
 }
 
 enum LogType {
