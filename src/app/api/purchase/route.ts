@@ -1,5 +1,7 @@
 // import { Stripe } from "@stripe/stripe-js";
 
+import { authOptions } from '@lib/auth';
+import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
@@ -30,6 +32,10 @@ export async function POST(req: Request, res: Response) {
 	const body = await req.json();
 	const plan: string = body.plan;
 	const planCapitalized = plan.charAt(0).toUpperCase() + plan.slice(1);
+	const userSession = await getServerSession(authOptions);
+	if (!userSession) {
+		return NextResponse.redirect('/signin');
+	}
 	try {
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ['card'],
@@ -63,6 +69,10 @@ export async function POST(req: Request, res: Response) {
 				'origin'
 			)}/purchase/{CHECKOUT_SESSION_ID}`,
 			cancel_url: `${req.headers.get('origin')}/plans`,
+			metadata: {
+				plan,
+				user: userSession?.user.id!,
+			},
 		});
 		return NextResponse.json(session, { status: 200 });
 	} catch (err) {

@@ -87,3 +87,7 @@ export function formatExpirationDate(date: Date | null) {
 	if (date === null) return 'Never';
 	return format(date, 'MMM d, yyyy');
 }
+
+export function capitalize(string: string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}

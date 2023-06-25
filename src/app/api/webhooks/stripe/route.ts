@@ -23,9 +23,7 @@ export async function POST(req: Request) {
 	// Handle the event
 	switch (event.type) {
 		case 'checkout.session.completed':
-			const checkoutSessionCompleted = event.data.object;
-			// Then define and call a function to handle the event checkout.session.completed
-			console.log('✅ Success checkout', checkoutSessionCompleted);
+			handleCheckoutSessionCompleted(event.data.object);
 			break;
 		case 'customer.subscription.created':
 			const customerSubscriptionCreated = event.data.object;
@@ -41,3 +39,22 @@ export async function POST(req: Request) {
 
 	return new NextResponse('Success', { status: 200 });
 }
+
+function handleCheckoutSessionCompleted(
+	checkoutSessionCompleted: Stripe.Event.Data.Object
+) {
+	console.log('✅ Success checkout', checkoutSessionCompleted);
+}
+
+/*
+
+checkout.session.completed
+- metadata.plan
+- metadata.user
+- customer
+- status
+
+customer.subscription.created
+- 
+
+*/
