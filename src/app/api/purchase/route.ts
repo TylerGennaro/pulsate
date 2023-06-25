@@ -1,14 +1,8 @@
-// import { Stripe } from "@stripe/stripe-js";
-
 import { authOptions } from '@lib/auth';
+import { stripe } from '@lib/stripe';
 import { getCustomer } from '@lib/stripe-util';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-	apiVersion: '2022-11-15',
-});
 
 export async function GET(req: Request) {
 	const { searchParams } = new URL(req.url);

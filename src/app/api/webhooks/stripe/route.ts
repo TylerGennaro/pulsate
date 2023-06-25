@@ -1,12 +1,9 @@
 import { toDateTime } from '@lib/date';
 import { db } from '@lib/prisma';
+import { stripe } from '@lib/stripe';
 import { Tier } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-	apiVersion: '2022-11-15',
-});
 
 const relevantEvents = new Set([
 	'checkout.session.completed',
