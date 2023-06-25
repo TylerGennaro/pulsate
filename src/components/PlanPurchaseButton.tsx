@@ -5,9 +5,10 @@ import { Button } from './ui/button';
 import { fetchJSON } from '@lib/utils';
 import getStripe from '@lib/stripe-client';
 import React from 'react';
+import { Tier } from '@prisma/client';
 
 interface Props {
-	plan: string;
+	plan: Tier;
 	children?: React.ReactNode;
 	disabled?: boolean;
 }

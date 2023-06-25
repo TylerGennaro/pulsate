@@ -1,6 +1,7 @@
 import PlanPurchaseButton from '@components/PlanPurchaseButton';
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
+import { Tier } from '@prisma/client';
 import { Check, X } from 'lucide-react';
 
 function Perk({
@@ -58,7 +59,7 @@ export default function PlanCard({ name, monthly, price, perks }: Props) {
 					</span>
 				</span>
 			</div>
-			<PlanPurchaseButton plan={name.toLowerCase()} disabled={!canBuy}>
+			<PlanPurchaseButton plan={name.toUpperCase() as Tier} disabled={!canBuy}>
 				{canBuy ? 'Buy this plan' : 'You have this'}
 			</PlanPurchaseButton>
 			<ul>
