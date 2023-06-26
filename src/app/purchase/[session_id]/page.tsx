@@ -1,3 +1,6 @@
+import Loader from '@components/ui/loader';
+import { Check } from 'lucide-react';
+
 export default async function Page({
 	params,
 }: {
@@ -16,7 +19,22 @@ export default async function Page({
 		<div>
 			<h1>Session {params.session_id}</h1>
 			<p>Session data: {JSON.stringify(session)}</p>
-			<p>Status: {session.status === 'complete' ? 'Complete' : 'loading...'}</p>
+			<div>
+				Status:{' '}
+				{session.status === 'complete' ? (
+					<div className='flex items-center gap-2'>
+						<div className='p-1 bg-green-700 border-2 rounded-full text-zinc-50 w-fit border-zinc-50'>
+							<Check className='w-3 h-3' />
+						</div>
+						<span>Complete</span>
+					</div>
+				) : (
+					<div className='flex items-center gap-2'>
+						<Loader className='w-6 h-6' />
+						<span>Loading...</span>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }
