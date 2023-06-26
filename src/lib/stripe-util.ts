@@ -34,6 +34,18 @@ export async function getCustomer(userId: string) {
 	return user.stripe_customer_id;
 }
 
+export async function getUserFromCustomer(customerId: string) {
+	const user = await db.user.findFirst({
+		where: {
+			stripe_customer_id: customerId,
+		},
+	});
+	if (!user) {
+		throw new Error('User not found.');
+	}
+	return user;
+}
+
 export async function getTier(userId: string) {
 	const subscription = await db.subscription.findFirst({
 		select: {

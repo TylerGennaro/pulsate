@@ -1,6 +1,7 @@
 import { toDateTime } from '@lib/date';
 import { db } from '@lib/prisma';
 import { stripe } from '@lib/stripe';
+import { getUserFromCustomer } from '@lib/stripe-util';
 import { Tier } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
@@ -32,7 +33,8 @@ export async function POST(req: Request) {
 		try {
 			switch (event.type) {
 				case 'checkout.session.completed':
-					// No operations necessary yet
+					const session = event.data.object as Stripe.Checkout.Session;
+					handleCheckoutComplete(session.id, session.customer as string);
 					// Send email/receipt/notification in the future
 					break;
 				case 'customer.subscription.created':
@@ -61,12 +63,7 @@ async function handleSubscriptionChange(
 	subscriptionId: string,
 	customerId: string
 ) {
-	const user = await db.user.findFirst({
-		where: {
-			stripe_customer_id: customerId,
-		},
-	});
-	if (!user) throw new Error('User not found');
+	const user = await getUserFromCustomer(customerId);
 	const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 	if (!subscription) throw new Error('Subscription not found');
 	const subscriptionData = {
@@ -94,6 +91,24 @@ async function handleSubscriptionChange(
 		update: {
 			...subscriptionData,
 		},
+	});
+}
+
+async function handleCheckoutComplete(sessionId: string, customerId: string) {
+	const user = await getUserFromCustomer(customerId);
+	await db.payment.upsert({
+		where: {
+			id: sessionId,
+		},
+		create: {
+			id: sessionId,
+			user: {
+				connect: {
+					id: user.id,
+				},
+			},
+		},
+		update: {},
 	});
 }
 
