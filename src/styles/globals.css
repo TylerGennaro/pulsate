@@ -89,4 +89,7 @@
 	.icon-right {
 		@apply w-4 h-4 ml-2;
 	}
+	.absolute-center {
+		@apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+	}
 }
