@@ -11,10 +11,7 @@ export async function GET(req: Request) {
 		if (!id?.startsWith('cs_')) {
 			throw new Error('Invalid session id');
 		}
-		const session = await stripe.checkout.sessions.retrieve(id, {
-			expand: ['payment_intent'],
-		});
-		console.log(session);
+		const session = await stripe.checkout.sessions.retrieve(id);
 		return NextResponse.json(session, { status: 200 });
 	} catch (err) {
 		const message =
