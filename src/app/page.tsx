@@ -17,8 +17,8 @@ export default async function Home() {
 			</NavHeader>
 			<div className='flex flex-col items-center pb-16'>
 				<div className='h-[100vh] max-w-screen-md px-8'>
-					<div className='absolute absolute-center bg-[radial-gradient(#1d4ed840,_transparent_70%)] h-2/3 aspect-square -z-20' />
-					<Patterns.DotGrid className='absolute absolute-center -z-10 h-3/4 aspect-square' />
+					<div className='hidden dark:block absolute absolute-center bg-[radial-gradient(#1d4ed840,_transparent_70%)] h-2/3 w-2/3 -z-20' />
+					<Patterns.DotGrid className='absolute hidden w-2/3 absolute-center -z-10 h-2/3 opacity-60 dark:block' />
 					<HeroHeading
 						title='The solution to organizing medical closets'
 						description='Effortlessly organize your medical closet and manage inventory with
