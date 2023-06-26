@@ -12,7 +12,7 @@ interface Props {
 export default function HeroHeading({
 	title,
 	description,
-	size = 'default',
+	size = 'xl',
 	children,
 	className,
 }: Props) {

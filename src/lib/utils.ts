@@ -91,3 +91,10 @@ export function formatExpirationDate(date: Date | null) {
 export function capitalize(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export function populateMetadata(title: string) {
+	return {
+		title: `${title} | Pulsate`,
+		description: 'Pulsate is a platform for managing EMS medical closets.',
+	};
+}
