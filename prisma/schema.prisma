@@ -53,6 +53,7 @@ model User {
   locations Location[]
   logs      Log[]
 	subscriptions Subscription[]
+	payments Payment[]
 
 	@@index ([stripe_customer_id])
 }
@@ -122,6 +123,12 @@ model Subscription {
 	ended_at DateTime? @db.Date
 
 	@@index ([userId])
+}
+
+model Payment {
+	id String @id
+	user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+	userId String?
 }
 
 enum Tier {
