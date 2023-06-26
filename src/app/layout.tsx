@@ -1,13 +1,15 @@
 import Providers from '@components/Providers';
 import '@styles/globals.css';
 import { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
-import { cn, populateMetadata } from '@lib/utils';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
 
-const inter = Inter({ subsets: ['latin'] });
+const roboto = Roboto({
+	weight: '400',
+	subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
 	title: {
@@ -26,7 +28,7 @@ export default async function RootLayout({
 	const session = await getServerSession(authOptions);
 	return (
 		<html lang='en'>
-			<body className={inter.className}>
+			<body className={roboto.className}>
 				<Providers session={session}>
 					<Toaster position='bottom-right' />
 					{children}
