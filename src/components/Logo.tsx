@@ -14,8 +14,9 @@ export default function Logo({ className }: { className?: string }) {
 				alt='logo'
 				width={32}
 				height={32}
+				className='h-8'
 			/>
-			<span className='text-2xl font-semibold text-[#111] dark:text-[#eee]'>
+			<span className='text-2xl font-medium text-blue-600 dark:text-blue-500'>
 				Pulsate
 			</span>
 		</Link>
