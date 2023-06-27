@@ -34,10 +34,10 @@ export default function FAQ() {
 						Why have a monthly payment and a one-time fee?
 					</FAQQestion>
 					<FAQAnswer>
-						Resources aren't cheap. All reliable cloud-hosted databases require
-						a monthly payment. The one-time fee helps us invest back into the
-						application, while the monthly payment helps keep the doors open
-						over time.
+						Resources aren&apos;t cheap. All reliable cloud-hosted databases
+						require a monthly payment. The one-time fee helps us invest back
+						into the application, while the monthly payment helps keep the doors
+						open over time.
 					</FAQAnswer>
 				</FAQEntry>
 				<FAQEntry>
