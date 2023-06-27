@@ -1,23 +1,9 @@
-export const plans = {
-	free: {
-		price: {
-			monthly: 0,
-			yearly: 0,
-		},
-		startupFee: 0,
-	},
-	manager: {
-		price: {
-			monthly: 15,
-			yearly: 150,
-		},
-		startupFee: 299,
-	},
-	executive: {
-		price: {
-			monthly: 40,
-			yearly: 400,
-		},
-		startupFee: 299,
-	},
+export const plans: {
+	[key: string]: string[];
+} = {
+	manager: ['price_1NNhyUFcqm2csjHPUbTjjz6Y', 'price_1NNhyUFcqm2csjHPby7pdYy1'],
+	executive: [
+		'price_1NNi2RFcqm2csjHPgAwjcMvU',
+		'price_1NNi2RFcqm2csjHP2aWuyAH0',
+	],
 };
