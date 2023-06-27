@@ -63,6 +63,10 @@ export async function fetchJSON(url: string, method: string, data?: object) {
 			'Content-Type': 'application/json',
 		},
 	});
+	if (response.redirected) {
+		window.location.replace(response.url);
+		return { data: { message: 'Redirected' }, status: response.status };
+	}
 	return { data: await response.json(), status: response.status };
 }
 
