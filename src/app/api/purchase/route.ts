@@ -1,3 +1,4 @@
+import { plans } from '@config/plans';
 import { authOptions } from '@lib/auth';
 import { stripe } from '@lib/stripe';
 import { getCustomer } from '@lib/stripe-util';
@@ -22,11 +23,14 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request, res: Response) {
 	const body = await req.json();
-	const plan: string = body.plan;
-	const planCapitalized = plan.charAt(0).toUpperCase() + plan.slice(1);
+	const plan = body.plan as string;
+	const planData = plans[plan.toLowerCase()];
+	const origin = req.headers.get('origin');
 	const userSession = await getServerSession(authOptions);
 	if (!userSession) {
-		return NextResponse.redirect('/signin');
+		return NextResponse.redirect(
+			`${origin}/signin?callbackUrl=${origin}/plans`
+		);
 	}
 	try {
 		const customerId = await getCustomer(userSession.user.id);
@@ -34,31 +38,10 @@ export async function POST(req: Request, res: Response) {
 			payment_method_types: ['card'],
 			mode: 'subscription',
 			customer: customerId,
-			line_items: [
-				{
-					price_data: {
-						currency: 'usd',
-						product_data: {
-							name: `${planCapitalized} Package Subscription`,
-						},
-						unit_amount: 1999,
-						recurring: {
-							interval: 'month',
-						},
-					},
-					quantity: 1,
-				},
-				{
-					price_data: {
-						currency: 'usd',
-						product_data: {
-							name: `${planCapitalized} Package Startup Fee`,
-						},
-						unit_amount: 28000,
-					},
-					quantity: 1,
-				},
-			],
+			line_items: planData.map((price) => ({
+				price,
+				quantity: 1,
+			})),
 			success_url: `${req.headers.get(
 				'origin'
 			)}/purchase/{CHECKOUT_SESSION_ID}`,
