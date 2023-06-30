@@ -20,8 +20,8 @@ function DotGrid({ className }: { className?: string }) {
 							x2='100%'
 							y2='100%'
 						>
-							<stop stop-color='white' offset='0' />
-							<stop stop-color='black' stop-opacity='0' offset='0.8' />
+							<stop stopColor='white' offset='0' />
+							<stop stopColor='black' stopOpacity='0' offset='0.8' />
 						</radialGradient>
 						<rect x='0' y='0' width='100%' height='100%' fill='url(#grad)' />
 					</mask>
