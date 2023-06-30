@@ -52,7 +52,7 @@ export default function Sidebar({
 				<X />
 			</Button>
 			<div className='flex flex-col w-full gap-8 px-8 py-4'>
-				<Logo />
+				<Logo className='mt-4' />
 				<hr />
 				<Nav locations={locations} toggle={toggle} />
 			</div>
