@@ -12,10 +12,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-	title: {
-		template: '%s | Pulsate',
-		default: 'Pulsate',
-	},
+	title: 'Pulsate',
 	description:
 		'Pulsate is a social media platform for developers to share their projects and ideas.',
 };

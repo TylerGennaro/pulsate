@@ -1,7 +1,10 @@
 import Logo from '@components/Logo';
 import Header from '@components/ui/header';
 import Loader from '@components/ui/loader';
+import { populateMetadata } from '@lib/utils';
 import { Check } from 'lucide-react';
+
+export const metadata = populateMetadata('Payment Confirmation');
 
 export default async function Page({
 	params,

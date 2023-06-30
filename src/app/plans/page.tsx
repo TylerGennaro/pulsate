@@ -1,19 +1,14 @@
 import Header from '@components/ui/header';
-import PlanCard from './PlanCard';
 import { Button } from '@components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import FAQ from './FAQ';
 import CompareTable from './CompareTable';
-import { Metadata } from 'next';
 import NavHeader from '@components/NavHeader';
 import Link from 'next/link';
 import Plans from './Plans';
+import { populateMetadata } from '@lib/utils';
 
-export const metadata: Metadata = {
-	title: 'Plans and Pricing | Pulsate',
-	description:
-		"Choose the best plan for your organization and don't overpay. Plans are differentiated by scale and features.",
-};
+export const metadata = populateMetadata('Plans and Pricing');
 
 export default function Page() {
 	return (

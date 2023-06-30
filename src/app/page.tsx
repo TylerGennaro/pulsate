@@ -2,13 +2,16 @@ import { Button } from '@components/ui/button';
 import Link from 'next/link';
 import NavHeader from '@components/NavHeader';
 import Plans from './plans/Plans';
-import Header from '@components/ui/header';
 import Features from './Features';
 import HeroHeading from '@components/HeroHeading';
 import { ArrowRight } from 'lucide-react';
 import { Patterns } from '@components/BackgroundPattern';
+import { Metadata } from 'next';
+import { populateMetadata } from '@lib/utils';
 
-export default async function Home() {
+export const metadata = populateMetadata('Home');
+
+export default function Home() {
 	return (
 		<main className='flex flex-col'>
 			<NavHeader>
