@@ -1,6 +1,5 @@
 import PlanPurchaseButton from '@components/PlanPurchaseButton';
 import { Badge } from '@components/ui/badge';
-import { Button } from '@components/ui/button';
 import { Tier } from '@prisma/client';
 import { Check, X } from 'lucide-react';
 
