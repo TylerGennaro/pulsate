@@ -1,5 +1,6 @@
 import { ClassValue, clsx } from 'clsx';
 import { format } from 'date-fns';
+import { Metadata } from 'next';
 import { NextResponse } from 'next/server';
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
@@ -96,7 +97,7 @@ export function capitalize(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function populateMetadata(title: string) {
+export function populateMetadata(title: string): Metadata {
 	return {
 		title: `${title} | Pulsate`,
 		description: 'Pulsate is a platform for managing EMS medical closets.',
