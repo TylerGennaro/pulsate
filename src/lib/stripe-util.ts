@@ -61,3 +61,13 @@ export async function getTier(userId: string) {
 	}
 	return subscription.tier;
 }
+
+export async function hasActiveSubscription(userId: string) {
+	const subscription = await db.subscription.findFirst({
+		where: {
+			userId,
+			status: 'active',
+		},
+	});
+	return !!subscription;
+}
