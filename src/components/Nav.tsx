@@ -117,7 +117,7 @@ export function Nav({
 						icon={item.icon}
 						selected={
 							(item.link === '/' && pathname === '/app') ||
-							pathname == `/app${item.link}`
+							(pathname.startsWith(`/app${item.link}`) && item.link !== '/')
 						}
 						onClick={() => toggle(false)}
 					>
