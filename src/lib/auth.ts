@@ -3,6 +3,7 @@ import { NextAuthOptions } from 'next-auth';
 import { db } from './prisma';
 import GoogleProvider from 'next-auth/providers/google';
 import AzureADProvider from 'next-auth/providers/azure-ad';
+import { getTier } from './stripe-util';
 
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 	const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -44,11 +45,13 @@ export const authOptions: NextAuthOptions = {
 	],
 	callbacks: {
 		async session({ token, session }) {
+			const tier = await getTier(token.id);
 			if (token && session?.user) {
 				session.user.id = token.id;
 				session.user.name = token.name;
 				session.user.email = token.email;
 				session.user.image = token.picture;
+				session.user.tier = tier;
 			}
 
 			return session;
