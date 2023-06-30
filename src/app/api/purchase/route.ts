@@ -1,7 +1,7 @@
 import { plans } from '@config/plans';
 import { authOptions } from '@lib/auth';
 import { stripe } from '@lib/stripe';
-import { getCustomer } from '@lib/stripe-util';
+import { getCustomer, hasActiveSubscription } from '@lib/stripe-util';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
@@ -31,6 +31,10 @@ export async function POST(req: Request, res: Response) {
 		return NextResponse.redirect(
 			`${origin}/signin?callbackUrl=${origin}/plans`
 		);
+	}
+	const hasSubscription = await hasActiveSubscription(userSession.user.id);
+	if (hasSubscription) {
+		return NextResponse.redirect(origin!);
 	}
 	try {
 		const customerId = await getCustomer(userSession.user.id);
