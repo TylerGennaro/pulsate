@@ -15,7 +15,7 @@
 	- [✅] Update an item's name/info
 - [✅] Checkbox if items don't expire
 - [✅] Show items on order
-- [] Product logs
+- [✅] Product logs
 	- [✅] User adds item
 	- [✅] User removes item
 	- [✅] User updates item
@@ -27,6 +27,8 @@
 - [✅] Checkout page
 - [✅] Better responsive sidebar
 - [] Add payment with Stripe
+- [] Sorting on products page
+	- [] Default sort products by shelf location
 
 - [] Improve mobile UX
 - [] Notification system
