@@ -11,6 +11,7 @@ const relevantEvents = new Set([
 	'customer.subscription.created',
 	'customer.subscription.deleted',
 	'customer.subscription.updated',
+	'invoice.paid',
 ]);
 
 export async function POST(req: Request) {
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
 			switch (event.type) {
 				case 'checkout.session.completed':
 					const session = event.data.object as Stripe.Checkout.Session;
-					handleCheckoutComplete(session.id, session.customer as string);
+					handlePaymentReceived(session.id, session.customer as string);
 					// Send email/receipt/notification in the future
 					break;
 				case 'customer.subscription.created':
@@ -46,6 +47,10 @@ export async function POST(req: Request) {
 						subscription.id,
 						subscription.customer as string
 					);
+					break;
+				case 'invoice.paid':
+					const invoice = event.data.object as Stripe.Invoice;
+					handlePaymentReceived(invoice.id, invoice.customer as string);
 					break;
 				default:
 					throw new Error('Unhandled relevant hook event.');
@@ -94,14 +99,14 @@ async function handleSubscriptionChange(
 	});
 }
 
-async function handleCheckoutComplete(sessionId: string, customerId: string) {
+async function handlePaymentReceived(paymentId: string, customerId: string) {
 	const user = await getUserFromCustomer(customerId);
 	await db.payment.upsert({
 		where: {
-			id: sessionId,
+			id: paymentId,
 		},
 		create: {
-			id: sessionId,
+			id: paymentId,
 			user: {
 				connect: {
 					id: user.id,
