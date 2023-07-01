@@ -5,6 +5,7 @@ import { Roboto } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
+import { cn } from '@lib/utils';
 
 const roboto = Roboto({
 	weight: '400',
@@ -25,7 +26,14 @@ export default async function RootLayout({
 	const session = await getServerSession(authOptions);
 	return (
 		<html lang='en'>
-			<body className={roboto.className}>
+			<body
+				className={
+					cn(
+						roboto.className,
+						'overflow-hidden'
+					) /* overflow-hidden is necessary */
+				}
+			>
 				<Providers session={session}>
 					<Toaster position='bottom-right' />
 					{children}
