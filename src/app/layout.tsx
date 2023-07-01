@@ -26,14 +26,7 @@ export default async function RootLayout({
 	const session = await getServerSession(authOptions);
 	return (
 		<html lang='en'>
-			<body
-				className={
-					cn(
-						roboto.className,
-						'overflow-hidden'
-					) /* overflow-hidden is necessary */
-				}
-			>
+			<body className={cn(roboto.className)}>
 				<Providers session={session}>
 					<Toaster position='bottom-right' />
 					{children}

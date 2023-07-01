@@ -14,15 +14,15 @@ export default function AppShell({
 }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	return (
-		<div className='flex h-[100dvh]'>
+		<div className='relative flex h-full'>
 			<Sidebar
 				locations={locations}
 				open={sidebarOpen}
 				toggle={setSidebarOpen}
 			/>
-			<div className='flex flex-col w-full shrink'>
+			<div className='flex flex-col w-full h-full shrink'>
 				<SiteHeader sidebarToggle={setSidebarOpen} sidebarOpen={sidebarOpen} />
-				<div className='w-full h-full p-4 overflow-y-scroll'>{children}</div>
+				<div className='w-full h-full p-4'>{children}</div>
 			</div>
 		</div>
 	);

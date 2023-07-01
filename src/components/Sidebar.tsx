@@ -39,7 +39,7 @@ export default function Sidebar({
 	}, []);
 	return (
 		<div
-			className={`flex w-80 h-full bg-zinc-50 dark:bg-zinc-900 border-r shadow-lg flex-col justify-between z-40 shrink-0 overflow-auto absolute lg:left-0 lg:opacity-100 lg:relative transition-all duration-300 ${
+			className={`flex w-80 h-[100dvh] sticky top-0 bg-zinc-50 dark:bg-zinc-900 border-r shadow-lg flex-col justify-between z-40 shrink-0 overflow-auto lg:left-0 lg:opacity-100 transition-all duration-300 ${
 				open ? 'left-0 opacity-100' : '-left-80 opacity-0'
 			}`}
 			ref={sidebarRef}
