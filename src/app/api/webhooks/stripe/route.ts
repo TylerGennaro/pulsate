@@ -101,11 +101,8 @@ async function handleSubscriptionChange(
 
 async function handlePaymentReceived(paymentId: string, customerId: string) {
 	const user = await getUserFromCustomer(customerId);
-	await db.payment.upsert({
-		where: {
-			id: paymentId,
-		},
-		create: {
+	await db.payment.create({
+		data: {
 			id: paymentId,
 			user: {
 				connect: {
@@ -113,7 +110,6 @@ async function handlePaymentReceived(paymentId: string, customerId: string) {
 				},
 			},
 		},
-		update: {},
 	});
 }
 
