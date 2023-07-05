@@ -34,8 +34,8 @@ export async function POST(req: Request) {
 		try {
 			switch (event.type) {
 				case 'checkout.session.completed':
-					const session = event.data.object as Stripe.Checkout.Session;
-					handlePaymentReceived(session.id, session.customer as string);
+					// const session = event.data.object as Stripe.Checkout.Session;
+					// handlePaymentReceived(session.id, session.customer as string);
 					// Send email/receipt/notification in the future
 					break;
 				case 'customer.subscription.created':
