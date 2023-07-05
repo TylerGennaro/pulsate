@@ -94,7 +94,7 @@ export function formatExpirationDate(date: Date | null) {
 }
 
 export function capitalize(string: string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
+	return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
 export function populateMetadata(title: string): Metadata {
