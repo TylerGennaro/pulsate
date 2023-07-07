@@ -9,7 +9,11 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Logo from './Logo';
 
-export default function NavHeader({ children }: { children: React.ReactNode }) {
+export default function NavHeader({
+	items,
+}: {
+	items: { label: string; href: string }[];
+}) {
 	const { data: session } = useSession();
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [scrolled, setScrolled] = useState(false);
@@ -65,7 +69,20 @@ export default function NavHeader({ children }: { children: React.ReactNode }) {
 					</Button>
 					<Logo className='flex sm:hidden' />
 					<hr className='sm:hidden' />
-					{children}
+					{items.map((item) => {
+						if (item.href.startsWith('#'))
+							return (
+								<a href={item.href} onClick={() => setSidebarOpen(false)}>
+									{item.label}
+								</a>
+							);
+						else
+							return (
+								<Link href={item.href} onClick={() => setSidebarOpen(false)}>
+									{item.label}
+								</Link>
+							);
+					})}
 				</div>
 				<div className='flex items-center justify-end gap-2'>
 					<ThemeToggle />
