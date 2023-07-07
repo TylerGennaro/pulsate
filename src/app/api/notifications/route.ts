@@ -1,6 +1,7 @@
 import { authOptions } from '@lib/auth';
 import { db } from '@lib/prisma';
 import { getServerSession } from 'next-auth';
+import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -30,6 +31,7 @@ export async function PUT(req: Request) {
 				},
 			});
 		}
+		revalidateTag('notifications');
 	} catch (err) {
 		return new NextResponse('Could not perform database operations', {
 			status: 400,
