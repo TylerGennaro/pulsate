@@ -11,18 +11,27 @@ import { z } from 'zod';
 const schema = z.object({
 	name: z
 		.string()
-		.min(1, { message: 'Name must be at least 2 character long.' })
-		.max(50, { message: 'Name must be at most 50 characters long.' })
+		.min(1, { message: 'Name must be at least 2 characters.' })
+		.max(50, { message: 'Name must be less than 50 characters.' })
 		.regex(/^[a-z0-9]+[a-z0-9\s-]*$/i, {
 			// Contains alphanumerical, \s, -, but can not start with - or \s
 			message: 'Name contains illegal characters.',
 		}),
-	min: z.coerce.number().int().min(1),
+	min: z.coerce
+		.number()
+		.int()
+		.min(1, { message: 'Minimum quantity must be greater than 1.' }),
 	max: z.coerce
 		.number({ invalid_type_error: 'Max quantity is not a number.' })
 		.int()
-		.min(0),
-	packageType: z.enum(['single', 'pack', 'box', 'case']),
+		.min(0, { message: 'Maximum quantity must be greater than 0.' }),
+	packageType: z.enum(['single', 'pack', 'box', 'case'], {
+		invalid_type_error: 'Package type is not valid.',
+		required_error: 'Package type is required.',
+	}),
+	position: z
+		.string()
+		.max(50, { message: 'Name must be less than 50 characters.' }),
 });
 
 export async function POST(req: Request) {
@@ -35,7 +44,7 @@ export async function POST(req: Request) {
 		return new NextResponse('Invalid location ID.', { status: 400 });
 
 	try {
-		const { name, min, max, packageType } = schema.parse(data);
+		const { name, min, max, packageType, position } = schema.parse(data);
 
 		const newProduct = await db.product.create({
 			data: {
@@ -43,6 +52,7 @@ export async function POST(req: Request) {
 				min,
 				max,
 				package: packageType,
+				position,
 				locationId: data.locationId,
 			},
 		});
@@ -67,7 +77,7 @@ export async function PUT(req: Request) {
 	const id = searchParams.get('id') || '';
 
 	try {
-		const { name, min, max, packageType } = schema.parse(data);
+		const { name, min, max, packageType, position } = schema.parse(data);
 		const product = await db.product.findFirst({
 			where: {
 				id,
@@ -84,6 +94,7 @@ export async function PUT(req: Request) {
 				min,
 				max,
 				package: packageType,
+				position,
 			},
 		});
 		log(LogType.PRODUCT_UPDATE, {
@@ -100,6 +111,9 @@ export async function PUT(req: Request) {
 					: []),
 				...(product.package !== updatedProduct.package
 					? [`Package: ${product.package} → ${updatedProduct.package}`]
+					: []),
+				...(product.position !== updatedProduct.position
+					? [`Position: ${product.position} → ${updatedProduct.position}`]
 					: []),
 			].join(', '),
 		});
