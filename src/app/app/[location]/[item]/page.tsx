@@ -1,14 +1,13 @@
-import QRCode from '@components/QRCode';
 import { Button } from '@components/ui/button';
 import { cn } from '@lib/utils';
 import { ChevronLeft, Pencil, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
-import ItemTable from './ItemTable';
-import NewItem from './NewItem';
+import ItemTable from './(components)/ItemTable';
+import NewItem from './(components)/NewItem';
 import { Item, Product } from '@prisma/client';
 import { PackageType, Tag } from '@lib/enum';
-import { isExpiring } from '@lib/date';
+import { formatUTCDate, isExpiring } from '@lib/date';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
 import SignIn from '@components/SignIn';
@@ -19,10 +18,9 @@ import { Suspense } from 'react';
 import { Skeleton } from '@components/ui/skeleton';
 import Container from '@components/Container';
 import Logs from './Logs';
-import EditProduct from '../EditProduct';
-import { printQRCode } from '@lib/qrcode';
-import PrintQRCode from './PrintQRCode';
-import OrderItem from './OrderItem';
+import EditProduct from '../(components)/EditProduct';
+import PrintQRCode from './(components)/PrintQRCode';
+import OrderItem from './(components)/OrderItem';
 
 export async function generateMetadata({
 	params,
@@ -173,6 +171,18 @@ export default async function Inventory({
 				>
 					<div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
 						<InfoBlock label='Name' value={data.name} />
+						<div className='flex flex-col gap-2'>
+							<span>Tags</span>
+							<div className='flex gap-2'>
+								{tags.length ? (
+									tags.map((tag) => {
+										return <TagBadge key={tag} tag={tag} />;
+									})
+								) : (
+									<TagBadge tag={Tag.NONE} />
+								)}
+							</div>
+						</div>
 						<InfoBlock label='Unique ID' value={data.id} />
 						<InfoBlock
 							label='Minimum quantity'
@@ -190,20 +200,18 @@ export default async function Inventory({
 								data.package.charAt(0).toUpperCase() + data.package.slice(1)
 							}
 						/>
-						<InfoBlock label='Location' value='Shelf 1C' />
-						<InfoBlock label='Last Order Date' value='Jun 18, 2023' />
-						<div className='flex flex-col gap-2'>
-							<span>Tags</span>
-							<div className='flex gap-2'>
-								{tags.length ? (
-									tags.map((tag) => {
-										return <TagBadge key={tag} tag={tag} />;
-									})
-								) : (
-									<TagBadge tag={Tag.NONE} />
-								)}
-							</div>
-						</div>
+						<InfoBlock
+							label='Position'
+							value={data.position || 'None specified'}
+						/>
+						<InfoBlock
+							label='Last Order Date'
+							value={
+								data.lastOrder !== null
+									? formatUTCDate(data.lastOrder)
+									: 'Never'
+							}
+						/>
 					</div>
 				</Container>
 				<Container
