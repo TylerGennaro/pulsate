@@ -14,6 +14,7 @@ interface Props {
 	min?: number;
 	max?: number;
 	packageType?: PackageType;
+	position?: string;
 }
 
 export default function ProductForm({
@@ -26,29 +27,29 @@ export default function ProductForm({
 			<InputGroup
 				label='Name'
 				name='name'
-				placeholder='Enter product name'
+				placeholder='Product name'
 				required
 				defaultValue={defaultValues?.name}
 			/>
 			<InputGroup
 				label='Min Quantity'
 				name='min'
-				placeholder='Enter the minimum quantity'
+				placeholder='Minimum quantity'
 				defaultValue={defaultValues?.min || 5}
 				type='number'
-				desc="When the product's quantity reaches this number, it will be marked as low quantity. Default: 5"
+				desc="When the product's quantity goes below this number, it will be marked as low quantity. Default: 5"
 			/>
 			<InputGroup
 				label='Max Quantity'
 				name='max'
-				placeholder='Enter the maximum quantity'
+				placeholder='Maximum quantity'
 				defaultValue={defaultValues?.max}
 				type='number'
-				desc='The maximum number of this product that can be stored in this location.'
+				desc='The maximum number of this product that can be stored in this location. This does not limit the quantity.'
 			/>
-			<div className='grid grid-cols-4 items-center gap-y-1'>
-				<label className='col-span-1 text-right mr-4'>
-					Packaging<span className='text-red-500 ml-1'>*</span>
+			<div className='grid items-center grid-cols-4 gap-y-1'>
+				<label className='col-span-1 mr-4 text-right'>
+					Packaging<span className='ml-1 text-red-500'>*</span>
 				</label>
 				<div className='col-span-3'>
 					<Select
@@ -69,6 +70,12 @@ export default function ProductForm({
 					</Select>
 				</div>
 			</div>
+			<InputGroup
+				label='Position'
+				name='position'
+				placeholder='Shelf position'
+				defaultValue={defaultValues?.position}
+			/>
 		</div>
 	);
 }

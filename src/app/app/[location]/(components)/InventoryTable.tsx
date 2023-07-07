@@ -13,6 +13,9 @@ async function getData(location: string) {
 		where: {
 			locationId: location,
 		},
+		orderBy: {
+			position: 'desc',
+		},
 	});
 	const extended: ProductInfo[] = data.map(
 		(product: Product & { items: Item[] }) => {
