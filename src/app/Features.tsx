@@ -33,7 +33,7 @@ export default function Features() {
 	return (
 		<div
 			id='features'
-			className='flex flex-col items-center w-full gap-16 px-8 py-16 bg-zinc-50 dark:bg-zinc-900 border-y'
+			className='flex flex-col items-center w-full gap-16 px-8 py-16 bg-zinc-100 dark:bg-zinc-900 border-y'
 		>
 			<HeroHeading
 				title='We have what you need'

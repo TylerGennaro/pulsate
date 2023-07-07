@@ -20,7 +20,7 @@ export default function Home() {
 	return (
 		<main className='flex flex-col'>
 			<NavHeader items={links} />
-			<div className='flex flex-col items-center pb-16'>
+			<div className='flex flex-col items-center pb-16 bg-zinc-50 dark:bg-zinc-950'>
 				<div className='h-[100vh] w-full grid place-content-center px-8'>
 					<HeroHeading
 						title='The solution to organizing medical closets'
