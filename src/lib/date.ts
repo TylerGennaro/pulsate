@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import {} from 'date-fns/locale';
 
 export function toDateTime(seconds: number | null) {
 	if (seconds === null) return null;
@@ -10,6 +11,15 @@ export function formatDate(date: Date | string) {
 		if (date.length === 0) return '';
 		date = new Date(date);
 	}
+	return format(date, 'MMM d, yyyy');
+}
+
+export function formatUTCDate(date: Date | string) {
+	if (typeof date === 'string') {
+		if (date.length === 0) return '';
+		date = new Date(date);
+	}
+	date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
 	return format(date, 'MMM d, yyyy');
 }
 
