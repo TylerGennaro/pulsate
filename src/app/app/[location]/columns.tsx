@@ -1,14 +1,13 @@
 'use client';
 
-import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
-import { Eye, MoreVertical, Trash2 } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { packageTypes, tags } from '@lib/relations';
 import { PackageType, Tag } from '@lib/enum';
 import { formatDate } from '@lib/date';
-import EditProduct from './EditProduct';
+import EditProduct from './(components)/EditProduct';
 import TagBadge from '@components/TagBadge';
 
 export const columns: ColumnDef<ProductInfo>[] = [
