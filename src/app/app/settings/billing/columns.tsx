@@ -1,6 +1,5 @@
 import { Badge } from '@components/ui/badge';
 import { formatDate } from '@lib/date';
-import { Payment } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, X } from 'lucide-react';
 
