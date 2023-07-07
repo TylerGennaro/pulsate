@@ -19,7 +19,7 @@ interface Notification {
 async function getNotifications() {
 	const response = await fetch('/api/notifications', {
 		next: {
-			revalidate: 600,
+			revalidate: 3600,
 			tags: ['notifications'],
 		},
 	});
