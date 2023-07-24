@@ -1,6 +1,6 @@
 'use client';
 
-import { formatDate, isExpiring } from '@lib/date';
+import { formatUTCDate, isExpiring } from '@lib/date';
 import { Tag } from '@lib/enum';
 import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
@@ -21,7 +21,7 @@ export const itemColumns: ColumnDef<Item>[] = [
 		accessorKey: 'expires',
 		cell: ({ row }: { row: any }) => {
 			if (row.original.expires === null) return <p>Never</p>;
-			return <p>{formatDate(row.original.expires)}</p>;
+			return <p>{formatUTCDate(row.original.expires)}</p>;
 		},
 	},
 	{ header: 'Quantity', accessorKey: 'quantity' },
