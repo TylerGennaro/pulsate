@@ -1,6 +1,5 @@
 'use client';
 
-import Header from '@components/ui/header';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Nav } from './Nav';
 import { signOut, useSession } from 'next-auth/react';
@@ -36,11 +35,11 @@ export default function Sidebar({
 			)
 				toggle(false);
 		});
-	}, []);
+	}, [open]);
 	return (
 		<div
-			className={`flex w-80 h-[100dvh] sticky top-0 bg-zinc-50 dark:bg-zinc-900 border-r shadow-lg flex-col justify-between z-40 shrink-0 overflow-auto lg:left-0 lg:opacity-100 transition-all duration-300 ${
-				open ? 'left-0 opacity-100' : '-left-80 opacity-0'
+			className={`flex w-80 h-[100dvh] fixed lg:sticky top-0 left-0 bottom-0 bg-zinc-50 dark:bg-zinc-900 border-r shadow-lg flex-col justify-between z-40 shrink-0 overflow-auto lg:translate-x-0 lg:opacity-100 transition-all duration-300 ${
+				open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
 			}`}
 			ref={sidebarRef}
 		>
