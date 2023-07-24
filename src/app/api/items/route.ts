@@ -178,11 +178,7 @@ export async function PUT(req: Request) {
 
 		const footnote = [
 			...(date?.getTime() !== item.expires?.getTime()
-				? [
-						`Expiration date: ${formatDate(item.expires)} → ${formatDate(
-							date
-						)}}`,
-				  ]
+				? [`Expiration date: ${formatDate(item.expires)} → ${formatDate(date)}`]
 				: []),
 			...(quantity !== item.quantity
 				? [`Quantity: ${item.quantity} → ${quantity}`]
