@@ -15,6 +15,7 @@ interface Props {
 	max?: number;
 	packageType?: PackageType;
 	position?: string;
+	url?: string;
 }
 
 export default function ProductForm({
@@ -75,6 +76,13 @@ export default function ProductForm({
 				name='position'
 				placeholder='Shelf position'
 				defaultValue={defaultValues?.position}
+			/>
+			<InputGroup
+				label='Page URL'
+				name='url'
+				placeholder='Product page URL'
+				defaultValue={defaultValues?.url}
+				desc='The link to the page where you order this product.'
 			/>
 		</div>
 	);

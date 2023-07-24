@@ -45,6 +45,8 @@ export default function EditProduct({
 		min?: number;
 		max?: number;
 		packageType?: PackageType;
+		position?: string;
+		url?: string;
 	};
 	id: string;
 	children: React.ReactNode;
