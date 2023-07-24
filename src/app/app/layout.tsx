@@ -1,17 +1,14 @@
 import AppShell from '@components/AppShell';
 import { authOptions } from '@lib/auth';
 import '@styles/globals.css';
-import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { db } from '@lib/prisma';
 import { isExpiring } from '@lib/date';
 import { Tag } from '@lib/enum';
 import SignIn from '@components/SignIn';
+import { populateMetadata } from '@lib/utils';
 
-export const metadata: Metadata = {
-	title: 'Dashboard | LFHRS Inventory',
-	description: 'Manage medical supply inventory for LFHRS.',
-};
+export const metadata = populateMetadata('App');
 
 async function getLocations() {
 	const session = await getServerSession(authOptions);

@@ -4,11 +4,9 @@ import SignIn from '@components/SignIn';
 import { authOptions } from '@lib/auth';
 import Container from '@components/Container';
 import Heading from '@components/ui/heading';
+import { populateMetadata } from '@lib/utils';
 
-export const metadata: Metadata = {
-	title: 'Dashboard | LFHRS Inventory',
-	description: 'Manage medical supply inventory for LFHRS.',
-};
+export const metadata = populateMetadata('Dashboard');
 
 export default async function Page() {
 	const session = await getServerSession(authOptions);

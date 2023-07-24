@@ -2,6 +2,7 @@ import Container from '@components/Container';
 import LogEntry from '@components/LogEntry';
 import { Button } from '@components/ui/button';
 import { db } from '@lib/prisma';
+import { populateMetadata } from '@lib/utils';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,10 +12,7 @@ export async function generateMetadata({
 	params: { locationId: string };
 }) {
 	const name = await getName(params.locationId);
-	return {
-		title: `${name} Activity | LFHRS Inventory`,
-		description: `Manage medical supply inventory for ${name}.`,
-	};
+	return populateMetadata(`${name} Activity`);
 }
 
 async function getName(locationId: string) {

@@ -1,6 +1,6 @@
 import { Button } from '@components/ui/button';
-import { cn } from '@lib/utils';
-import { ChevronLeft, Pencil, ShoppingCart } from 'lucide-react';
+import { cn, populateMetadata } from '@lib/utils';
+import { ChevronLeft, ExternalLink, Pencil, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
 import ItemTable from './(components)/ItemTable';
@@ -35,10 +35,7 @@ export async function generateMetadata({
 			id: params.item,
 		},
 	});
-	return {
-		title: `${data?.name} | Pulsate`,
-		description: 'View and manage your inventory',
-	};
+	return populateMetadata(data?.name!);
 }
 
 function InfoBlock({
@@ -153,20 +150,32 @@ export default async function Inventory({
 					divider
 					className='xl:col-span-2'
 					action={
-						<EditProduct
-							id={params.item}
-							defaultValues={{
-								name: data.name,
-								min: data.min,
-								max: data.max || undefined,
-								packageType: data.package as PackageType,
-							}}
-						>
-							<Button>
-								<Pencil className='w-4 h-4 mr-2' />
-								Update
-							</Button>
-						</EditProduct>
+						<div className='flex flex-wrap gap-2'>
+							<Link
+								href={data.url || process.env.NEXT_PUBLIC_PROJECT_URL!}
+								target='_blank'
+							>
+								<Button variant='outline'>
+									Go to Page <ExternalLink className='icon-right' />
+								</Button>
+							</Link>
+							<EditProduct
+								id={params.item}
+								defaultValues={{
+									name: data.name,
+									min: data.min,
+									max: data.max || undefined,
+									packageType: data.package as PackageType,
+									position: data.position || undefined,
+									url: data.url || undefined,
+								}}
+							>
+								<Button>
+									<Pencil className='w-4 h-4 mr-2' />
+									Update
+								</Button>
+							</EditProduct>
+						</div>
 					}
 				>
 					<div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
@@ -205,7 +214,7 @@ export default async function Inventory({
 							value={data.position || 'None specified'}
 						/>
 						<InfoBlock
-							label='Last Order Date'
+							label='Last Ordered'
 							value={
 								data.lastOrder !== null
 									? formatUTCDate(data.lastOrder)

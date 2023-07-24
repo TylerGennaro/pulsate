@@ -7,6 +7,7 @@ import { authOptions } from '@lib/auth';
 import { Button } from '@components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import { populateMetadata } from '@lib/utils';
 
 export async function generateMetadata({
 	params,
@@ -21,10 +22,7 @@ export async function generateMetadata({
 			id: params.product,
 		},
 	});
-	return {
-		title: `Checkout ${product?.name} | Pulsate`,
-		description: `Checkout ${product?.name} from the medical supplies inventory.`,
-	};
+	return populateMetadata(`${product?.name!} Checkout`);
 }
 
 async function getData(productId: string) {

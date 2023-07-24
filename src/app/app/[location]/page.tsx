@@ -12,6 +12,7 @@ import { authOptions } from '@lib/auth';
 import SignIn from '@components/SignIn';
 import { notFound } from 'next/navigation';
 import Container from '@components/Container';
+import { populateMetadata } from '@lib/utils';
 
 export async function generateMetadata({
 	params,
@@ -19,10 +20,7 @@ export async function generateMetadata({
 	params: { location: string };
 }) {
 	const { name, userId } = await getLocationInfo(params.location);
-	return {
-		title: `${name} | LFHRS Inventory`,
-		description: `Manage medical supply inventory for ${name}.`,
-	};
+	return populateMetadata(name!);
 }
 
 async function getLocationInfo(id: string) {
