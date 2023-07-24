@@ -3,11 +3,13 @@
 import {
 	ColumnDef,
 	ColumnFiltersState,
+	SortingState,
 	flexRender,
 	getCoreRowModel,
 	getFacetedRowModel,
 	getFacetedUniqueValues,
 	getFilteredRowModel,
+	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
 
@@ -37,6 +39,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({});
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [sorting, setSorting] = useState<SortingState>([]);
 
 	if (enableSelection && !columns.find((column) => column.id === 'select')) {
 		columns.unshift({
@@ -72,13 +75,16 @@ export function DataTable<TData, TValue>({
 		state: {
 			rowSelection,
 			columnFilters,
+			sorting,
 		},
+		onSortingChange: setSorting,
+		getSortedRowModel: getSortedRowModel(),
 	});
 
 	return (
 		<div>
 			{toolbar && toolbar({ table })}
-			<div className='rounded-md border'>
+			<div className='rounded-md'>
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
