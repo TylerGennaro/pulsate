@@ -10,7 +10,7 @@ export default function TagBadge({ tag }: { tag: TagEnum }) {
 		<Badge
 			color={tagInfo.color as VariantProps<typeof Badge>['color']}
 			variant='ghost'
-			className='whitespace-nowrap'
+			className='whitespace-nowrap w-fit'
 		>
 			{tagInfo.icon && <tagInfo.icon className='mr-1 w-3 h-3' />}
 			{tagInfo.label}
