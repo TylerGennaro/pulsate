@@ -13,7 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 export function formDataToObject(formData: FormData) {
 	const object: Record<string, any> = {};
 	formData.forEach((value, key) => {
-		object[key] = value;
+		object[key] = value === '' ? null : value;
 	});
 	return object;
 }
@@ -56,13 +56,20 @@ export async function crud({
 	return result;
 }
 
-export async function fetchJSON(url: string, method: string, data?: object) {
+export async function fetchJSON(
+	url: string,
+	method: string,
+	data?: object,
+	headers: { [key: string]: string } = {}
+) {
+	headers['Content-Type'] = 'application/json';
 	const response = await fetch(url, {
 		method,
-		body: JSON.stringify(data),
-		headers: {
-			'Content-Type': 'application/json',
-		},
+		body:
+			data !== undefined && Object.keys(data).length > 0
+				? JSON.stringify(data)
+				: undefined,
+		headers,
 	});
 	if (response.redirected) {
 		window.location.replace(response.url);
