@@ -72,7 +72,11 @@ export default function NavHeader({
 					{items.map((item) => {
 						if (item.href.startsWith('#'))
 							return (
-								<a href={item.href} onClick={() => setSidebarOpen(false)}>
+								<a
+									key={item.label}
+									href={item.href}
+									onClick={() => setSidebarOpen(false)}
+								>
 									{item.label}
 								</a>
 							);
