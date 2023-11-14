@@ -25,17 +25,16 @@ async function getData(location: string) {
 				0
 			);
 			const exp = product.items.reduce(
-				(acc: number, item: Item) =>
-					item.expires !== null &&
-					(new Date(item.expires).getTime() < acc || acc === 0)
-						? new Date(item.expires).getTime()
+				(acc: Date | string, item: Item) =>
+					item.expires !== null && (new Date(item.expires) < acc || acc === '')
+						? new Date(item.expires)
 						: acc,
-				0
+				''
 			);
 			const hasOnOrder = product.items.some((item) => item.onOrder);
 			const tags = [];
 			if (quantity < product.min) tags.push(Tag.LOW);
-			if (isExpiring(new Date(exp)) && quantity > 0) tags.push(Tag.EXPIRES);
+			if (isExpiring(exp) && quantity > 0) tags.push(Tag.EXPIRES);
 			if (hasOnOrder) tags.push(Tag.ONORDER);
 			// product.url = product.url !== null ? await getLongURL(product.url) : '';
 			return {

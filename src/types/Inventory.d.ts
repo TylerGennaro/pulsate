@@ -14,7 +14,7 @@ declare global {
 		quantity: number;
 		items: Item[];
 		tags: Tag[];
-		exp: number;
+		exp: string | Date;
 	}
 
 	interface PopulatedPayment {
