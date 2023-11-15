@@ -13,33 +13,39 @@ async function getData(location: string) {
 		where: {
 			locationId: location,
 		},
+		orderBy: {
+			position: { sort: 'asc', nulls: 'last' },
+		},
 	});
-	const extended: ProductInfo[] = data.map(
-		(product: Product & { items: Item[] }) => {
+	const extended: ProductInfo[] = await Promise.all(
+		data.map(async (product: Product & { items: Item[] }) => {
 			const quantity = product.items.reduce(
 				(acc: number, item: Item) =>
 					!item.onOrder ? acc + item.quantity : acc,
 				0
 			);
 			const exp = product.items.reduce(
-				(acc: Date | string, item: Item) =>
-					item.expires !== null && (new Date(item.expires) < acc || acc === '')
-						? new Date(item.expires)
+				(acc: number, item: Item) =>
+					item.expires !== null &&
+					(new Date(item.expires).getTime() < acc || acc === -1)
+						? new Date(item.expires).getTime()
 						: acc,
-				''
+				-1
 			);
 			const hasOnOrder = product.items.some((item) => item.onOrder);
 			const tags = [];
 			if (quantity < product.min) tags.push(Tag.LOW);
-			if (isExpiring(exp) && quantity > 0) tags.push(Tag.EXPIRES);
+			if (exp !== -1 && isExpiring(new Date(exp)) && quantity > 0)
+				tags.push(Tag.EXPIRES);
 			if (hasOnOrder) tags.push(Tag.ONORDER);
+			// product.url = product.url !== null ? await getLongURL(product.url) : '';
 			return {
 				quantity,
 				exp,
 				tags,
 				...product,
 			};
-		}
+		})
 	);
 	// console.dir(extended, { depth: Infinity });
 
@@ -48,6 +54,5 @@ async function getData(location: string) {
 
 export default async function InventoryTable({ id }: { id: string }) {
 	const data = await getData(id);
-	// await new Promise((res, rej) => setTimeout(res, 5000));
 	return <Products data={data} />;
 }

@@ -14,5 +14,13 @@ declare global {
 		quantity: number;
 		items: Item[];
 		tags: Tag[];
+		exp: number;
+	}
+
+	interface PopulatedPayment {
+		id: string;
+		amount: number;
+		status: string;
+		created: number;
 	}
 }

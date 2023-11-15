@@ -4,11 +4,9 @@ import SignIn from '@components/SignIn';
 import { authOptions } from '@lib/auth';
 import Container from '@components/Container';
 import Nav from './Nav';
+import { populateMetadata } from '@lib/utils';
 
-export const metadata: Metadata = {
-	title: 'Settings | LFHRS Inventory',
-	description: 'Manage medical supply inventory for LFHRS.',
-};
+export const metadata = populateMetadata('Settings');
 
 export default async function Layout({
 	children,

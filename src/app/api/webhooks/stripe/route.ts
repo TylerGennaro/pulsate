@@ -34,8 +34,8 @@ export async function POST(req: Request) {
 		try {
 			switch (event.type) {
 				case 'checkout.session.completed':
-					const session = event.data.object as Stripe.Checkout.Session;
-					handlePaymentReceived(session.id, session.customer as string);
+					// const session = event.data.object as Stripe.Checkout.Session;
+					// handlePaymentReceived(session.id, session.customer as string);
 					// Send email/receipt/notification in the future
 					break;
 				case 'customer.subscription.created':
@@ -101,11 +101,8 @@ async function handleSubscriptionChange(
 
 async function handlePaymentReceived(paymentId: string, customerId: string) {
 	const user = await getUserFromCustomer(customerId);
-	await db.payment.upsert({
-		where: {
-			id: paymentId,
-		},
-		create: {
+	await db.payment.create({
+		data: {
 			id: paymentId,
 			user: {
 				connect: {
@@ -113,7 +110,6 @@ async function handlePaymentReceived(paymentId: string, customerId: string) {
 				},
 			},
 		},
-		update: {},
 	});
 }
 

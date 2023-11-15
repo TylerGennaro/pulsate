@@ -23,15 +23,15 @@
 	- [✅] User removes product
 	- [✅] User updates product
 	- [✅] User checks item out
-- [] Last order date
+- [✅] Last order date
 - [✅] Checkout page
 - [✅] Better responsive sidebar
-- [] Add payment with Stripe
+- [✅] Add payment with Stripe
 - [] Sorting on products page
 	- [] Default sort products by shelf location
+- [✅] Notification system
 
 - [] Improve mobile UX
-- [] Notification system
 - [] Management sharing
 - [] Global location log w/ filters
 - [] Link to product order page

@@ -51,7 +51,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 							<Separator orientation='vertical' className='h-4 mx-2' />
 							<div className='hidden space-x-1 lg:flex'>
 								{selectedValues.size > 2 ? (
-									<Badge className='px-1 font-normal rounded-sm bg-zinc-300 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-700'>
+									<Badge className='px-1 font-normal rounded-sm bg-zinc-300 dark:bg-zinc-700 text-zinc-950 dark:text-zinc-50'>
 										{selectedValues.size} selected
 									</Badge>
 								) : (
@@ -60,7 +60,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 										.map((option) => (
 											<Badge
 												key={option.value}
-												className='px-1 font-normal rounded-sm bg-zinc-300 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-700'
+												className='px-1 font-normal rounded-sm bg-zinc-300 dark:bg-zinc-700 text-zinc-950 dark:text-zinc-50'
 											>
 												{option.label}
 											</Badge>
@@ -96,9 +96,9 @@ export function DataTableFacetedFilter<TData, TValue>({
 									>
 										<div
 											className={cn(
-												'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+												'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-blue-700',
 												isSelected
-													? 'bg-primary text-primary-foreground'
+													? 'bg-blue-700 text-zinc-50'
 													: 'opacity-50 [&_svg]:invisible'
 											)}
 										>

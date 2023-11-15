@@ -8,7 +8,6 @@ import { cn } from '@lib/utils';
 import { useSession } from 'next-auth/react';
 import { Skeleton } from './ui/skeleton';
 import { SignInButton, SignOutButton } from './SignButton';
-import { usePathname } from 'next/navigation';
 
 export default function SiteHeader({
 	sidebarToggle,

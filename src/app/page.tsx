@@ -11,22 +11,21 @@ import { populateMetadata } from '@lib/utils';
 
 export const metadata = populateMetadata('Home');
 
+const links = [
+	{ label: 'Features', href: '#features' },
+	{ label: 'Pricing', href: '#pricing' },
+];
+
 export default function Home() {
 	return (
 		<main className='flex flex-col'>
-			<NavHeader>
-				<a href='#features'>Features</a>
-				<Link href='#pricing'>Pricing</Link>
-			</NavHeader>
-			<div className='flex flex-col items-center pb-16'>
-				<div className='h-[100vh] max-w-screen-md'>
-					<div className='hidden dark:block absolute absolute-center bg-[radial-gradient(#1d4ed840,_transparent_70%)] h-2/3 w-2/3 -z-20' />
-					<Patterns.DotGrid className='absolute hidden w-2/3 absolute-center -z-10 h-2/3 opacity-60 dark:block' />
+			<NavHeader items={links} />
+			<div className='flex flex-col items-center pb-16 bg-zinc-50 dark:bg-zinc-950'>
+				<div className='h-[100vh] w-full px-8 pt-32 flex justify-center'>
 					<HeroHeading
 						title='The solution to organizing medical closets'
 						description='Effortlessly organize your medical closet and manage inventory with
 						ease using this intuitive solution.'
-						className='absolute px-8 absolute-center'
 					>
 						<Link href='/app' className='mt-2 w-fit'>
 							<Button className='shadow-md'>Get started</Button>

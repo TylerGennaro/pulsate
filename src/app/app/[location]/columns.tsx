@@ -1,23 +1,31 @@
 'use client';
 
-import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
-import { Eye, MoreVertical, Trash2 } from 'lucide-react';
+import { ChevronsUpDown, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { packageTypes, tags } from '@lib/relations';
 import { PackageType, Tag } from '@lib/enum';
 import { formatDate } from '@lib/date';
-import EditProduct from './EditProduct';
+import EditProduct from './(components)/EditProduct';
 import TagBadge from '@components/TagBadge';
+import DataTableSortableHeader from '@components/DataTableSortableHeader';
 
 export const columns: ColumnDef<ProductInfo>[] = [
-	{ header: 'Product Name', accessorKey: 'name' },
 	{
-		header: 'Quantity',
+		header: ({ column }) => (
+			<DataTableSortableHeader column={column} header='Name' />
+		),
+		invertSorting: true,
+		accessorKey: 'name',
+	},
+	{
+		header: ({ column }) => (
+			<DataTableSortableHeader column={column} header='Quantity' />
+		),
 		accessorKey: 'quantity',
 		cell: ({ row }: { row: any }) => (
-			<span>
+			<span className='text-muted'>
 				{row.original.quantity}{' '}
 				{packageTypes[row.original.package as PackageType]}
 				{row.original.max && row.original.max > 0 ? (
@@ -30,10 +38,24 @@ export const columns: ColumnDef<ProductInfo>[] = [
 		),
 	},
 	{
-		header: 'Earliest Expiration',
+		header: ({ column }) => (
+			<DataTableSortableHeader column={column} header='Expiration' />
+		),
 		accessorKey: 'exp',
 		cell: ({ row }: { row: any }) => {
-			return <p>{formatDate(row.original.exp) || 'None'}</p>;
+			return (
+				<p className='text-muted'>
+					{row.original.exp > 0 ? formatDate(row.original.exp) : 'None'}
+				</p>
+			);
+		},
+		sortingFn: (rowA, rowB, columnId) => {
+			const a = rowA.original.exp;
+			const b = rowB.original.exp;
+			if (a === b) return 0;
+			if (a === 0) return 1;
+			if (b === 0) return -1;
+			return a < b ? -1 : 1;
 		},
 	},
 	{
@@ -41,7 +63,7 @@ export const columns: ColumnDef<ProductInfo>[] = [
 		accessorKey: 'tags',
 		cell: ({ row }: { row: any }) => {
 			return (
-				<div className='flex flex-wrap gap-2'>
+				<div className='flex flex-col gap-2'>
 					{row.original.tags.map((tag: any) => (
 						<TagBadge tag={tag} key={tag} />
 					))}
@@ -58,7 +80,7 @@ export const columns: ColumnDef<ProductInfo>[] = [
 		},
 	},
 	{
-		header: 'Actions',
+		id: 'actions',
 		cell: ({ row }: { row: any }) => {
 			return (
 				<div className='flex gap-2'>
@@ -74,6 +96,8 @@ export const columns: ColumnDef<ProductInfo>[] = [
 							min: row.original.min,
 							max: row.original.max,
 							packageType: row.original.package,
+							position: row.original.position,
+							url: row.original.url,
 						}}
 					>
 						<Button variant='ghost'>

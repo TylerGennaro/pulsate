@@ -7,28 +7,27 @@ import NavHeader from '@components/NavHeader';
 import Link from 'next/link';
 import Plans from './Plans';
 import { populateMetadata } from '@lib/utils';
+import HeroHeading from '@components/HeroHeading';
 
 export const metadata = populateMetadata('Plans and Pricing');
+
+const links = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Plans', href: '#compare' },
+	{ label: 'FAQ', href: '#faq' },
+];
 
 export default function Page() {
 	return (
 		<main className='flex flex-col scroll-smooth'>
-			<NavHeader>
-				<Link href='/'>Home</Link>
-				<a href='#compare'>Plans</a>
-				<a href='#faq'>FAQ</a>
-			</NavHeader>
-			<div className='container flex flex-col items-center gap-32 py-16'>
+			<NavHeader items={links} />
+			<div className='container flex flex-col items-center gap-32 py-16 bg-zinc-50 dark:bg-zinc-950'>
 				<div className='flex justify-center w-full'>
 					<div className='flex flex-col items-center max-w-screen-md gap-2'>
-						<Header size='xl' className='text-center'>
-							Plans suited for your needs
-						</Header>
-						<span className='w-3/4 text-center text-muted'>
-							Choose the best plan for your organization and don&apos;t overpay.
-							Plans are differentiated by scale and features.
-						</span>
-						<div className='flex gap-2 mt-2'>
+						<HeroHeading
+							title='Plans suited for your needs'
+							description="Choose the best plan for your organization and don't overpay. Plans are differentiated by scale and features."
+						>
 							<a href='#faq'>
 								<Button variant='outline'>FAQ</Button>
 							</a>
@@ -38,7 +37,7 @@ export default function Page() {
 									<ArrowRight className='w-4 h-4 ml-2' />
 								</Button>
 							</a>
-						</div>
+						</HeroHeading>
 					</div>
 				</div>
 				<Plans />

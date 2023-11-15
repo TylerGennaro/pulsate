@@ -14,7 +14,7 @@ export default function AppShell({
 }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	return (
-		<div className='relative flex h-full'>
+		<div className='flex h-full'>
 			<Sidebar
 				locations={locations}
 				open={sidebarOpen}

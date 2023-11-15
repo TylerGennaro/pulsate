@@ -48,13 +48,22 @@ export async function POST(req: Request) {
 				},
 			});
 
-			if (onOrder)
+			if (onOrder) {
 				log(LogType.ITEM_ORDER, {
 					product: item.productId,
 					quantity: item.quantity + quantity,
 					footnote: `Duplicate items merged`,
 				});
-			else
+				// Update last order date
+				const updatedProduct = await db.product.update({
+					where: {
+						id: item.productId,
+					},
+					data: {
+						lastOrder: new Date(),
+					},
+				});
+			} else
 				log(LogType.ITEM_UPDATE, {
 					product: item.productId,
 					quantity: item.quantity + quantity,
@@ -74,12 +83,21 @@ export async function POST(req: Request) {
 			},
 		});
 
-		if (onOrder)
+		if (onOrder) {
 			log(LogType.ITEM_ORDER, {
 				product: data.productId,
 				quantity,
 			});
-		else
+			// Update last order date
+			const updatedProduct = await db.product.update({
+				where: {
+					id: data.productId,
+				},
+				data: {
+					lastOrder: new Date(),
+				},
+			});
+		} else
 			log(LogType.ITEM_ADD, {
 				product: data.productId,
 				quantity,
@@ -160,11 +178,7 @@ export async function PUT(req: Request) {
 
 		const footnote = [
 			...(date?.getTime() !== item.expires?.getTime()
-				? [
-						`Expiration date: ${formatDate(item.expires)} → ${formatDate(
-							date
-						)}}`,
-				  ]
+				? [`Expiration date: ${formatDate(item.expires)} → ${formatDate(date)}`]
 				: []),
 			...(quantity !== item.quantity
 				? [`Quantity: ${item.quantity} → ${quantity}`]
