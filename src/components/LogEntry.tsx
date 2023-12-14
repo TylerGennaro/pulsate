@@ -38,7 +38,7 @@ function UserPopover({ user }: { user: User | null }) {
 					</Avatar>
 					<div className='flex flex-col gap-2'>
 						<span>{user.name}</span>
-						<span className='text-sm text-muted-text'>{user.email}</span>
+						<span className='text-sm text-muted-foreground'>{user.email}</span>
 					</div>
 				</div>
 			</HoverCardContent>
@@ -62,25 +62,25 @@ export default function LogEntry({
 	return (
 		<div className='flex gap-2'>
 			<div className='relative'>
-				<div className='z-[1] relative rounded-full border-8 border-zinc-50 dark:border-zinc-900'>
+				<div className='z-[1] relative rounded-full border-8 border-content'>
 					<Avatar>
 						<AvatarImage src={log.user?.image || undefined} />
 						<AvatarFallback>
 							{log.user?.name?.charAt(0).toUpperCase() || 'G'}
 						</AvatarFallback>
 					</Avatar>
-					<div className='w-1/2 h-1/2 absolute bottom-0 right-0 bg-zinc-50 dark:bg-zinc-900 z-[2] grid place-items-center rounded-tl'>
-						<template.icon className='w-4 h-4 text-muted-text' />
+					<div className='w-1/2 h-1/2 absolute bottom-0 right-0 bg-content z-[2] grid place-items-center rounded-tl'>
+						<template.icon className='w-4 h-4 text-muted-foreground' />
 					</div>
 				</div>
 				{!last && (
-					<div className='absolute w-[1px] left-1/2 top-2 bg-zinc-300 dark:bg-zinc-700 h-full' />
+					<div className='absolute w-[1px] left-1/2 top-2 bg-border h-full' />
 				)}
 			</div>
 			<div className='flex flex-col'>
 				<span className='mb-1 font-semibold'>
 					{log.user?.name || 'Guest'}
-					<span className='ml-4 text-sm font-normal text-muted'>
+					<span className='ml-4 text-sm font-normal text-muted-foreground'>
 						{timeSince(log.timestamp)} ago
 					</span>
 				</span>

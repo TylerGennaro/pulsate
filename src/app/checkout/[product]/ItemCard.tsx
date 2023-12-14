@@ -20,11 +20,11 @@ export default function ItemCard({
 			<div className='flex items-center justify-between w-full'>
 				<div className='flex flex-col'>
 					<span className='text-lg'>Quantity</span>
-					<span className='text-muted'>{item.quantity}</span>
+					<span className='text-muted-foreground'>{item.quantity}</span>
 				</div>
 				<div className='flex flex-col'>
 					<span className='text-lg'>Expires</span>
-					<span className='text-muted'>
+					<span className='text-muted-foreground'>
 						{formatExpirationDate(item.expires)}
 					</span>
 				</div>

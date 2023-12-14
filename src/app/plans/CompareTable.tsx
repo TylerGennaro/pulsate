@@ -62,7 +62,7 @@ function PerkValue({ value }: { value: string | boolean }) {
 		return value ? (
 			<Check className='w-4 h-4 text-blue-700' />
 		) : (
-			<X className='w-4 h-4 text-muted' />
+			<X className='w-4 h-4 text-muted-foreground' />
 		);
 	}
 	return <span>{value}</span>;
@@ -130,7 +130,7 @@ export default function CompareTable() {
 					)}
 				</tbody>
 			</Table>
-			<span className='max-w-screen-sm text-sm text-muted'>
+			<span className='max-w-screen-sm text-sm text-muted-foreground'>
 				* Items are organized by expiration date per product. Items with the
 				same expiration date are automatically combined to save space.
 			</span>

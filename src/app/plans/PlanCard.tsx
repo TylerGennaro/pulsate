@@ -47,12 +47,12 @@ export default function PlanCard({ name, monthly, price, perks }: Props) {
 					<span className='text-4xl font-bold'>${monthly}</span>
 					<div className='flex flex-col text-xs'>
 						<span>USD</span>
-						<span className='text-muted'>Billed monthly</span>
+						<span className='text-muted-foreground'>Billed monthly</span>
 					</div>
 				</div>
 				<span className='font-medium'>
 					+ ${price}
-					<span className='text-sm font-normal text-muted'>
+					<span className='text-sm font-normal text-muted-foreground'>
 						{' '}
 						USD billed once
 					</span>

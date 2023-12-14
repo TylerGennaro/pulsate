@@ -14,7 +14,7 @@ function FAQQestion({ children }: { children: React.ReactNode }) {
 }
 
 function FAQAnswer({ children }: { children: React.ReactNode }) {
-	return <span className='text-sm text-muted'>{children}</span>;
+	return <span className='text-sm text-muted-foreground'>{children}</span>;
 }
 
 export default function FAQ() {

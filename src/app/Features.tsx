@@ -48,7 +48,9 @@ export default function Features() {
 						</div>
 						<div className='flex flex-col items-start'>
 							<span className='text-lg font-semibold'>{feature.title}</span>
-							<span className='text-muted'>{feature.description}</span>
+							<span className='text-muted-foreground'>
+								{feature.description}
+							</span>
 						</div>
 					</div>
 				))}

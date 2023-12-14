@@ -2,9 +2,10 @@
 module.exports = {
 	darkMode: ["class"],
 	content: [
-		'./src/pages/**/*.{ts,tsx}',
-		'./src/components/**/*.{ts,tsx}',
-		'./src/app/**/*.{ts,tsx}',
+		'./pages/**/*.{ts,tsx}',
+		'./components/**/*.{ts,tsx}',
+		'./app/**/*.{ts,tsx}',
+		'./src/**/*.{ts,tsx}',
 	],
 	theme: {
 		container: {
@@ -20,10 +21,8 @@ module.exports = {
 				input: "hsl(var(--input))",
 				ring: "hsl(var(--ring))",
 				background: "hsl(var(--background))",
-				foreground: {
-					DEFAULT: "hsl(var(--foreground))",
-					text: "hsl(var(--foreground-text))",
-				},
+				foreground: "hsl(var(--foreground))",
+				content: "hsl(var(--content))",
 				primary: {
 					DEFAULT: "hsl(var(--primary))",
 					foreground: "hsl(var(--primary-foreground))",
@@ -36,10 +35,10 @@ module.exports = {
 					DEFAULT: "hsl(var(--destructive))",
 					foreground: "hsl(var(--destructive-foreground))",
 				},
-				// muted: {
-				// 	DEFAULT: "hsl(var(--muted))",
-				// 	text: "hsl(var(--muted-text))",
-				// },
+				muted: {
+					DEFAULT: "hsl(var(--muted))",
+					foreground: "hsl(var(--muted-foreground))",
+				},
 				accent: {
 					DEFAULT: "hsl(var(--accent))",
 					foreground: "hsl(var(--accent-foreground))",

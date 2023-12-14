@@ -1,13 +1,11 @@
-import { Button } from '@components/ui/button';
-import Link from 'next/link';
-import NavHeader from '@components/NavHeader';
-import Plans from './plans/Plans';
-import Features from './Features';
 import HeroHeading from '@components/HeroHeading';
-import { ArrowRight } from 'lucide-react';
-import { Patterns } from '@components/BackgroundPattern';
-import { Metadata } from 'next';
+import NavHeader from '@components/NavHeader';
+import { Button } from '@components/ui/button';
 import { populateMetadata } from '@lib/utils';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import Features from './Features';
+import Plans from './plans/Plans';
 
 export const metadata = populateMetadata('Home');
 

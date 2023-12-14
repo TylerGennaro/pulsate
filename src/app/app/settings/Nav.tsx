@@ -18,7 +18,7 @@ export default function Nav() {
 	const path = usePathname();
 	return (
 		<div className='px-8 py-4 border-b'>
-			<ul className='flex gap-4 font-semibold text-muted'>
+			<ul className='flex gap-4 font-semibold text-muted-foreground'>
 				{navItems.map((item) => (
 					<li
 						key={item.name}

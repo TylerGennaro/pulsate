@@ -55,7 +55,7 @@ export default function Checkout({
 			<div className='flex flex-wrap items-center justify-between gap-4 mt-8'>
 				<div className='flex flex-col'>
 					<span className='text-lg'>Checked out</span>
-					<span className='text-muted-text'>
+					<span className='text-muted-foreground'>
 						Your response has been recorded.
 					</span>
 				</div>
@@ -76,7 +76,7 @@ export default function Checkout({
 			{!items.length ? (
 				<div className='flex flex-col items-center gap-2 mt-8'>
 					<span className='text-lg'>Out of stock</span>
-					<span className='text-muted'>Contact your manager</span>
+					<span className='text-muted-foreground'>Contact your manager</span>
 				</div>
 			) : (
 				<>

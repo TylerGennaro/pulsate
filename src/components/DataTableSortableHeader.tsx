@@ -14,12 +14,18 @@ export default function DataTableSortableHeader({
 		<Button
 			variant='ghost'
 			onClick={() => column.toggleSorting(undefined)}
-			className='font-medium'
+			className='pl-0 font-medium hover:bg-transparent dark:hover:bg-transparent'
 		>
 			{header}
-			{sort === false && <ChevronsUpDown className='icon-right' />}
-			{sort === 'asc' && <ChevronUp className='icon-right' />}
-			{sort === 'desc' && <ChevronDown className='icon-right' />}
+			{sort === false && (
+				<ChevronsUpDown className='icon-right text-muted-foreground' />
+			)}
+			{sort === 'asc' && (
+				<ChevronUp className='icon-right text-muted-foreground' />
+			)}
+			{sort === 'desc' && (
+				<ChevronDown className='icon-right text-muted-foreground' />
+			)}
 		</Button>
 	);
 }

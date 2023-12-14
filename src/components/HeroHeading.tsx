@@ -27,7 +27,7 @@ export default function HeroHeading({
 			<Header size={size} className='leading-tight tracking-tight text-center'>
 				<Balancer>{title}</Balancer>
 			</Header>
-			<span className='w-3/4 mb-2 leading-normal text-center text-muted'>
+			<span className='w-3/4 mb-2 leading-normal text-center text-muted-foreground'>
 				<Balancer className='text-center'>{description}</Balancer>
 			</span>
 			<div className='flex gap-2 mt-2'>{children}</div>

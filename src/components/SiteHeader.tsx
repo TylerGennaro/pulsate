@@ -26,7 +26,7 @@ export default function SiteHeader({
 	return (
 		<div
 			className={cn(
-				`w-full sticky top-0 h-16 bg-zinc-50 dark:bg-zinc-900 border-b shadow-md flex items-center justify-between ${
+				`w-full sticky top-0 h-16 bg-content border-b shadow-md flex items-center justify-between ${
 					sidebarToggle && 'lg:justify-end'
 				} px-4 z-30`,
 				className
@@ -44,7 +44,7 @@ export default function SiteHeader({
 				</Button>
 			)}
 			{children !== undefined && (
-				<div className='flex gap-4 font-semibold justify-self-start text-muted'>
+				<div className='flex gap-4 font-semibold justify-self-start text-muted-foreground'>
 					{children}
 				</div>
 			)}

@@ -38,7 +38,7 @@ export default function Sidebar({
 	}, [open]);
 	return (
 		<div
-			className={`w-80 h-[100dvh] fixed lg:sticky top-0 left-0 bottom-0 bg-zinc-50 dark:bg-zinc-900 border-r shadow-lg z-40 shrink-0 lg:translate-x-0 lg:opacity-100 transition-all duration-300 ${
+			className={`w-80 h-[100dvh] fixed lg:sticky top-0 left-0 bottom-0 bg-content border-r shadow-lg z-40 shrink-0 lg:translate-x-0 lg:opacity-100 transition-all duration-300 ${
 				open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
 			}`}
 			ref={sidebarRef}

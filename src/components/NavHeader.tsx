@@ -69,24 +69,21 @@ export default function NavHeader({
 					</Button>
 					<Logo className='flex sm:hidden' />
 					<hr className='sm:hidden' />
-					{items.map((item) => {
-						if (item.href.startsWith('#'))
-							return (
-								<a
-									key={item.label}
-									href={item.href}
-									onClick={() => setSidebarOpen(false)}
-								>
-									{item.label}
-								</a>
-							);
-						else
-							return (
-								<Link href={item.href} onClick={() => setSidebarOpen(false)}>
-									{item.label}
-								</Link>
-							);
-					})}
+					{items.map((item) =>
+						item.href.startsWith('#') ? (
+							<a
+								key={item.label}
+								href={item.href}
+								onClick={() => setSidebarOpen(false)}
+							>
+								{item.label}
+							</a>
+						) : (
+							<Link href={item.href} onClick={() => setSidebarOpen(false)}>
+								{item.label}
+							</Link>
+						)
+					)}
 				</div>
 				<div className='flex items-center justify-end gap-2'>
 					<ThemeToggle />

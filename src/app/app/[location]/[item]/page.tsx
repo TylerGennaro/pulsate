@@ -50,7 +50,7 @@ function InfoBlock({
 	return (
 		<div className={cn('flex flex-col gap-2', className)}>
 			<span>{label}</span>
-			<span className='text-muted'>{value}</span>
+			<span className='text-muted-foreground'>{value}</span>
 		</div>
 	);
 }
@@ -250,7 +250,7 @@ export default async function Inventory({
 				<Container className='xl:col-span-2'>
 					<div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
 						<div className='flex flex-col gap-1'>
-							<span className='text-muted text-md'>Total</span>
+							<span className='text-muted-foreground text-md'>Total</span>
 							<span className='text-xl font-semibold'>
 								{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
 								{packageTypes[data.package as PackageType]}

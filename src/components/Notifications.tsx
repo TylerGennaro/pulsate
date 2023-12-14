@@ -91,7 +91,7 @@ export default function Notifications() {
 									)}
 									<div className='flex flex-col text-left'>
 										<span className='text-sm'>{notification.message}</span>
-										<span className='text-xs text-muted'>
+										<span className='text-xs text-muted-foreground'>
 											{timeSince(new Date(notification.created))} ago
 										</span>
 									</div>
