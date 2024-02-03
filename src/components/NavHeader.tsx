@@ -79,7 +79,11 @@ export default function NavHeader({
 								{item.label}
 							</a>
 						) : (
-							<Link href={item.href} onClick={() => setSidebarOpen(false)}>
+							<Link
+								key={item.label}
+								href={item.href}
+								onClick={() => setSidebarOpen(false)}
+							>
 								{item.label}
 							</Link>
 						)
