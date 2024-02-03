@@ -68,7 +68,7 @@ export async function POST(req: Request) {
 		const owner = await db.user.findFirst({
 			where: { id: product?.location.userId },
 		});
-		sendMail(
+		await sendMail(
 			owner?.email!,
 			`[${product?.location.name}] Checkout recorded`,
 			`
