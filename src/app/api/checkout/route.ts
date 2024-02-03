@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 		// console.log(`
 		// Checkout recorded:
 		// User: ${session?.user?.name}
-		// Time: ${new Date().toLocaleString()}
+		// Time: ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })}
 		// Product: ${product?.name}
 		// Quantity: ${items.reduce((acc, item) => acc + item.quantity, 0)}
 		// `);
@@ -82,7 +82,9 @@ export async function POST(req: Request) {
 						(acc, item) => acc + item.quantity,
 						0
 					)}<br>
-					<strong>Time:</strong> ${new Date().toLocaleString()}
+					<strong>Time:</strong> ${new Date().toLocaleString('en-US', {
+						timeZone: 'America/New_York',
+					})}<br>
 				</p>
 			</body>
 		</html>
