@@ -58,13 +58,13 @@ export async function POST(req: Request) {
 			product: data.productId,
 			quantity: items.reduce((acc, item) => acc + item.quantity, 0),
 		});
-		console.log(`
-		Checkout recorded:
-		User: ${session?.user?.name}
-		Time: ${new Date().toLocaleString()}
-		Product: ${product?.name}
-		Quantity: ${items.reduce((acc, item) => acc + item.quantity, 0)}
-		`);
+		// console.log(`
+		// Checkout recorded:
+		// User: ${session?.user?.name}
+		// Time: ${new Date().toLocaleString()}
+		// Product: ${product?.name}
+		// Quantity: ${items.reduce((acc, item) => acc + item.quantity, 0)}
+		// `);
 		const owner = await db.user.findFirst({
 			where: { id: product?.location.userId },
 		});
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
 			<body>
 				<h2>Checkout recorded</h2>
 				<p>
-					<strong>User:</strong> ${session?.user?.name}<br>
+					<strong>User:</strong> ${session?.user?.name ?? 'Guest'}<br>
 					<strong>Product:</strong> ${product?.name}<br>
 					<strong>Quantity:</strong> ${items.reduce(
 						(acc, item) => acc + item.quantity,
