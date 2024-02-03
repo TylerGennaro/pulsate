@@ -1,4 +1,5 @@
 import { log } from '@lib/log';
+import { sendMail } from '@lib/mail';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
 import { notify } from '@lib/utils-server';
@@ -57,6 +58,36 @@ export async function POST(req: Request) {
 			product: data.productId,
 			quantity: items.reduce((acc, item) => acc + item.quantity, 0),
 		});
+		console.log(`
+		Checkout recorded:
+		User: ${session?.user?.name}
+		Time: ${new Date().toLocaleString()}
+		Product: ${product?.name}
+		Quantity: ${items.reduce((acc, item) => acc + item.quantity, 0)}
+		`);
+		const owner = await db.user.findFirst({
+			where: { id: product?.location.userId },
+		});
+		sendMail(
+			owner?.email!,
+			`[${product?.location.name}] Checkout recorded`,
+			`
+			<html>
+			<body>
+				<h2>Checkout recorded</h2>
+				<p>
+					<strong>User:</strong> ${session?.user?.name}<br>
+					<strong>Product:</strong> ${product?.name}<br>
+					<strong>Quantity:</strong> ${items.reduce(
+						(acc, item) => acc + item.quantity,
+						0
+					)}<br>
+					<strong>Time:</strong> ${new Date().toLocaleString()}
+				</p>
+			</body>
+		</html>
+		`
+		);
 		return new NextResponse('Checkout recorded.', { status: 200 });
 	} catch (e) {
 		return catchError(e);
