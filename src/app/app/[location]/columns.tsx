@@ -6,8 +6,8 @@ import { ChevronsUpDown, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { packageTypes, tags } from '@lib/relations';
 import { PackageType, Tag } from '@lib/enum';
-import { formatDate } from '@lib/date';
-import EditProduct from './(components)/EditProduct';
+import { formatDate, formatUTCDate } from '@lib/date';
+import EditProduct from '../../../components/location/EditProduct';
 import TagBadge from '@components/TagBadge';
 import DataTableSortableHeader from '@components/DataTableSortableHeader';
 import {
@@ -48,10 +48,12 @@ export const columns: ColumnDef<ProductInfo>[] = [
 			<DataTableSortableHeader column={column} header='Expiration' />
 		),
 		accessorKey: 'exp',
-		cell: ({ row }: { row: any }) => {
+		cell: ({ row }: { row: { original: ProductInfo } }) => {
 			return (
 				<p className='text-muted-foreground'>
-					{row.original.exp > 0 ? formatDate(row.original.exp) : 'None'}
+					{row.original.exp > 0
+						? formatUTCDate(new Date(row.original.exp))
+						: 'None'}
 				</p>
 			);
 		},
