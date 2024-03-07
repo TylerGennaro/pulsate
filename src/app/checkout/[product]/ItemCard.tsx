@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@components/ui/button';
+import { formatUTCDate } from '@lib/date';
 import { formatExpirationDate } from '@lib/utils';
 import { Item } from '@prisma/client';
 import { format } from 'date-fns';
@@ -25,7 +26,7 @@ export default function ItemCard({
 				<div className='flex flex-col'>
 					<span className='text-lg'>Expires</span>
 					<span className='text-muted-foreground'>
-						{formatExpirationDate(item.expires)}
+						{formatUTCDate(item.expires || new Date(0))}
 					</span>
 				</div>
 			</div>

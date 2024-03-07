@@ -1,18 +1,18 @@
-import InventoryTable from './(components)/InventoryTable';
+import InventoryTable from '@components/location/InventoryTable';
 import { Button } from '@components/ui/button';
 import { ScrollText } from 'lucide-react';
-import NewProduct from './(components)/NewProduct';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
-import EditLocation from './(components)/EditLocation';
 import { Suspense } from 'react';
-import TableLoading from './(components)/TableLoading';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
 import SignIn from '@components/SignIn';
 import { notFound } from 'next/navigation';
 import Container from '@components/Container';
 import { populateMetadata } from '@lib/utils';
+import NewProduct from '@components/location/NewProduct';
+import EditLocation from '@components/location/EditLocation';
+import TableLoading from '@components/location/TableLoading';
 
 export async function generateMetadata({
 	params,

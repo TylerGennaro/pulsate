@@ -29,7 +29,6 @@ export function isExpiring(date: Date | string | null) {
 		if (date.length === 0) return false;
 		date = new Date(date);
 	}
-	date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
 	const today = new Date();
 	const diff = date.getTime() - today.getTime();
 	return diff <= 1000 * 60 * 60 * 24 * 7;
