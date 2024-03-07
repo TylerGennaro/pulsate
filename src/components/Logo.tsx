@@ -16,9 +16,7 @@ export default function Logo({ className }: { className?: string }) {
 				height={32}
 				className='h-8'
 			/>
-			<span className='text-2xl font-medium text-blue-600 dark:text-blue-500'>
-				Pulsate
-			</span>
+			<span className='text-2xl font-medium text-primary'>Pulsate</span>
 		</Link>
 	);
 }
