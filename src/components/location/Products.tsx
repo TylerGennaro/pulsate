@@ -1,7 +1,7 @@
 'use client';
 
 import { DataTable } from '@components/ui/data-table';
-import { columns } from '../columns';
+import { columns } from '../../app/app/[location]/columns';
 import { Row, useReactTable } from '@tanstack/react-table';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';

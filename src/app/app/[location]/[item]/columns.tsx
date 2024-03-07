@@ -4,9 +4,9 @@ import { formatUTCDate, isExpiring } from '@lib/date';
 import { Tag } from '@lib/enum';
 import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
-import EditItem from './(components)/EditItem';
+import EditItem from '../../../../components/product/EditItem';
 import TagBadge from '@components/TagBadge';
-import ItemArrived from './(components)/ItemArrived';
+import ItemArrived from '../../../../components/product/ItemArrived';
 
 export type Log = {
 	user: string;

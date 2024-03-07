@@ -3,8 +3,8 @@ import { cn, populateMetadata } from '@lib/utils';
 import { ChevronLeft, ExternalLink, Pencil, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
-import ItemTable from './(components)/ItemTable';
-import NewItem from './(components)/NewItem';
+import ItemTable from '@components/product/ItemTable';
+import NewItem from '@components/product/NewItem';
 import { Item, Product } from '@prisma/client';
 import { PackageType, Tag } from '@lib/enum';
 import { formatUTCDate, isExpiring } from '@lib/date';
@@ -17,10 +17,10 @@ import { packageTypes } from '@lib/relations';
 import { Suspense } from 'react';
 import { Skeleton } from '@components/ui/skeleton';
 import Container from '@components/Container';
-import Logs from './Logs';
-import EditProduct from '../(components)/EditProduct';
-import PrintQRCode from './(components)/PrintQRCode';
-import OrderItem from './(components)/OrderItem';
+import Logs from '@components/product/Logs';
+import OrderItem from '@components/product/OrderItem';
+import EditProduct from '@components/location/EditProduct';
+import PrintQRCode from '@components/product/PrintQRCode';
 
 export async function generateMetadata({
 	params,
