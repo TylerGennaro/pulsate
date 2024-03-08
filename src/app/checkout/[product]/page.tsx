@@ -8,6 +8,7 @@ import { Button } from '@components/ui/button';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { populateMetadata } from '@lib/utils';
+import Container from '@components/Container';
 
 export async function generateMetadata({
 	params,
@@ -73,7 +74,7 @@ export default async function Page({
 	if (!product || !location) return notFound();
 	const session = await getServerSession(authOptions);
 	return (
-		<div className='w-full max-w-screen-md px-2 py-4 border h-fit bg-zinc-50 dark:bg-zinc-900 md:my-4 md:rounded-md md:shadow-md md:p-4'>
+		<Container className='w-full max-w-screen-lg md:m-4 h-max'>
 			<div className='flex flex-wrap items-center justify-between gap-4'>
 				<Heading
 					header={product?.name}
@@ -90,6 +91,6 @@ export default async function Page({
 			</div>
 			<hr className='mt-6' />
 			<Checkout items={product!.items} productId={params.product} />
-		</div>
+		</Container>
 	);
 }
