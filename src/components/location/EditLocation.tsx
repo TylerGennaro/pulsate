@@ -76,8 +76,8 @@ export default function EditLocation({
 			<AlertDialog>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant='outline' icon={Settings}>
-							Settings
+						<Button variant='outline'>
+							<MoreVertical size={16} />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
