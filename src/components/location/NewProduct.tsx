@@ -2,71 +2,71 @@
 
 import { Button } from '@components/ui/button';
 import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from '@components/ui/sheet';
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@components/ui/dialog';
+import { parseFormData } from '@lib/utils';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { FormEvent, useState } from 'react';
-import { crud, formDataToObject } from '@lib/utils';
+import toast from 'react-hot-toast';
 import ProductForm from './ProductForm';
-import { useRouter } from 'next/navigation';
 
 export default function NewItemSheet({ location }: { location: string }) {
 	const [open, setOpen] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const router = useRouter();
+	const queryClient = useQueryClient();
 
-	async function submit(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setLoading(true);
-		const data = new FormData(e.currentTarget);
-		data.append('locationId', location);
-		const result = await crud({
-			url: '/products',
-			method: 'POST',
-			data: formDataToObject(data),
-		});
-		if (result.status === 200) {
-			setOpen(false);
-			router.refresh();
-		}
-		setLoading(false);
-	}
+	const { isPending, mutate } = useMutation({
+		mutationFn: (e: FormEvent<HTMLFormElement>) => {
+			const data = parseFormData(e);
+			return fetch(`/api/products?location=${location}`, {
+				method: 'POST',
+				body: data,
+			});
+		},
+		onSettled: async (res) => {
+			if (res?.ok) {
+				queryClient.invalidateQueries({ queryKey: ['products'] });
+				setOpen(false);
+			} else toast.error('Failed to add product: ' + (await res?.text()));
+		},
+	});
+
 	return (
-		<Sheet open={open} onOpenChange={setOpen}>
-			<SheetTrigger asChild>
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>
 				<Button>
 					<Plus className='w-4 h-4 mr-2' />
 					New Product
 				</Button>
-			</SheetTrigger>
-			<SheetContent size='content'>
-				<form onSubmit={submit}>
-					<SheetHeader>
-						<SheetTitle>Add New Product</SheetTitle>
-						<SheetDescription>
+			</DialogTrigger>
+			<DialogContent>
+				<form onSubmit={mutate}>
+					<DialogHeader>
+						<DialogTitle>Add New Product</DialogTitle>
+						<DialogDescription>
 							Add a new inventory product. All information entered can be
 							changed later.
-						</SheetDescription>
-					</SheetHeader>
+						</DialogDescription>
+					</DialogHeader>
 					<ProductForm />
-					<SheetFooter>
+					<DialogFooter>
 						<Button
 							className='ml-auto'
 							type='submit'
 							icon={Plus}
-							isLoading={loading}
+							isLoading={isPending}
 						>
 							Add
 						</Button>
-					</SheetFooter>
+					</DialogFooter>
 				</form>
-			</SheetContent>
-		</Sheet>
+			</DialogContent>
+		</Dialog>
 	);
 }
