@@ -1,6 +1,12 @@
 import { Button } from '@components/ui/button';
 import { cn, populateMetadata } from '@lib/utils';
-import { ChevronLeft, ExternalLink, Pencil, ShoppingCart } from 'lucide-react';
+import {
+	ChevronLeft,
+	ExternalLink,
+	MoreVertical,
+	Pencil,
+	ShoppingCart,
+} from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
 import ItemTable from '@components/product/ItemTable';
@@ -170,9 +176,8 @@ export default async function Inventory({
 									url: data.url || undefined,
 								}}
 							>
-								<Button>
-									<Pencil className='w-4 h-4 mr-2' />
-									Update
+								<Button variant='outline'>
+									<MoreVertical size={16} />
 								</Button>
 							</EditProduct>
 						</div>
