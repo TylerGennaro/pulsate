@@ -2,6 +2,7 @@ import { ClassValue, clsx } from 'clsx';
 import { format } from 'date-fns';
 import { Metadata } from 'next';
 import { NextResponse } from 'next/server';
+import { FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
@@ -16,6 +17,17 @@ export function formDataToObject(formData: FormData) {
 		object[key] = value === '' ? null : value;
 	});
 	return object;
+}
+
+export function parseFormData(e: FormEvent<HTMLFormElement>) {
+	e.preventDefault();
+	const target = e.target as HTMLFormElement;
+	const formData = new FormData(target);
+	for (const checkbox of target.querySelectorAll('input[type="checkbox"]')) {
+		const checkboxInput = checkbox as HTMLInputElement;
+		formData.set(checkboxInput.name, checkboxInput.checked.toString());
+	}
+	return formData;
 }
 
 export async function crud({
