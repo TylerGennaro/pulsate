@@ -51,6 +51,21 @@
 	}
 }
 
+*::-webkit-scrollbar {
+	width: 0.25rem;
+}
+*::-webkit-scrollbar-thumb {
+	background-color: hsl(var(--foreground) / 0.25);
+	border-radius: 0.25rem;
+}
+*::-webkit-scrollbar-thumb:hover {
+	background-color: hsl(var(--foreground) / 0.4);
+}
+*::-webkit-scrollbar-track {
+	background-color: hsl(var(--foreground) / 0.1);
+	border-radius: 0.25rem;
+}
+
 @layer base {
 	* {
 		@apply border-border scroll-smooth;

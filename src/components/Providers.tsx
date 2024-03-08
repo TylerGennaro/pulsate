@@ -6,18 +6,27 @@ import { TooltipProvider } from './ui/tooltip';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from 'next-auth';
 import { Provider as BalancerProvider } from 'react-wrap-balancer';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 export default function Providers({
 	children,
 	session,
 }: ThemeProviderProps & { session: Session | null }) {
 	return (
-		<SessionProvider session={session}>
-			<NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
-				<TooltipProvider delayDuration={0}>
-					<BalancerProvider>{children}</BalancerProvider>
-				</TooltipProvider>
-			</NextThemesProvider>
-		</SessionProvider>
+		<QueryClientProvider client={queryClient}>
+			<SessionProvider session={session}>
+				<NextThemesProvider
+					attribute='class'
+					defaultTheme='system'
+					enableSystem
+				>
+					<TooltipProvider delayDuration={0}>
+						<BalancerProvider>{children}</BalancerProvider>
+					</TooltipProvider>
+				</NextThemesProvider>
+			</SessionProvider>
+		</QueryClientProvider>
 	);
 }

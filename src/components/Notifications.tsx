@@ -68,7 +68,7 @@ export default function Notifications() {
 				<div className='p-4'>
 					<span className='text-lg font-semibold'>Notifications</span>
 				</div>
-				<div className='border-y'>
+				<div className='border-y max-h-[50vh] overflow-y-auto'>
 					{loading ? (
 						<Loader className='w-8 h-8 mx-auto my-2' />
 					) : (

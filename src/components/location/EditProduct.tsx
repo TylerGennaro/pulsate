@@ -30,10 +30,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { FormEvent, useState } from 'react';
-import { crud, formDataToObject } from '@lib/utils';
+import { FormEvent, FormEventHandler, useState } from 'react';
+import { crud, formDataToObject, parseFormData } from '@lib/utils';
 import ProductForm from './ProductForm';
 import { PackageType } from '@lib/enum';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 export default function EditProduct({
 	defaultValues,
@@ -52,45 +54,43 @@ export default function EditProduct({
 	children: React.ReactNode;
 }) {
 	const [open, setOpen] = useState(false);
-	const [editLoading, setEditLoading] = useState(false);
-	const [deleteLoading, setDeleteLoading] = useState(false);
-	const router = useRouter();
+	const [alertOpen, setAlertOpen] = useState(false);
+	const queryClient = useQueryClient();
 
-	async function update(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setEditLoading(true);
-		const data = new FormData(e.currentTarget);
-		const result = await crud({
-			url: '/products',
-			method: 'PUT',
-			data: formDataToObject(data),
-			params: { id },
-		});
-		if (result.status === 200) {
-			setOpen(false);
-			router.refresh();
-		}
-		setEditLoading(false);
-	}
+	const updateMutation = useMutation({
+		mutationFn: (e: FormEvent<HTMLFormElement>) => {
+			const data = parseFormData(e);
+			return fetch(`/api/products?id=${id}`, {
+				method: 'PUT',
+				body: data,
+			});
+		},
+		onSettled: async (res) => {
+			if (res?.ok) {
+				queryClient.invalidateQueries({ queryKey: ['products'] });
+				setOpen(false);
+			} else toast.error('Failed to update product: ' + (await res?.text()));
+		},
+	});
 
-	async function remove(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setDeleteLoading(true);
-		const result = await crud({
-			url: '/products',
-			method: 'DELETE',
-			params: { id },
-		});
-		if (result.status === 200) {
-			setOpen(false);
-			router.refresh();
-		}
-		setDeleteLoading(false);
-	}
+	const deleteMutation = useMutation({
+		mutationFn: (e: FormEvent<HTMLFormElement>) => {
+			e.preventDefault();
+			return fetch(`/api/products?id=${id}`, {
+				method: 'DELETE',
+			});
+		},
+		onSettled: async (res) => {
+			if (res?.ok) {
+				queryClient.invalidateQueries({ queryKey: ['products'] });
+				setAlertOpen(false);
+			} else toast.error('Failed to update product: ' + (await res?.text()));
+		},
+	});
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<AlertDialog>
+			<AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
@@ -110,7 +110,7 @@ export default function EditProduct({
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<AlertDialogContent>
-					<form onSubmit={remove}>
+					<form onSubmit={deleteMutation.mutate}>
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 							<AlertDialogDescription>
@@ -123,7 +123,7 @@ export default function EditProduct({
 							<Button
 								type='submit'
 								variant='destructive'
-								isLoading={deleteLoading}
+								isLoading={deleteMutation.isPending}
 							>
 								Delete
 							</Button>
@@ -132,7 +132,7 @@ export default function EditProduct({
 				</AlertDialogContent>
 			</AlertDialog>
 			<DialogContent>
-				<form className='flex flex-col gap-4' onSubmit={update}>
+				<form className='flex flex-col gap-4' onSubmit={updateMutation.mutate}>
 					<DialogHeader>
 						<DialogTitle>Edit product</DialogTitle>
 						<DialogDescription>
@@ -141,7 +141,11 @@ export default function EditProduct({
 					</DialogHeader>
 					<ProductForm defaultValues={defaultValues} />
 					<DialogFooter>
-						<Button icon={Save} type='submit' isLoading={editLoading}>
+						<Button
+							icon={Save}
+							type='submit'
+							isLoading={updateMutation.isPending}
+						>
 							Save
 						</Button>
 					</DialogFooter>

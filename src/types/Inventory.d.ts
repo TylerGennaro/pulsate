@@ -10,7 +10,7 @@ declare global {
 		tags?: Tag[];
 	}
 
-	export interface ProductInfo extends Product {
+	export interface FormattedProduct extends Product {
 		quantity: number;
 		items: Item[];
 		tags: Tag[];

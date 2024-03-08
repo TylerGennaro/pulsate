@@ -13,6 +13,7 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 
+import { Checkbox } from '@components/ui/checkbox';
 import {
 	Table,
 	TableBody,
@@ -21,14 +22,15 @@ import {
 	TableHeader,
 	TableRow,
 } from '@components/ui/table';
-import { Checkbox } from '@components/ui/checkbox';
 import { useState } from 'react';
+import { Skeleton } from './skeleton';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	enableSelection?: boolean;
 	toolbar?: ({ table }: { table: any }) => JSX.Element;
+	isLoading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +38,7 @@ export function DataTable<TData, TValue>({
 	data,
 	enableSelection,
 	toolbar,
+	isLoading,
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({});
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -105,31 +108,47 @@ export function DataTable<TData, TValue>({
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && 'selected'}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext()
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
+						{isLoading ? (
+							<>
+								{Array.from({ length: 10 }).map((_, index) => (
+									<TableRow key={index}>
+										{columns.map((column, i) => (
+											<TableCell key={i}>
+												<Skeleton className='w-full h-6' />
+											</TableCell>
+										))}
+									</TableRow>
+								))}
+							</>
 						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className='h-24 text-center'
-								>
-									No results.
-								</TableCell>
-							</TableRow>
+							<>
+								{table.getRowModel().rows?.length ? (
+									table.getRowModel().rows.map((row) => (
+										<TableRow
+											key={row.id}
+											data-state={row.getIsSelected() && 'selected'}
+										>
+											{row.getVisibleCells().map((cell) => (
+												<TableCell key={cell.id}>
+													{flexRender(
+														cell.column.columnDef.cell,
+														cell.getContext()
+													)}
+												</TableCell>
+											))}
+										</TableRow>
+									))
+								) : (
+									<TableRow>
+										<TableCell
+											colSpan={columns.length}
+											className='h-24 text-center'
+										>
+											No results.
+										</TableCell>
+									</TableRow>
+								)}
+							</>
 						)}
 					</TableBody>
 				</Table>
