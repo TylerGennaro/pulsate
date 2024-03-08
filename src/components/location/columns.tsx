@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { packageTypes, tags } from '@lib/relations';
 import { PackageType, Tag } from '@lib/enum';
 import { formatDate, formatUTCDate } from '@lib/date';
-import EditProduct from '../../../components/location/EditProduct';
+import EditProduct from './EditProduct';
 import TagBadge from '@components/TagBadge';
 import DataTableSortableHeader from '@components/DataTableSortableHeader';
 import {
