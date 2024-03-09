@@ -24,13 +24,18 @@ export default function HeroHeading({
 				className
 			)}
 		>
-			<Header size={size} className='leading-tight tracking-tight text-center'>
+			<Header
+				size={size}
+				className='block leading-tight tracking-tight text-center duration-500 animate-in fade-in slide-in-from-top-6'
+			>
 				<Balancer>{title}</Balancer>
 			</Header>
-			<span className='w-3/4 mb-2 leading-normal text-center text-muted-foreground'>
+			<span className='w-3/4 mb-2 leading-normal text-center duration-500 delay-75 text-muted-foreground animate-in fade-in slide-in-from-top-6'>
 				<Balancer className='text-center'>{description}</Balancer>
 			</span>
-			<div className='flex gap-2 mt-2'>{children}</div>
+			<div className='flex gap-2 mt-2 duration-500 delay-150 animate-in fade-in slide-in-from-top-6'>
+				{children}
+			</div>
 		</div>
 	);
 }
