@@ -4,11 +4,16 @@ export async function fetchLocationInfo(id: string) {
 	const data = await db.location.findFirst({
 		select: {
 			name: true,
-			userId: true,
+			user: {
+				select: {
+					name: true,
+					id: true,
+				},
+			},
 		},
 		where: {
 			id,
 		},
 	});
-	return { name: data?.name, userId: data?.userId };
+	return { name: data?.name, userId: data?.user.id, userName: data?.user.name };
 }
