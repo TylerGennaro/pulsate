@@ -17,7 +17,7 @@ import {
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 
-export const columns: ColumnDef<ProductInfo>[] = [
+export const columns: ColumnDef<FormattedProduct>[] = [
 	{
 		header: ({ column }) => (
 			<DataTableSortableHeader column={column} header='Name' />
@@ -48,7 +48,7 @@ export const columns: ColumnDef<ProductInfo>[] = [
 			<DataTableSortableHeader column={column} header='Expiration' />
 		),
 		accessorKey: 'exp',
-		cell: ({ row }: { row: { original: ProductInfo } }) => {
+		cell: ({ row }: { row: { original: FormattedProduct } }) => {
 			return (
 				<p className='text-muted-foreground'>
 					{row.original.exp > 0

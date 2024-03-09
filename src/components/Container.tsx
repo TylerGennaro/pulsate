@@ -18,9 +18,12 @@ export default function Container({
 }) {
 	return (
 		<div
-			className={cn('bg-content lg:border rounded-md p-8 shadow-md', className)}
+			className={cn(
+				'bg-content lg:border lg:rounded-md p-4 lg:p-8 lg:shadow-md border-b',
+				className
+			)}
 		>
-			<div className='flex items-center justify-between'>
+			<div className='flex flex-wrap items-center justify-between gap-y-4'>
 				{header && <Heading header={header} description={description} />}
 				{action}
 			</div>

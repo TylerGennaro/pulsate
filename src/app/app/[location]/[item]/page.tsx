@@ -142,9 +142,12 @@ export default async function Inventory({
 
 	const units = packageTypes[data.package as PackageType];
 	return (
-		<div className='container'>
-			<Link href={`/app/${params.location}`}>
-				<Button className='p-2 mb-4 w-fit' variant='ghost'>
+		<div className='lg:px-2'>
+			<Link
+				href={`/app/${params.location}`}
+				className='block mt-4 mb-4 ml-4 w-fit lg:mt-0 lg:ml-0'
+			>
+				<Button className='p-2 w-fit' variant='ghost'>
 					<ChevronLeft className='w-4 h-4 mr-2' />
 					Go back
 				</Button>
