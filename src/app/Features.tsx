@@ -33,7 +33,7 @@ export default function Features() {
 	return (
 		<div
 			id='features'
-			className='flex flex-col items-center w-full gap-16 px-8 py-16 bg-zinc-100 dark:bg-zinc-900 border-y'
+			className='flex flex-col items-center w-full gap-16 px-8 py-16 bg-content border-y'
 		>
 			<HeroHeading
 				title='We have what you need'
@@ -43,7 +43,7 @@ export default function Features() {
 			<div className='grid max-w-screen-md grid-cols-1 gap-16 sm:grid-cols-2'>
 				{features.map((feature) => (
 					<div className='flex gap-4' key={feature.title}>
-						<div className='p-2 bg-blue-700 rounded-lg text-zinc-50 h-fit'>
+						<div className='p-2 rounded-lg bg-primary text-primary-foreground h-fit'>
 							<feature.icon className='w-6 h-6' />
 						</div>
 						<div className='flex flex-col items-start'>
