@@ -21,7 +21,7 @@ export const itemColumns: ColumnDef<Item>[] = [
 		accessorKey: 'expires',
 		cell: ({ row }: { row: any }) => {
 			if (row.original.expires === null) return <p>Never</p>;
-			return <p>{formatUTCDate(row.original.expires)}</p>;
+			return <p className='w-max'>{formatUTCDate(row.original.expires)}</p>;
 		},
 	},
 	{ header: 'Quantity', accessorKey: 'quantity' },
