@@ -19,7 +19,7 @@ export default function Container({
 	return (
 		<div
 			className={cn(
-				'bg-content lg:border lg:rounded-md p-4 lg:p-8 lg:shadow-md border-b',
+				'bg-content border rounded-md p-4 lg:p-8 shadow-md',
 				className
 			)}
 		>
