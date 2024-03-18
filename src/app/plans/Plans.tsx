@@ -45,16 +45,19 @@ const plans = {
 
 export default function Plans() {
 	return (
-		<div id='plans' className='flex flex-wrap justify-center gap-2'>
-			{Object.entries(plans).map(([name, { monthly, price, perks }]) => (
-				<PlanCard
-					key={name}
-					name={name}
-					monthly={monthly}
-					price={price}
-					perks={perks}
-				/>
-			))}
+		<div id='plans' className='relative'>
+			<div className='sm:block hidden absolute top-0 w-full h-40 -translate-x-1/2 -translate-y-1/2 bg-primary/10 dark:bg-white/5 left-1/2 rounded-[50%] blur-[60px]' />
+			<div className='relative z-10 flex flex-wrap justify-center gap-2'>
+				{Object.entries(plans).map(([name, { monthly, price, perks }]) => (
+					<PlanCard
+						key={name}
+						name={name}
+						monthly={monthly}
+						price={price}
+						perks={perks}
+					/>
+				))}
+			</div>
 		</div>
 	);
 }
