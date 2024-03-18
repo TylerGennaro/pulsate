@@ -34,8 +34,8 @@ export default function PlanCard({ name, monthly, price, perks }: Props) {
 	const bestValue = name === 'Executive';
 	return (
 		<div
-			className={`flex flex-col gap-4 p-8 border shadow-md w-72 shrink-0 rounded-2xl bg-zinc-50 dark:bg-zinc-900 h-fit ${
-				bestValue ? 'border-blue-700 lg:scale-110' : ''
+			className={`flex flex-col gap-4 p-8 border shadow-[0_0_10px] sm:shadow-md dark:shadow-white/10 sm:dark:shadow-inherit w-72 shrink-0 rounded-2xl bg-content h-fit animate-in fade-in duration-500 slide-in-from-bottom-6 delay-200 ${
+				bestValue ? 'dark:shadow-primary/70 border-primary lg:scale-110' : ''
 			}`}
 		>
 			<div className='flex flex-col gap-1'>
