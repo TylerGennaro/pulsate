@@ -74,6 +74,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					isLoading ? 'opacity-50 pointer-events-none' : ''
 				)}
 				ref={ref}
+				type={props.type || 'button'}
 				{...props}
 			>
 				<>
