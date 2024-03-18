@@ -225,7 +225,7 @@ export default async function Inventory({
 							label='Last Ordered'
 							value={
 								data.lastOrder !== null
-									? formatUTCDate(data.lastOrder)
+									? formatUTCDate(data.lastOrder)!
 									: 'Never'
 							}
 						/>
