@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
 import { VariantProps, cva } from 'class-variance-authority';
+import React from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -11,6 +11,8 @@ const headerVariants = cva('text-foreground-text', {
 			md: 'text-2xl',
 			lg: 'text-4xl',
 			xl: 'text-5xl',
+			'2xl': 'text-6xl',
+			'3xl': 'text-7xl',
 		},
 		weight: {
 			default: 'font-bold',
