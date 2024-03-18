@@ -116,7 +116,7 @@ function Toolbar({
 
 export default function InventoryTable({ location }: { location: string }) {
 	const { data, isLoading, isError } = useQuery({
-		queryKey: ['products'],
+		queryKey: ['products', location],
 		queryFn: async () => {
 			const res = await fetch(`/api/products?location=${location}`);
 			const products = await res.json();
