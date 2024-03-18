@@ -14,11 +14,10 @@ export function formatDate(date: Date | string) {
 	return format(date, 'MMM d, yyyy');
 }
 
-export function formatUTCDate(date: Date | string) {
-	if (typeof date === 'string') {
-		if (date.length === 0) return '';
-		date = new Date(date);
-	}
+export function formatUTCDate(date: Date | string | null) {
+	if (date === null) return null;
+	if (typeof date === 'string' && date.length === 0) return '';
+	date = new Date(date);
 	date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
 	return format(date, 'MMM d, yyyy');
 }
