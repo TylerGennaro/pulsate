@@ -1,51 +1,81 @@
 'use client';
 
 import { Button } from '@components/ui/button';
+import { Input } from '@components/ui/input';
 import { formatUTCDate } from '@lib/date';
-import { formatExpirationDate } from '@lib/utils';
+import { PackageType } from '@lib/enum';
+import { packageTypes } from '@lib/relations';
 import { Item } from '@prisma/client';
-import { format } from 'date-fns';
-import { ShoppingCart, Trash2 } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 export default function ItemCard({
 	item,
-	canAdd,
-	setSelected,
+	packageType,
+	cart,
+	setCart,
 }: {
 	item: Item;
-	canAdd: boolean;
-	setSelected: React.Dispatch<React.SetStateAction<Item[]>>;
+	packageType: PackageType;
+	cart: Map<string, number>;
+	setCart: Dispatch<SetStateAction<Map<string, number>>>;
 }) {
+	const quantity = cart.get(item.id) ?? 0;
+	// const [quantity, setQuantity] = useState(0);
 	return (
 		<div className='flex flex-col items-end gap-2 px-2 py-6'>
 			<div className='flex items-center justify-between w-full'>
 				<div className='flex flex-col'>
 					<span className='text-lg'>Quantity</span>
-					<span className='text-muted-foreground'>{item.quantity}</span>
+					<span className='text-muted-foreground'>{`${item.quantity} ${packageTypes[packageType]}`}</span>
 				</div>
-				<div className='flex flex-col'>
+				<div className='flex flex-col items-end'>
 					<span className='text-lg'>Expires</span>
 					<span className='text-muted-foreground'>
-						{formatUTCDate(item.expires || new Date(0))}
+						{formatUTCDate(item.expires) ?? 'Never'}
 					</span>
 				</div>
 			</div>
 
-			<div className='flex justify-end gap-2'>
+			<div className='flex justify-end'>
 				<Button
-					icon={Trash2}
 					variant='outline'
-					disabled={canAdd}
-					onClick={() => setSelected((arr) => arr.filter((i) => i !== item))}
+					className='rounded-none rounded-l-full'
+					onClick={() => {
+						const newCart = new Map(cart);
+						newCart.set(item.id, Math.max(quantity - 1, 0));
+						setCart(newCart);
+					}}
 				>
-					Remove from cart
+					<Minus size={16} />
 				</Button>
+				<Input
+					className='w-20 text-center rounded-none border-x-0 no-arrows'
+					placeholder='Quantity'
+					value={quantity}
+					onChange={(e) => {
+						const newCart = new Map(cart);
+						newCart.set(
+							item.id,
+							Math.min(
+								Math.max(parseInt(e.target.value) || 0, 0),
+								item.quantity
+							)
+						);
+					}}
+					name={`quantity-${item.id}`}
+					type='number'
+				/>
 				<Button
-					icon={ShoppingCart}
-					disabled={!canAdd}
-					onClick={() => setSelected((arr) => [...arr, item])}
+					variant='outline'
+					className='rounded-none rounded-r-full'
+					onClick={() => {
+						const newCart = new Map(cart);
+						newCart.set(item.id, Math.min(quantity + 1, item.quantity));
+						setCart(newCart);
+					}}
 				>
-					Add to cart
+					<Plus size={16} />
 				</Button>
 			</div>
 		</div>
