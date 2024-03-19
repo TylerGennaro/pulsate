@@ -1,5 +1,9 @@
+import { getProduct } from '@lib/data';
+import { log } from '@lib/log';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
+import { notify } from '@lib/utils-server';
+import { LogType } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -45,6 +49,8 @@ export async function POST(req: Request) {
 	const data = (await req.json()).filter(
 		(item: { id: string; quantity: number }) => item.quantity > 0
 	);
+	const product = await getProduct(data[0].id, { items: true, location: true });
+	if (!product) return NextResponse.json('Product not found', { status: 404 });
 	try {
 		const items = schema.parse(data);
 		items.forEach(async (items) => {
@@ -68,13 +74,31 @@ export async function POST(req: Request) {
 				},
 			},
 		});
-		// 	const product = await db.product.findUnique({
-		// 		where: { id: data.productId },
-		// 		include: {
-		// 			location: true,
-		// 			items: true,
+		const sum = await db.item.aggregate({
+			where: { productId: product.id },
+			_sum: { quantity: true },
+		});
+
+		if (sum?._sum?.quantity! < product.min) {
+			notify({
+				userId: product.location.userId,
+				message: `${product.name} is low on stock.`,
+				redirect: `/app/${product.location.id}/${product.id}`,
+			});
+		}
+		log(LogType.ITEM_CHECKOUT, {
+			product: product.id,
+			quantity: items.reduce((acc, item) => acc + item.quantity, 0),
+		});
+		// const product = await db.product.findUnique({
+		// 	where: { id: data.productId },
+		// 	include: {
+		// 		location: true,
+		// 		items: {
+
 		// 		},
-		// 	});
+		// 	},
+		// });
 		// 	if (
 		// 		product &&
 		// 		product?.items.reduce((acc, item) => acc + item.quantity, 0) <
