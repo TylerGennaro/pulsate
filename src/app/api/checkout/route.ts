@@ -1,5 +1,6 @@
 import { getProduct } from '@lib/data';
 import { log } from '@lib/log';
+import { sendCheckoutEmail } from '@lib/mail';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
 import { notify } from '@lib/utils-server';
@@ -44,26 +45,37 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-	// const session = await getServerSession();
-	// if (!session) return new NextResponse('Unauthorized', { status: 401 });
+	// Get request data
 	const data = (await req.json()).filter(
 		(item: { id: string; quantity: number }) => item.quantity > 0
 	);
-	const product = await getProduct(data[0].id, { items: true, location: true });
-	if (!product) return NextResponse.json('Product not found', { status: 404 });
+	const searchParams = new URL(req.url).searchParams;
+	const productId = searchParams.get('productId');
+	if (!productId) return new NextResponse('Bad request', { status: 400 });
+
+	// Get product
+	const product = await getProduct(productId, { items: true, location: true });
+	if (!product)
+		return NextResponse.json({ message: 'Product not found' }, { status: 404 });
+
 	try {
 		const items = schema.parse(data);
-		items.forEach(async (items) => {
-			const result = await db.item.update({
-				where: { id: items.id },
-				data: {
-					quantity: {
-						decrement: items.quantity,
+		const itemsWithExpiration = await Promise.all([
+			...items.map(async (item) => {
+				// Decrement quantity for all items
+				const result = await db.item.update({
+					where: { id: item.id },
+					data: {
+						quantity: {
+							decrement: item.quantity,
+						},
 					},
-				},
-			});
-			if (!result) throw new Error('Item not found');
-		});
+				});
+				if (!result) throw new Error('Item not found');
+				return { ...item, expiration: result.expires };
+			}),
+		]);
+		// Delete items with quantity <= 0
 		await db.item.deleteMany({
 			where: {
 				quantity: {
@@ -74,81 +86,43 @@ export async function POST(req: Request) {
 				},
 			},
 		});
-		const sum = await db.item.aggregate({
-			where: { productId: product.id },
-			_sum: { quantity: true },
-		});
 
-		if (sum?._sum?.quantity! < product.min) {
+		// Check if product is low on stock
+		const total = await getProductQuantity(product.id);
+		// If low, notify location owner
+		if (total < product.min) {
 			notify({
 				userId: product.location.userId,
 				message: `${product.name} is low on stock.`,
 				redirect: `/app/${product.location.id}/${product.id}`,
 			});
 		}
+
+		// Log the checkout
 		log(LogType.ITEM_CHECKOUT, {
 			product: product.id,
 			quantity: items.reduce((acc, item) => acc + item.quantity, 0),
 		});
-		// const product = await db.product.findUnique({
-		// 	where: { id: data.productId },
-		// 	include: {
-		// 		location: true,
-		// 		items: {
 
-		// 		},
-		// 	},
+		// Send email to location owner
+		// const owner = await db.user.findFirst({
+		// 	where: { id: product.location.userId },
 		// });
-		// 	if (
-		// 		product &&
-		// 		product?.items.reduce((acc, item) => acc + item.quantity, 0) <
-		// 			product?.min
-		// 	) {
-		// 		notify({
-		// 			userId: product?.location.userId!,
-		// 			message: `${product?.name} is low on stock.`,
-		// 			redirect: `/app/${product?.location.id}/${product?.id}`,
-		// 		});
-		// 	}
-		// 	log(LogType.ITEM_CHECKOUT, {
-		// 		product: data.productId,
-		// 		quantity: items.reduce((acc, item) => acc + item.quantity, 0),
-		// 	});
-		// 	// console.log(`
-		// 	// Checkout recorded:
-		// 	// User: ${session?.user?.name}
-		// 	// Time: ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })}
-		// 	// Product: ${product?.name}
-		// 	// Quantity: ${items.reduce((acc, item) => acc + item.quantity, 0)}
-		// 	// `);
-		// 	const owner = await db.user.findFirst({
-		// 		where: { id: product?.location.userId },
-		// 	});
-		// 	await sendMail(
-		// 		owner?.email!,
-		// 		`[${product?.location.name}] Checkout recorded`,
-		// 		`
-		// 		<html>
-		// 		<body>
-		// 			<h2>Checkout recorded</h2>
-		// 			<p>
-		// 				<strong>User:</strong> ${session?.user?.name ?? 'Guest'}<br>
-		// 				<strong>Product:</strong> ${product?.name}<br>
-		// 				<strong>Quantity:</strong> ${items.reduce(
-		// 					(acc, item) => acc + item.quantity,
-		// 					0
-		// 				)}<br>
-		// 				<strong>Time:</strong> ${new Date().toLocaleString('en-US', {
-		// 					timeZone: 'America/New_York',
-		// 				})}<br>
-		// 			</p>
-		// 		</body>
-		// 	</html>
-		// 	`
-		// 	);
-		return NextResponse.json('Checkout recorded.', { status: 200 });
+		// if (owner && owner.email)
+		// 	await sendCheckoutEmail(owner.email, product, itemsWithExpiration);
+
+		return NextResponse.json({ message: 'Checkout recorded' }, { status: 200 });
 	} catch (e) {
 		console.log(e);
 		return catchError(e);
 	}
+}
+
+async function getProductQuantity(id: string) {
+	const total = await db.item.aggregate({
+		where: { productId: id },
+		_sum: { quantity: true },
+	});
+	if (!total?._sum?.quantity) throw new Error('Could not aggregate quantity');
+	return total._sum.quantity;
 }

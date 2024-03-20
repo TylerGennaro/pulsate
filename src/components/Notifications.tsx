@@ -47,7 +47,7 @@ export default function Notifications() {
 			setNotifications(result);
 			setLoading(false);
 		});
-	}, []);
+	}, [open]);
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>

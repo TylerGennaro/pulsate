@@ -32,10 +32,12 @@ export default function Checkout({ productId }: { productId: string }) {
 				body: JSON.stringify(data),
 			});
 		},
-		onSuccess: () => {
-			setCart(new Map());
-			queryClient.invalidateQueries({ queryKey: ['product', productId] });
-			toast.success('Checkout recorded');
+		onSuccess: async (res) => {
+			if (res.ok) {
+				setCart(new Map());
+				queryClient.invalidateQueries({ queryKey: ['product', productId] });
+				toast.success('Checkout recorded');
+			} else toast.error('Failed: ' + (await res.json()).message);
 		},
 	});
 

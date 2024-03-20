@@ -27,19 +27,23 @@
 ✔ Checkout page @done(24-03-07 11:58)
 ✔ Better responsive sidebar @done(24-03-07 11:58)
 ☐ Add payment with Stripe
-☐ Sorting on products page
-	☐ Default sort products by shelf location
+✔ Sorting on products page @done(24-03-18 23:28)
+	✔ Default sort products by shelf location @done(24-03-18 23:28)
 ✔ Notification system @done(24-03-07 11:58)
 	✔ Email notifications @done(24-03-07 11:56)
 ☐ Remove max quantity
 ☐ Improve notifications
 	☐ Notification settings
 	☐ Improve overall functionality
+☐ Add location settings
+	☐ Send email on every checkout
+	☐ Only allow authenticated users to checkout
+		☐ Specify which email extensions can checkout
 
-☐ Improve mobile UX
+✔ Improve mobile UX @done(24-03-19 00:51)
 ☐ Management sharing
 ☐ Global location log w/ filters
-☐ Link to product order page
+✔ Link to product order page @done(24-03-19 00:51)
 ☐ Dashboard @started(24-03-09 11:36)
 	☐ Most used product per location
 	☐ Locations with low inventory
