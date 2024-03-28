@@ -9,7 +9,7 @@ export default async function Logs({
 	return (
 		<div className='flex flex-col'>
 			{!logs.length && (
-				<span className='text-muted-text'>No activity to show</span>
+				<span className='text-muted-foreground'>No activity to show</span>
 			)}
 			{logs.map((log, index, arr) => (
 				<LogEntry

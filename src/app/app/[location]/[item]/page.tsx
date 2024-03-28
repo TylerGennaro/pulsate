@@ -1,10 +1,16 @@
 import { Button } from '@components/ui/button';
 import { cn, populateMetadata } from '@lib/utils';
-import { ChevronLeft, ExternalLink, Pencil, ShoppingCart } from 'lucide-react';
+import {
+	ChevronLeft,
+	ExternalLink,
+	MoreVertical,
+	Pencil,
+	ShoppingCart,
+} from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@lib/prisma';
-import ItemTable from './(components)/ItemTable';
-import NewItem from './(components)/NewItem';
+import ItemTable from '@components/product/ItemTable';
+import NewItem from '@components/product/NewItem';
 import { Item, Product } from '@prisma/client';
 import { PackageType, Tag } from '@lib/enum';
 import { formatUTCDate, isExpiring } from '@lib/date';
@@ -17,10 +23,10 @@ import { packageTypes } from '@lib/relations';
 import { Suspense } from 'react';
 import { Skeleton } from '@components/ui/skeleton';
 import Container from '@components/Container';
-import Logs from './Logs';
-import EditProduct from '../(components)/EditProduct';
-import PrintQRCode from './(components)/PrintQRCode';
-import OrderItem from './(components)/OrderItem';
+import Logs from '@components/product/Logs';
+import OrderItem from '@components/product/OrderItem';
+import EditProduct from '@components/location/EditProduct';
+import PrintQRCode from '@components/product/PrintQRCode';
 
 export async function generateMetadata({
 	params,
@@ -50,7 +56,7 @@ function InfoBlock({
 	return (
 		<div className={cn('flex flex-col gap-2', className)}>
 			<span>{label}</span>
-			<span className='text-muted'>{value}</span>
+			<span className='text-muted-foreground'>{value}</span>
 		</div>
 	);
 }
@@ -136,9 +142,12 @@ export default async function Inventory({
 
 	const units = packageTypes[data.package as PackageType];
 	return (
-		<div className='container'>
-			<Link href={`/app/${params.location}`}>
-				<Button className='p-2 mb-4 w-fit' variant='ghost'>
+		<div className='lg:px-2'>
+			<Link
+				href={`/app/${params.location}`}
+				className='block mt-4 mb-4 ml-4 w-fit lg:mt-0 lg:ml-0'
+			>
+				<Button className='p-2 w-fit' variant='ghost'>
 					<ChevronLeft className='w-4 h-4 mr-2' />
 					Go back
 				</Button>
@@ -170,9 +179,8 @@ export default async function Inventory({
 									url: data.url || undefined,
 								}}
 							>
-								<Button>
-									<Pencil className='w-4 h-4 mr-2' />
-									Update
+								<Button variant='outline'>
+									<MoreVertical size={16} />
 								</Button>
 							</EditProduct>
 						</div>
@@ -217,7 +225,7 @@ export default async function Inventory({
 							label='Last Ordered'
 							value={
 								data.lastOrder !== null
-									? formatUTCDate(data.lastOrder)
+									? formatUTCDate(data.lastOrder)!
 									: 'Never'
 							}
 						/>
@@ -250,7 +258,7 @@ export default async function Inventory({
 				<Container className='xl:col-span-2'>
 					<div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
 						<div className='flex flex-col gap-1'>
-							<span className='text-muted text-md'>Total</span>
+							<span className='text-muted-foreground text-md'>Total</span>
 							<span className='text-xl font-semibold'>
 								{data.items.reduce((acc, val) => (acc += val.quantity), 0)}{' '}
 								{packageTypes[data.package as PackageType]}

@@ -47,7 +47,7 @@ export default function Notifications() {
 			setNotifications(result);
 			setLoading(false);
 		});
-	}, []);
+	}, [open]);
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
@@ -68,7 +68,7 @@ export default function Notifications() {
 				<div className='p-4'>
 					<span className='text-lg font-semibold'>Notifications</span>
 				</div>
-				<div className='border-y'>
+				<div className='border-y max-h-[50vh] overflow-y-auto'>
 					{loading ? (
 						<Loader className='w-8 h-8 mx-auto my-2' />
 					) : (
@@ -91,7 +91,7 @@ export default function Notifications() {
 									)}
 									<div className='flex flex-col text-left'>
 										<span className='text-sm'>{notification.message}</span>
-										<span className='text-xs text-muted'>
+										<span className='text-xs text-muted-foreground'>
 											{timeSince(new Date(notification.created))} ago
 										</span>
 									</div>

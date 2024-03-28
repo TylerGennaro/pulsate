@@ -27,13 +27,8 @@ interface SheetPortalProps
 	extends SheetPrimitive.DialogPortalProps,
 		VariantProps<typeof portalVariants> {}
 
-const SheetPortal = ({
-	position,
-	className,
-	children,
-	...props
-}: SheetPortalProps) => (
-	<SheetPrimitive.Portal className={cn(className)} {...props}>
+const SheetPortal = ({ position, children, ...props }: SheetPortalProps) => (
+	<SheetPrimitive.Portal {...props}>
 		<div className={portalVariants({ position })}>{children}</div>
 	</SheetPrimitive.Portal>
 );
@@ -213,7 +208,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<SheetPrimitive.Description
 		ref={ref}
-		className={cn('text-sm text-muted', className)}
+		className={cn('text-sm text-muted-foreground', className)}
 		{...props}
 	/>
 ));

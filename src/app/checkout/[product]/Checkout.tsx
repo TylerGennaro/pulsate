@@ -1,128 +1,118 @@
 'use client';
 
-import { Item } from '@prisma/client';
-import ItemCard from './ItemCard';
-import { FormEvent, useState } from 'react';
-import CartItem from './CartItem';
 import { Button } from '@components/ui/button';
-import { ShoppingCart } from 'lucide-react';
-import { crud } from '@lib/utils';
-import { useRouter } from 'next/navigation';
 import Heading from '@components/ui/heading';
+import { Skeleton } from '@components/ui/skeleton';
+import { Item } from '@prisma/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ExternalLink, ShoppingCart } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useState } from 'react';
+import ItemCard from './ItemCard';
+import toast from 'react-hot-toast';
 
-export default function Checkout({
-	items,
-	productId,
-}: {
-	items: Item[];
-	productId: string;
-}) {
-	const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-	const [loading, setLoading] = useState(false);
-	const [recorded, setRecorded] = useState(false);
-	const [error, setError] = useState('');
-	const router = useRouter();
+export default function Checkout({ productId }: { productId: string }) {
+	const queryClient = useQueryClient();
+	const session = useSession();
+	const [cart, setCart] = useState<Map<string, number>>(new Map());
 
-	async function submit(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setLoading(true);
-		const formData = new FormData(e.target as HTMLFormElement);
-		const data = selectedItems.map((item) => ({
-			id: item.id,
-			quantity: parseInt(formData.get(`quantity-${item.id}`)?.toString() || ''),
-		}));
-		const result = await crud({
-			method: 'POST',
-			url: '/checkout',
-			data: {
-				productId,
-				items: data,
-			},
-			notify: false,
-		});
-		if (result.status === 500) {
-			setError(result.message);
-			setSelectedItems(selectedItems);
-		} else {
-			setSelectedItems([]);
-			setRecorded(true);
-		}
-		setLoading(false);
-	}
-
-	if (recorded)
-		return (
-			<div className='flex flex-wrap items-center justify-between gap-4 mt-8'>
-				<div className='flex flex-col'>
-					<span className='text-lg'>Checked out</span>
-					<span className='text-muted-text'>
-						Your response has been recorded.
-					</span>
-				</div>
-				<Button
-					onClick={() => {
-						setRecorded(false);
-						router.refresh();
-					}}
-					className='w-max'
-				>
-					Checkout more
-				</Button>
-			</div>
-		);
+	const { data, isLoading } = useQuery({
+		queryKey: ['product', productId],
+		queryFn: async () => {
+			const res = await fetch(`/api/checkout?productId=${productId}`);
+			return res.json();
+		},
+	});
+	const { mutate, isPending } = useMutation({
+		mutationFn: () => {
+			const data = Array.from(cart).map(([id, quantity]) => ({ id, quantity }));
+			return fetch(`/api/checkout?productId=${productId}`, {
+				method: 'POST',
+				body: JSON.stringify(data),
+			});
+		},
+		onSuccess: async (res) => {
+			if (res.ok) {
+				setCart(new Map());
+				queryClient.invalidateQueries({ queryKey: ['product', productId] });
+				toast.success('Checkout recorded');
+			} else toast.error('Failed: ' + (await res.json()).message);
+		},
+	});
 
 	return (
-		<div>
-			{!items.length ? (
-				<div className='flex flex-col items-center gap-2 mt-8'>
-					<span className='text-lg'>Out of stock</span>
-					<span className='text-muted'>Contact your manager</span>
-				</div>
+		<div className='flex flex-col'>
+			<div className='flex flex-wrap items-center justify-between gap-4'>
+				{isLoading ? (
+					<div>
+						<Skeleton className='w-40 h-8' />
+						<Skeleton className='h-6 mt-2 w-96' />
+					</div>
+				) : (
+					<Heading
+						header={data.name}
+						description={`Checkout ${data.name} from ${data.location.name}`}
+					/>
+				)}
+				{!isLoading && session?.data?.user.id === data.location.userId && (
+					<Link href={`/app/${data.location.id}/${productId}`}>
+						<Button variant='outline'>
+							View Page
+							<ExternalLink className='w-4 h-4 ml-2' />
+						</Button>
+					</Link>
+				)}
+			</div>
+			<hr className='mt-6' />
+			{/* <form onSubmit={mutate}> */}
+			{isLoading ? (
+				<ul>
+					{Array.from({ length: 3 }).map((_, index) => (
+						<li key={index} className='block py-4 border-b'>
+							<Skeleton className='w-full h-32' />
+						</li>
+					))}
+				</ul>
 			) : (
 				<>
-					{items.map((item, index) => (
-						<div key={index}>
-							<ItemCard
-								item={item}
-								canAdd={!selectedItems.includes(item)}
-								setSelected={setSelectedItems}
-							/>
-							<hr />
+					{!data.items.length ? (
+						<div className='flex flex-col items-center gap-2 mt-8'>
+							<span className='text-lg'>Out of stock</span>
+							<span className='text-muted-foreground'>
+								Contact your manager
+							</span>
 						</div>
-					))}
-					<Heading
-						header='Cart'
-						description='Review and checkout'
-						className='mt-8 mb-4'
-					/>
-					<form onSubmit={submit}>
-						<div className='flex justify-end'>
-							<div className='flex flex-col gap-4'>
-								{selectedItems.map((item) => (
-									<CartItem
+					) : (
+						<>
+							{data.items.map((item: Item, index: number) => (
+								<div key={index}>
+									<ItemCard
 										item={item}
-										setSelected={setSelectedItems}
-										key={item.id}
+										packageType={data.package}
+										cart={cart}
+										setCart={setCart}
 									/>
-								))}
-							</div>
-						</div>
-						<div className='flex justify-end'>
-							<div className='flex flex-col items-end gap-2 text-right'>
-								<Button
-									icon={ShoppingCart}
-									className='mt-4 w-fit'
-									disabled={!selectedItems.length}
-									isLoading={loading}
-								>
-									Checkout
-								</Button>
-								{error && <span className='text-red-500'>{error}</span>}
-							</div>
-						</div>
-					</form>
+									<hr />
+								</div>
+							))}
+						</>
+					)}
 				</>
 			)}
+			<Button
+				icon={ShoppingCart}
+				className='self-end mt-8 w-fit'
+				disabled={isLoading || !data.items.length}
+				type='submit'
+				isLoading={isPending}
+				onClick={() => mutate()}
+			>
+				Checkout (
+				{Array.from(cart).reduce((acc, [, quantity]) => acc + quantity, 0)}{' '}
+				items)
+			</Button>
+			{/* </form> */}
 		</div>
 	);
 }

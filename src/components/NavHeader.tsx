@@ -39,10 +39,8 @@ export default function NavHeader({
 	}, [sidebarOpen]);
 	return (
 		<div
-			className={`sticky top-0 z-50 w-full bg-zinc-50 dark:bg-zinc-950 border-b transition ${
-				scrolled
-					? 'shadow-md border-zinc-200 dark:border-zinc-800'
-					: 'border-zinc-200/0'
+			className={`sticky top-0 z-50 w-full bg-background/0 border-b transition ${
+				scrolled ? 'shadow-md !bg-background' : 'border-zinc-200/0'
 			}`}
 			ref={sidebarRef}
 		>
@@ -57,8 +55,10 @@ export default function NavHeader({
 				<Logo className='hidden md:flex' />
 				<div
 					className={`absolute top-0 left-0 flex flex-col h-screen gap-4 p-8 pr-32 font-semibold ${
-						sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-					} duration-300 sm:justify-center transition-transform shadow-md sm:translate-x-0 bg-zinc-50 dark:bg-zinc-900 sm:dark:bg-zinc-950 sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-start sm:gap-12 sm:static z-10`}
+						sidebarOpen
+							? 'translate-x-0 bg-content border-r'
+							: '-translate-x-full'
+					} duration-300 sm:justify-center transition shadow-md sm:translate-x-0 sm:shadow-none sm:items-center sm:p-0 sm:flex-row sm:h-auto justify-start sm:gap-12 sm:static z-10`}
 				>
 					<Button
 						variant='ghost'
@@ -69,24 +69,25 @@ export default function NavHeader({
 					</Button>
 					<Logo className='flex sm:hidden' />
 					<hr className='sm:hidden' />
-					{items.map((item) => {
-						if (item.href.startsWith('#'))
-							return (
-								<a
-									key={item.label}
-									href={item.href}
-									onClick={() => setSidebarOpen(false)}
-								>
-									{item.label}
-								</a>
-							);
-						else
-							return (
-								<Link href={item.href} onClick={() => setSidebarOpen(false)}>
-									{item.label}
-								</Link>
-							);
-					})}
+					{items.map((item) =>
+						item.href.startsWith('#') ? (
+							<a
+								key={item.label}
+								href={item.href}
+								onClick={() => setSidebarOpen(false)}
+							>
+								{item.label}
+							</a>
+						) : (
+							<Link
+								key={item.label}
+								href={item.href}
+								onClick={() => setSidebarOpen(false)}
+							>
+								{item.label}
+							</Link>
+						)
+					)}
 				</div>
 				<div className='flex items-center justify-end gap-2'>
 					<ThemeToggle />

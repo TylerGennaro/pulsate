@@ -36,7 +36,7 @@ const QRCode: FC<QRCodeProps> = ({ location, id, onPrint, style }) => {
 					color='#FF0000'
 				/>
 			</div>
-			<div className='flex items-center w-full gap-2 mt-4'>
+			<div className='flex items-center w-full max-w-lg gap-2 mt-4'>
 				<label>Size</label>
 				<div className='grow'>
 					<Slider

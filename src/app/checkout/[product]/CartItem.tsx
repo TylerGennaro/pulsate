@@ -15,7 +15,9 @@ export default function CartItem({
 		<div className='grid grid-cols-[1fr_1fr_min-content] items-center'>
 			<div className='flex flex-wrap gap-2'>
 				<span className='font-semibold'>Expires</span>
-				<span className='text-muted'>{formatExpirationDate(item.expires)}</span>
+				<span className='text-muted-foreground'>
+					{formatExpirationDate(item.expires)}
+				</span>
 			</div>
 			<div className='flex items-center gap-1'>
 				<Input
@@ -26,11 +28,11 @@ export default function CartItem({
 					name={`quantity-${item.id}`}
 					className='w-32 ml-4'
 				/>
-				<span className='text-muted w-max'>/ {item.quantity}</span>
+				<span className='text-muted-foreground w-max'>/ {item.quantity}</span>
 			</div>
 			<Button
 				variant='ghost'
-				className='p-2 ml-1 w-fit h-fit text-muted'
+				className='p-2 ml-1 w-fit h-fit text-muted-foreground'
 				onClick={() => setSelected((arr) => arr.filter((i) => i !== item))}
 			>
 				<X size={16} />

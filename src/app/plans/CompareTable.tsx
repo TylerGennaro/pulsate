@@ -60,9 +60,9 @@ const comparePlans = {
 function PerkValue({ value }: { value: string | boolean }) {
 	if (typeof value === 'boolean') {
 		return value ? (
-			<Check className='w-4 h-4 text-blue-700' />
+			<Check className='w-4 h-4 text-primary' />
 		) : (
-			<X className='w-4 h-4 text-muted' />
+			<X className='w-4 h-4 text-muted-foreground' />
 		);
 	}
 	return <span>{value}</span>;
@@ -88,10 +88,10 @@ function FeatureRow({
 				<td
 					key={key}
 					className={`p-4 ${
-						key === 'Executive' ? 'border-x-2 border-x-blue-700' : ''
+						key === 'Executive' ? 'border-x-2 border-x-primary' : ''
 					} ${
 						last && key === 'Executive'
-							? 'block border-b-2 border-blue-700 rounded-b-md -mx-[1px]'
+							? 'block border-b-2 border-primary rounded-b-md -mx-[1px]'
 							: ''
 					}`}
 				>
@@ -112,7 +112,7 @@ export default function CompareTable() {
 						<th>Features</th>
 						<th>Free</th>
 						<th>Manager</th>
-						<th className='block border-t-2 border-blue-700 border-x-2 -mx-[1px] rounded-t-md'>
+						<th className='block border-t-2 border-primary border-x-2 -mx-[1px] rounded-t-md'>
 							Executive
 						</th>
 					</TableRow>
@@ -130,7 +130,7 @@ export default function CompareTable() {
 					)}
 				</tbody>
 			</Table>
-			<span className='max-w-screen-sm text-sm text-muted'>
+			<span className='max-w-screen-sm text-sm text-muted-foreground'>
 				* Items are organized by expiration date per product. Items with the
 				same expiration date are automatically combined to save space.
 			</span>

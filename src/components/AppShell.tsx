@@ -22,7 +22,9 @@ export default function AppShell({
 			/>
 			<div className='flex flex-col w-full h-full shrink'>
 				<SiteHeader sidebarToggle={setSidebarOpen} sidebarOpen={sidebarOpen} />
-				<div className='w-full h-full p-4'>{children}</div>
+				<div className='w-full h-full p-2 mx-auto max-w-screen-2xl lg:p-4 bg-background'>
+					{children}
+				</div>
 			</div>
 		</div>
 	);

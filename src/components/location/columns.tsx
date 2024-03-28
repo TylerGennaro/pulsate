@@ -6,12 +6,18 @@ import { ChevronsUpDown, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { packageTypes, tags } from '@lib/relations';
 import { PackageType, Tag } from '@lib/enum';
-import { formatDate } from '@lib/date';
-import EditProduct from './(components)/EditProduct';
+import { formatDate, formatUTCDate } from '@lib/date';
+import EditProduct from './EditProduct';
 import TagBadge from '@components/TagBadge';
 import DataTableSortableHeader from '@components/DataTableSortableHeader';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@components/ui/dropdown-menu';
 
-export const columns: ColumnDef<ProductInfo>[] = [
+export const columns: ColumnDef<FormattedProduct>[] = [
 	{
 		header: ({ column }) => (
 			<DataTableSortableHeader column={column} header='Name' />
@@ -25,11 +31,11 @@ export const columns: ColumnDef<ProductInfo>[] = [
 		),
 		accessorKey: 'quantity',
 		cell: ({ row }: { row: any }) => (
-			<span className='text-muted'>
+			<span className='text-muted-foreground'>
 				{row.original.quantity}{' '}
 				{packageTypes[row.original.package as PackageType]}
 				{row.original.max && row.original.max > 0 ? (
-					<span className='ml-1 text-xs text-muted-text'>
+					<span className='ml-1 text-xs text-muted-foreground'>
 						{'/ '}
 						{row.original.max || ''}
 					</span>
@@ -42,10 +48,12 @@ export const columns: ColumnDef<ProductInfo>[] = [
 			<DataTableSortableHeader column={column} header='Expiration' />
 		),
 		accessorKey: 'exp',
-		cell: ({ row }: { row: any }) => {
+		cell: ({ row }: { row: { original: FormattedProduct } }) => {
 			return (
-				<p className='text-muted'>
-					{row.original.exp > 0 ? formatDate(row.original.exp) : 'None'}
+				<p className='text-muted-foreground'>
+					{row.original.exp > 0
+						? formatUTCDate(new Date(row.original.exp))
+						: 'None'}
 				</p>
 			);
 		},
@@ -101,7 +109,7 @@ export const columns: ColumnDef<ProductInfo>[] = [
 						}}
 					>
 						<Button variant='ghost'>
-							<span className='sr-only'>Open menu</span>
+							{/* <span className='sr-only'>Open menu</span> */}
 							<MoreVertical size={20} />
 						</Button>
 					</EditProduct>

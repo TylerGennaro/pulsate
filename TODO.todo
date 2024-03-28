@@ -1,46 +1,56 @@
-- [✅] CRUD operations to Locations
-	- [✅] Create a new location
-	- [✅] Read all locations
-	- [✅] Delete a location
-	- [✅] Update a location's name/info
-- [✅] CRUD operations to Products
-	- [✅] Create a new product
-	- [✅] Read all products
-	- [✅] Delete a product
-	- [✅] Update a product's name/info
-- [✅] CRUD operations to Items
-	- [✅] Create a new item
-	- [✅] Read all items
-	- [✅] Delete an item
-	- [✅] Update an item's name/info
-- [✅] Checkbox if items don't expire
-- [✅] Show items on order
-- [✅] Product logs
-	- [✅] User adds item
-	- [✅] User removes item
-	- [✅] User updates item
-	- [✅] User adds product
-	- [✅] User removes product
-	- [✅] User updates product
-	- [✅] User checks item out
-- [✅] Last order date
-- [✅] Checkout page
-- [✅] Better responsive sidebar
-- [✅] Add payment with Stripe
-- [] Sorting on products page
-	- [] Default sort products by shelf location
-- [✅] Notification system
+✔ CRUD operations to Locations @done(24-03-07 11:58)
+	✔ Create a new location @done(24-03-07 11:58)
+	✔ Read all locations @done(24-03-07 11:58)
+	✔ Delete a location @done(24-03-07 11:58)
+	✔ Update a location's name/info @done(24-03-07 11:58)
+✔ CRUD operations to Products @done(24-03-07 11:58)
+	✔ Create a new product @done(24-03-07 11:58)
+	✔ Read all products @done(24-03-07 11:58)
+	✔ Delete a product @done(24-03-07 11:58)
+	✔ Update a product's name/info @done(24-03-07 11:58)
+✔ CRUD operations to Items @done(24-03-07 11:58)
+	✔ Create a new item @done(24-03-07 11:58)
+	✔ Read all items @done(24-03-07 11:58)
+	✔ Delete an item @done(24-03-07 11:58)
+	✔ Update an item's name/info @done(24-03-07 11:58)
+✔ Checkbox if items don't expire @done(24-03-07 11:58)
+✔ Show items on order @done(24-03-07 11:58)
+✔ Product logs @done(24-03-07 11:58)
+	✔ User adds item @done(24-03-07 11:58)
+	✔ User removes item @done(24-03-07 11:58)
+	✔ User updates item @done(24-03-07 11:58)
+	✔ User adds product @done(24-03-07 11:58)
+	✔ User removes product @done(24-03-07 11:58)
+	✔ User updates product @done(24-03-07 11:58)
+	✔ User checks item out @done(24-03-07 11:58)
+✔ Last order date @done(24-03-07 11:58)
+✔ Checkout page @done(24-03-07 11:58)
+✔ Better responsive sidebar @done(24-03-07 11:58)
+☐ Add payment with Stripe
+✔ Sorting on products page @done(24-03-18 23:28)
+	✔ Default sort products by shelf location @done(24-03-18 23:28)
+✔ Notification system @done(24-03-07 11:58)
+	✔ Email notifications @done(24-03-07 11:56)
+☐ Remove max quantity
+☐ Improve notifications
+	☐ Notification settings
+	☐ Improve overall functionality
+☐ Add location settings
+	☐ Send email on every checkout
+	☐ Only allow authenticated users to checkout
+		☐ Specify which email extensions can checkout
 
-- [] Improve mobile UX
-- [] Management sharing
-- [] Global location log w/ filters
-- [] Link to product order page
-- [] Dashboard
-	- [] Most used product per location
-	- [] Locations with low inventory
-	- [] Graphs on daily checkouts
-	- [] Activity feeds
-- [] Settings
+✔ Improve mobile UX @done(24-03-19 00:51)
+☐ Management sharing
+☐ Global location log w/ filters
+✔ Link to product order page @done(24-03-19 00:51)
+☐ Dashboard @started(24-03-09 11:36)
+	☐ Most used product per location
+	☐ Locations with low inventory
+	☐ Graphs on daily checkouts
+	☐ Activity feeds
+☐ Settings
+☐ Mobile app
 
 Benefits:
 	- Goes live instantly

@@ -16,10 +16,5 @@ export default async function Layout({
 	const session = await getServerSession(authOptions);
 	if (!session) return <SignIn />;
 
-	return (
-		<Container className='p-0'>
-			<Nav />
-			<div>{children}</div>
-		</Container>
-	);
+	return <Container className='p-0'>{children}</Container>;
 }

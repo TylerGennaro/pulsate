@@ -4,9 +4,9 @@ import { formatUTCDate, isExpiring } from '@lib/date';
 import { Tag } from '@lib/enum';
 import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
-import EditItem from './(components)/EditItem';
+import EditItem from '../../../../components/product/EditItem';
 import TagBadge from '@components/TagBadge';
-import ItemArrived from './(components)/ItemArrived';
+import ItemArrived from '../../../../components/product/ItemArrived';
 
 export type Log = {
 	user: string;
@@ -21,7 +21,7 @@ export const itemColumns: ColumnDef<Item>[] = [
 		accessorKey: 'expires',
 		cell: ({ row }: { row: any }) => {
 			if (row.original.expires === null) return <p>Never</p>;
-			return <p>{formatUTCDate(row.original.expires)}</p>;
+			return <p className='w-max'>{formatUTCDate(row.original.expires)}</p>;
 		},
 	},
 	{ header: 'Quantity', accessorKey: 'quantity' },

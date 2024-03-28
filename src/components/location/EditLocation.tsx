@@ -1,16 +1,14 @@
 'use client';
 
-import { Pencil, Save, Trash2 } from 'lucide-react';
+import { MoreVertical, Pencil, Save, Settings, Trash2 } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
-import { useRouter } from 'next/navigation';
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -30,72 +28,60 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
+import InputGroup from '@components/FormGroup';
 import { FormEvent, useState } from 'react';
-import { crud, formDataToObject } from '@lib/utils';
-import ProductForm from './ProductForm';
-import { PackageType } from '@lib/enum';
+import { crud } from '@lib/utils';
 
-export default function EditProduct({
-	defaultValues,
+export default function EditLocation({
+	name,
 	id,
-	children,
 }: {
-	defaultValues?: {
-		name?: string;
-		min?: number;
-		max?: number;
-		packageType?: PackageType;
-		position?: string;
-		url?: string;
-	};
+	name: string;
 	id: string;
-	children: React.ReactNode;
 }) {
 	const [open, setOpen] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
-	const router = useRouter();
 
 	async function update(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setEditLoading(true);
-		const data = new FormData(e.currentTarget);
+		const data = {
+			name: e.currentTarget['location-name'].value as string,
+		};
 		const result = await crud({
-			url: '/products',
+			url: `/locations`,
 			method: 'PUT',
-			data: formDataToObject(data),
+			data,
 			params: { id },
 		});
-		if (result.status === 200) {
-			setOpen(false);
-			router.refresh();
-		}
 		setEditLoading(false);
+		if (result?.status === 200) setOpen(false);
 	}
 
 	async function remove(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setDeleteLoading(true);
 		const result = await crud({
-			url: '/products',
+			url: `/locations`,
 			method: 'DELETE',
 			params: { id },
 		});
-		if (result.status === 200) {
-			setOpen(false);
-			router.refresh();
-		}
 		setDeleteLoading(false);
+		if (result?.status === 200) setOpen(false);
 	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<AlertDialog>
 				<DropdownMenu>
-					<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+					<DropdownMenuTrigger asChild>
+						<Button variant='outline'>
+							<MoreVertical size={16} />
+						</Button>
+					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuSeparator />
 						<DialogTrigger asChild>
 							<DropdownMenuItem>
 								<Pencil className='w-4 h-4 mr-2' />
@@ -103,7 +89,7 @@ export default function EditProduct({
 							</DropdownMenuItem>
 						</DialogTrigger>
 						<AlertDialogTrigger asChild>
-							<DropdownMenuItem className='text-red-500 focus:text-red-500 dark:focus:text-red-500'>
+							<DropdownMenuItem className='text-red-500'>
 								<Trash2 className='w-4 h-4 mr-2' /> Delete
 							</DropdownMenuItem>
 						</AlertDialogTrigger>
@@ -114,8 +100,8 @@ export default function EditProduct({
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This product and all its data will
-								be removed from the system.
+								This action cannot be undone. This location and all its data
+								will be removed from the system.
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
@@ -123,6 +109,7 @@ export default function EditProduct({
 							<Button
 								type='submit'
 								variant='destructive'
+								icon={Trash2}
 								isLoading={deleteLoading}
 							>
 								Delete
@@ -134,12 +121,17 @@ export default function EditProduct({
 			<DialogContent>
 				<form className='flex flex-col gap-4' onSubmit={update}>
 					<DialogHeader>
-						<DialogTitle>Edit product</DialogTitle>
+						<DialogTitle>Edit location</DialogTitle>
 						<DialogDescription>
-							Change the product&apos;s information.
+							Change the name of this location.
 						</DialogDescription>
 					</DialogHeader>
-					<ProductForm defaultValues={defaultValues} />
+					<InputGroup
+						label='Name'
+						placeholder='Location name'
+						name='location-name'
+						defaultValue={name}
+					/>
 					<DialogFooter>
 						<Button icon={Save} type='submit' isLoading={editLoading}>
 							Save

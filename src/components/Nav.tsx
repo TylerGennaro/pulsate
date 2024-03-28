@@ -55,10 +55,8 @@ function NavButton({
 			<TooltipTrigger asChild>
 				<Link href={link} onClick={props.onClick}>
 					<Button
-						className={`w-full flex bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-50 ${
-							selected
-								? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50'
-								: ''
+						className={`w-full flex bg-transparent hover:bg-muted text-foreground ${
+							selected ? 'bg-muted' : ''
 						}`}
 					>
 						{props.icon && <props.icon className='mr-2 shrink-0' />}

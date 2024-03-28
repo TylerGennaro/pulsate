@@ -14,11 +14,10 @@ export function formatDate(date: Date | string) {
 	return format(date, 'MMM d, yyyy');
 }
 
-export function formatUTCDate(date: Date | string) {
-	if (typeof date === 'string') {
-		if (date.length === 0) return '';
-		date = new Date(date);
-	}
+export function formatUTCDate(date: Date | string | null) {
+	if (date === null) return null;
+	if (typeof date === 'string' && date.length === 0) return '';
+	date = new Date(date);
 	date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
 	return format(date, 'MMM d, yyyy');
 }
@@ -29,7 +28,6 @@ export function isExpiring(date: Date | string | null) {
 		if (date.length === 0) return false;
 		date = new Date(date);
 	}
-	date.setHours(date.getHours() + date.getTimezoneOffset() / 60);
 	const today = new Date();
 	const diff = date.getTime() - today.getTime();
 	return diff <= 1000 * 60 * 60 * 24 * 7;
@@ -40,7 +38,7 @@ export function timeSince(date: Date) {
 	let interval = Math.floor(seconds / 31536000);
 	if (interval >= 1) return interval + 'y';
 	interval = Math.floor(seconds / 2592000);
-	if (interval >= 1) return interval + 'm';
+	if (interval >= 1) return interval + 'mo';
 	interval = Math.floor(seconds / 86400);
 	if (interval >= 1) return interval + 'd';
 	interval = Math.floor(seconds / 3600);

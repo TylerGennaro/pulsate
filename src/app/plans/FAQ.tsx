@@ -14,7 +14,7 @@ function FAQQestion({ children }: { children: React.ReactNode }) {
 }
 
 function FAQAnswer({ children }: { children: React.ReactNode }) {
-	return <span className='text-sm text-muted'>{children}</span>;
+	return <span className='text-sm text-muted-foreground'>{children}</span>;
 }
 
 export default function FAQ() {
@@ -45,11 +45,11 @@ export default function FAQ() {
 						Why are the number of locations, products, etc. limited?
 					</FAQQestion>
 					<FAQAnswer>
-						As previously stated, cloud-hosted databases are expensive. Payments
-						are calculated based on the amount of storage you use and the
-						computing power you require. The more data you use, the higher the
-						database bill. Thus, the number of resources you can use is limited
-						to ensure your usage never exceeds the bill cost.
+						Cloud-hosted databases are expensive. Payments are calculated based
+						on the amount of storage you use and the computing power you
+						require. The more data you use, the higher the database bill. Thus,
+						the number of resources you can use is limited to ensure your usage
+						never exceeds the bill cost.
 					</FAQAnswer>
 				</FAQEntry>
 				<FAQEntry>

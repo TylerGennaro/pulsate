@@ -11,11 +11,10 @@ const AlertDialog = AlertDialogPrimitive.Root;
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
 
 const AlertDialogPortal = ({
-	className,
 	children,
 	...props
 }: AlertDialogPrimitive.AlertDialogPortalProps) => (
-	<AlertDialogPrimitive.Portal className={cn(className)} {...props}>
+	<AlertDialogPrimitive.Portal {...props}>
 		<div className='fixed inset-0 z-50 flex items-end justify-center sm:items-center'>
 			{children}
 		</div>
@@ -76,7 +75,7 @@ const AlertDialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
 	<div
 		className={cn(
-			'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
+			'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4',
 			className
 		)}
 		{...props}
@@ -102,7 +101,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<AlertDialogPrimitive.Description
 		ref={ref}
-		className={cn('text-sm text-muted', className)}
+		className={cn('text-sm text-muted-foreground', className)}
 		{...props}
 	/>
 ));

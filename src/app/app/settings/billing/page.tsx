@@ -48,19 +48,19 @@ export default async function Page() {
 			)}
 			<div className='grid grid-cols-3 border-y bg-zinc-100 dark:bg-zinc-800 dark:border-zinc-700'>
 				<div className='flex flex-col gap-2 p-8 border-r dark:border-zinc-700'>
-					<span className='text-muted'>Plan</span>
+					<span className='text-muted-foreground'>Plan</span>
 					<span className='text-xl'>
 						{capitalize((subscription?.tier as string) || 'None')}
 					</span>
 				</div>
 				<div className='flex flex-col gap-2 p-8 border-r dark:border-zinc-700'>
-					<span className='text-muted'>Status</span>
+					<span className='text-muted-foreground'>Status</span>
 					<span className='text-xl'>
 						{capitalize(subscription?.status || '-')}
 					</span>
 				</div>
 				<div className='flex flex-col gap-2 p-8'>
-					<span className='text-muted'>Renews</span>
+					<span className='text-muted-foreground'>Renews</span>
 					<span className='text-xl'>
 						{subscription?.current_period_end
 							? formatDate(subscription?.current_period_end)
@@ -69,7 +69,7 @@ export default async function Page() {
 				</div>
 			</div>
 			<div className='p-4 mt-8'>
-				<span className='block mb-4 text-lg font-medium text-muted'>
+				<span className='block mb-4 text-lg font-medium text-muted-foreground'>
 					Payments
 				</span>
 				<Suspense
