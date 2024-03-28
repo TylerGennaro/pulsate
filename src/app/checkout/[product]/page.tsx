@@ -71,7 +71,6 @@ export default async function Page({
 }: {
 	params: { product: string };
 }) {
-	const session = await getServerSession(authOptions);
 	return (
 		<Container className='w-full max-w-screen-lg m-2 lg:m-8 h-max'>
 			<Checkout productId={params.product} />
