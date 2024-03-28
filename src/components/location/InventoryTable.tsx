@@ -43,6 +43,7 @@ function Toolbar({
 	const isFiltered =
 		table.getPreFilteredRowModel().rows.length >
 		table.getFilteredRowModel().rows.length;
+	console.log(table.getColumn('name')?.getFilterValue());
 
 	return (
 		<div className='flex flex-wrap justify-between gap-4 mb-4'>
@@ -50,7 +51,7 @@ function Toolbar({
 				<Input
 					placeholder='Search products'
 					className='max-w-xs'
-					value={table.getColumn('name')?.getFilterValue() as string}
+					value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
 					onChange={(event) =>
 						table.getColumn('name')?.setFilterValue(event.target.value)
 					}
