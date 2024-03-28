@@ -105,11 +105,11 @@ export async function POST(req: Request) {
 		});
 
 		// Send email to location owner
-		// const owner = await db.user.findFirst({
-		// 	where: { id: product.location.userId },
-		// });
-		// if (owner && owner.email)
-		// 	await sendCheckoutEmail(owner.email, product, itemsWithExpiration);
+		const owner = await db.user.findFirst({
+			where: { id: product.location.userId },
+		});
+		if (owner && owner.email)
+			await sendCheckoutEmail(owner.email, product, itemsWithExpiration);
 
 		return NextResponse.json({ message: 'Checkout recorded' }, { status: 200 });
 	} catch (e) {
