@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import nodemailer from 'nodemailer';
 import { authOptions } from './auth';
 import { Item, Location, Product } from '@prisma/client';
+import { formatUTCDate } from './date';
 
 export async function sendMail(to: string, subject: string, message: string) {
 	const transporter = nodemailer.createTransport({
@@ -52,6 +53,17 @@ export async function sendCheckoutEmail(
 							(acc, item) => acc + item.quantity,
 							0
 						)}<br>
+						<strong>Expiration dates:</strong><br>
+						<ul>
+							${items
+								.map(
+									(item) =>
+										`<li>${item.quantity} x ${
+											formatUTCDate(item.expiration) ?? 'Never'
+										}</li>`
+								)
+								.join('')}
+						</ul>
 						<strong>Time:</strong> ${new Date().toLocaleString('en-US', {
 							timeZone: 'America/New_York',
 						})} EST<br>
