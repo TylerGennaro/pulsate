@@ -19,6 +19,9 @@ export default async function Page() {
 			{/* <Container>
 				<Heading header='Dashboard' description='Under development' />
 			</Container> */}
+			<Container className='col-span-2'>
+				<span>This page contains placeholder data for testing purposes.</span>
+			</Container>
 			<Container>
 				<Heading
 					header='Checkout History'
