@@ -41,6 +41,7 @@ interface NavButtonProps {
 	icon?: LucideIcon;
 	children: React.ReactNode;
 	tags?: Tag[];
+	disabled?: boolean;
 }
 
 function NavButton({
@@ -48,16 +49,22 @@ function NavButton({
 	tags,
 	children,
 	link,
+	disabled,
 	...props
 }: NavButtonProps & React.ComponentPropsWithoutRef<'a'>) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
-				<Link href={link} onClick={props.onClick}>
+				<Link
+					href={link}
+					onClick={props.onClick}
+					className={`${disabled ? 'pointer-events-none' : ''}`}
+				>
 					<Button
 						className={`w-full flex bg-transparent hover:bg-muted text-foreground ${
 							selected ? 'bg-muted' : ''
 						}`}
+						disabled={disabled}
 					>
 						{props.icon && <props.icon className='mr-2 shrink-0' />}
 						<div className='w-full overflow-hidden text-left overflow-ellipsis'>
@@ -94,6 +101,7 @@ const navItems = [
 		label: 'Settings',
 		icon: Settings,
 		link: '/settings',
+		disabled: true,
 	},
 ];
 
@@ -118,6 +126,7 @@ export function Nav({
 							(pathname.startsWith(`/app${item.link}`) && item.link !== '/')
 						}
 						onClick={() => toggle(false)}
+						disabled={item.disabled}
 					>
 						{item.label}
 					</NavButton>
