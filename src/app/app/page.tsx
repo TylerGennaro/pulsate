@@ -5,9 +5,10 @@ import { authOptions } from '@lib/auth';
 import { populateMetadata } from '@lib/utils';
 import { getServerSession } from 'next-auth';
 import CheckoutHistory from './(modules)/CheckoutHistory';
+import CheckoutUsers from './(modules)/CheckoutUsers';
 import PopularItems from './(modules)/PopularItems';
 import StockAlerts from './(modules)/StockAlerts';
-import CheckoutUsers from './(modules)/CheckoutUsers';
+import { AlertTriangle } from 'lucide-react';
 
 export const metadata = populateMetadata('Dashboard');
 
@@ -18,7 +19,10 @@ export default async function Page() {
 	return (
 		<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
 			<Container className='md:col-span-2'>
-				<span>This page contains placeholder data for testing purposes.</span>
+				<span className='flex items-center gap-2'>
+					<AlertTriangle size={16} />
+					This page contains placeholder data for testing purposes.
+				</span>
 			</Container>
 			<Container>
 				<Heading
