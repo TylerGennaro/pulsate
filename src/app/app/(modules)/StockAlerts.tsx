@@ -41,12 +41,12 @@ export default function StockAlerts() {
 		<ul className='mt-8 overflow-hidden rounded-md [&>li:last-of-type_li:last-of-type]:border-none'>
 			{data.map((location) => (
 				<li key={location.name}>
-					<p className='p-2 border-b bg-background'>{location.name}</p>
+					<p className='px-4 py-2 border-b bg-background'>{location.name}</p>
 					<ul>
 						{location.items.map((item) => (
 							<li
 								key={item.name}
-								className='flex items-center justify-between p-2 transition-colors border-b hover:bg-muted'
+								className='flex items-center justify-between p-4 transition-colors border-b hover:bg-muted'
 							>
 								<div>
 									<p>{item.name}</p>
