@@ -7,6 +7,7 @@ import { getServerSession } from 'next-auth';
 import CheckoutHistory from './(modules)/CheckoutHistory';
 import PopularItems from './(modules)/PopularItems';
 import StockAlerts from './(modules)/StockAlerts';
+import CheckoutUsers from './(modules)/CheckoutUsers';
 
 export const metadata = populateMetadata('Dashboard');
 
@@ -16,9 +17,6 @@ export default async function Page() {
 
 	return (
 		<div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-			{/* <Container>
-				<Heading header='Dashboard' description='Under development' />
-			</Container> */}
 			<Container className='md:col-span-2'>
 				<span>This page contains placeholder data for testing purposes.</span>
 			</Container>
@@ -48,6 +46,7 @@ export default async function Page() {
 					header='Users'
 					description='Users who have checked out items'
 				/>
+				<CheckoutUsers />
 			</Container>
 		</div>
 	);
