@@ -65,7 +65,7 @@ export default function OrderItem({ product }: { product: Product }) {
 						type='number'
 					/>
 					<DialogFooter>
-						<Button icon={CreditCard} isLoading={loading}>
+						<Button type='submit' icon={CreditCard} isLoading={loading}>
 							Place Order
 						</Button>
 					</DialogFooter>
