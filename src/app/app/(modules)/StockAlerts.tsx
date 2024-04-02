@@ -8,28 +8,62 @@ import {
 import { Tag } from '@lib/enum';
 import { ChevronRight } from 'lucide-react';
 
+const data = [
+	{
+		name: 'Test Location',
+		items: [
+			{
+				name: 'Cervical Collar',
+				quantity: 4,
+				tag: Tag.LOW,
+			},
+			{
+				name: 'Test Item',
+				expires: 'Mar 30, 2024',
+				tag: Tag.EXPIRES,
+			},
+		],
+	},
+	{
+		name: 'Other Location',
+		items: [
+			{
+				name: 'Cervical Collar',
+				quantity: 4,
+				tag: Tag.LOW,
+			},
+		],
+	},
+];
+
 export default function StockAlerts() {
 	return (
-		<ul className='mt-8 [&>li]:p-2 [&>li]:border-b [&>li:not(:first-of-type):hover]:bg-muted [&>li]:transition-colors [&>li:first-of-type]:bg-background'>
-			<li>Test Location</li>
-			<li className='flex items-center justify-between'>
-				<div>
-					<p>Cervical Collar</p>
-					<p className='text-sm text-muted-foreground'>4 items left</p>
-				</div>
-				<div>
-					<TagBadge tag={Tag.LOW} />
-				</div>
-			</li>
-			<li className='flex items-center justify-between'>
-				<div>
-					<p>Test Item</p>
-					<p className='text-sm text-muted-foreground'>Expires Mar 30, 2024</p>
-				</div>
-				<div>
-					<TagBadge tag={Tag.EXPIRES} />
-				</div>
-			</li>
+		<ul className='mt-8 overflow-hidden rounded-md [&>li:last-of-type_li:last-of-type]:border-none'>
+			{data.map((location) => (
+				<li key={location.name}>
+					<p className='p-2 border-b bg-background'>{location.name}</p>
+					<ul>
+						{location.items.map((item) => (
+							<li
+								key={item.name}
+								className='flex items-center justify-between p-2 transition-colors border-b hover:bg-muted'
+							>
+								<div>
+									<p>{item.name}</p>
+									<p className='text-sm text-muted-foreground'>
+										{item.quantity
+											? `${item.quantity} items left`
+											: `Expires ${item.expires}`}
+									</p>
+								</div>
+								<div>
+									<TagBadge tag={item.tag} />
+								</div>
+							</li>
+						))}
+					</ul>
+				</li>
+			))}
 		</ul>
 		// <Accordion
 		// 	type='single'
