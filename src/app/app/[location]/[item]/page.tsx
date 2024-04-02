@@ -160,14 +160,13 @@ export default async function Inventory({
 					className='xl:col-span-2'
 					action={
 						<div className='flex flex-wrap gap-2'>
-							<Link
-								href={data.url || process.env.NEXT_PUBLIC_PROJECT_URL!}
-								target='_blank'
-							>
-								<Button variant='outline'>
-									Go to Page <ExternalLink className='icon-right' />
-								</Button>
-							</Link>
+							{data.url && (
+								<Link href={data.url} target='_blank'>
+									<Button variant='outline'>
+										Go to Page <ExternalLink className='icon-right' />
+									</Button>
+								</Link>
+							)}
 							<EditProduct
 								id={params.item}
 								defaultValues={{
