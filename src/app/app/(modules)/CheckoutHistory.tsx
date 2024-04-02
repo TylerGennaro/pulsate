@@ -8,8 +8,60 @@ import {
 	SelectValue,
 } from '@components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@components/ui/tabs';
+import { useQuery } from '@tanstack/react-query';
 import { CSSProperties } from 'react';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+
+/*
+const data = [
+	{
+		name: 'Location 1',
+		week: [
+			{
+				name: 'Cervical Collar',
+				quantity: 10,
+				weekday: 'Sun',
+			},
+			{
+				name: 'Cervical Collar',
+				quantity: 8,
+				weekday: 'Mon',
+			},
+			{
+				name: 'Cervical Collar',
+				quantity: 8,
+				weekday: 'Tue',
+			},
+			{
+				name: 'Cervical Collar',
+				quantity: 8,
+				weekday: 'Wed',
+			},
+			{
+				name: 'Cervical Collar',
+				quantity: 7,
+				weekday: 'Thu',
+			},
+			{
+				name: 'Cervical Collar',
+				quantity: 5,
+				weekday: 'Fri',
+			},
+			{
+				name: 'Cervical Collar',
+				quantity: 8,
+				weekday: 'Sat',
+			}
+		],
+		biweek: [
+
+		],
+		month: [
+
+		]
+	}
+]
+*/
 
 const data = [
 	{
@@ -50,6 +102,14 @@ const data = [
 ];
 
 export default function CheckoutHistory() {
+	const { data } = useQuery({
+		queryKey: ['checkout-history'],
+		queryFn: async () => {
+			const results = await fetch('/api/locations/stats');
+			return results.json();
+		},
+	});
+	console.log(data);
 	return (
 		<div className='mt-8'>
 			<div className='flex flex-wrap items-center justify-between gap-8'>
