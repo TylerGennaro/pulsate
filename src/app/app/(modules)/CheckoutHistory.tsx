@@ -102,14 +102,14 @@ const data = [
 ];
 
 export default function CheckoutHistory() {
-	const { data } = useQuery({
-		queryKey: ['checkout-history'],
-		queryFn: async () => {
-			const results = await fetch('/api/locations/stats');
-			return results.json();
-		},
-	});
-	console.log(data);
+	// const { data } = useQuery({
+	// 	queryKey: ['checkout-history'],
+	// 	queryFn: async () => {
+	// 		const results = await fetch('/api/locations/stats');
+	// 		return results.json();
+	// 	},
+	// });
+	// console.log(data);
 	return (
 		<div className='mt-8'>
 			<div className='flex flex-wrap items-center justify-between gap-8'>
