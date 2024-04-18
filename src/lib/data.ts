@@ -33,3 +33,23 @@ export async function fetchLocationInfo(id: string) {
 	});
 	return { name: data?.name, userId: data?.user.id, userName: data?.user.name };
 }
+
+const validSettings = ['location.email-checkouts'];
+
+export async function updateSetting(
+	location: string,
+	key: string,
+	value: string | number
+) {
+	if (!validSettings.includes(key)) return;
+	await db.locationSettings.upsert({
+		where: { locationId_key: { locationId: location, key } },
+		create: {
+			locationId: location,
+			key,
+			value: String(value),
+			isNumber: typeof value === 'number',
+		},
+		update: { value: String(value), isNumber: typeof value === 'number' },
+	});
+}
