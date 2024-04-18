@@ -1,4 +1,5 @@
 import { authOptions } from '@lib/auth';
+import { getUTCDate } from '@lib/date';
 import { log } from '@lib/log';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
@@ -60,7 +61,7 @@ export async function POST(req: Request) {
 						id: item.productId,
 					},
 					data: {
-						lastOrder: new Date(),
+						lastOrder: getUTCDate(),
 					},
 				});
 			} else
