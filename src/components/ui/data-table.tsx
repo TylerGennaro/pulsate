@@ -3,6 +3,7 @@
 import {
 	ColumnDef,
 	ColumnFiltersState,
+	Row,
 	SortingState,
 	flexRender,
 	getCoreRowModel,
@@ -24,6 +25,7 @@ import {
 } from '@components/ui/table';
 import { useState } from 'react';
 import { Skeleton } from './skeleton';
+import { cn } from '@lib/utils';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -31,6 +33,17 @@ interface DataTableProps<TData, TValue> {
 	enableSelection?: boolean;
 	toolbar?: ({ table }: { table: any }) => JSX.Element;
 	isLoading?: boolean;
+	onRowClick?: (row: Row<TData>) => void;
+	classNames?: {
+		table?: string;
+		header?: {
+			container?: string;
+			row?: string;
+			cell?: string;
+		};
+		row?: string;
+		cell?: string;
+	};
 }
 
 export function DataTable<TData, TValue>({
@@ -39,6 +52,8 @@ export function DataTable<TData, TValue>({
 	enableSelection,
 	toolbar,
 	isLoading,
+	onRowClick,
+	classNames,
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({});
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -88,13 +103,19 @@ export function DataTable<TData, TValue>({
 		<div>
 			{toolbar && toolbar({ table })}
 			<div className='rounded-md'>
-				<Table>
-					<TableHeader>
+				<Table className={classNames?.table}>
+					<TableHeader className={classNames?.header?.container}>
 						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
+							<TableRow
+								key={headerGroup.id}
+								className={classNames?.header?.row}
+							>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id}>
+										<TableHead
+											key={header.id}
+											className={classNames?.header?.cell}
+										>
 											{header.isPlaceholder
 												? null
 												: flexRender(
@@ -127,9 +148,16 @@ export function DataTable<TData, TValue>({
 										<TableRow
 											key={row.id}
 											data-state={row.getIsSelected() && 'selected'}
+											onClick={() => onRowClick?.(row)}
+											className={cn(
+												classNames?.row,
+												onRowClick
+													? 'cursor-pointer hover:bg-muted transition-colors'
+													: ''
+											)}
 										>
 											{row.getVisibleCells().map((cell) => (
-												<TableCell key={cell.id}>
+												<TableCell key={cell.id} className={classNames?.cell}>
 													{flexRender(
 														cell.column.columnDef.cell,
 														cell.getContext()
@@ -139,10 +167,10 @@ export function DataTable<TData, TValue>({
 										</TableRow>
 									))
 								) : (
-									<TableRow>
+									<TableRow className={classNames?.row}>
 										<TableCell
 											colSpan={columns.length}
-											className='h-24 text-center'
+											className={cn(classNames?.cell, 'h-24 text-center')}
 										>
 											No results.
 										</TableCell>
