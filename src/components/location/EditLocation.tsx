@@ -31,6 +31,7 @@ import {
 import InputGroup from '@components/FormGroup';
 import { FormEvent, useState } from 'react';
 import { crud } from '@lib/utils';
+import SettingsDialog from './SettingsDialog';
 
 export default function EditLocation({
 	name,
@@ -42,6 +43,8 @@ export default function EditLocation({
 	const [open, setOpen] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
+
+	const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
 
 	async function update(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -72,73 +75,83 @@ export default function EditLocation({
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<AlertDialog>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant='outline'>
-							<MoreVertical size={16} />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align='end'>
-						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DialogTrigger asChild>
-							<DropdownMenuItem>
-								<Pencil className='w-4 h-4 mr-2' />
-								Edit
-							</DropdownMenuItem>
-						</DialogTrigger>
-						<AlertDialogTrigger asChild>
-							<DropdownMenuItem className='text-red-500'>
-								<Trash2 className='w-4 h-4 mr-2' /> Delete
-							</DropdownMenuItem>
-						</AlertDialogTrigger>
-					</DropdownMenuContent>
-				</DropdownMenu>
-				<AlertDialogContent>
-					<form onSubmit={remove}>
-						<AlertDialogHeader>
-							<AlertDialogTitle>Are you sure?</AlertDialogTitle>
-							<AlertDialogDescription>
-								This action cannot be undone. This location and all its data
-								will be removed from the system.
-							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<Button
-								type='submit'
-								variant='destructive'
-								icon={Trash2}
-								isLoading={deleteLoading}
-							>
-								Delete
+		<>
+			<SettingsDialog
+				open={settingsDialogOpen}
+				setOpen={setSettingsDialogOpen}
+			/>
+			<Dialog open={open} onOpenChange={setOpen}>
+				<AlertDialog>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant='outline'>
+								<MoreVertical size={16} />
 							</Button>
-						</AlertDialogFooter>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align='end'>
+							<DropdownMenuLabel>Actions</DropdownMenuLabel>
+							<DialogTrigger asChild>
+								<DropdownMenuItem>
+									<Pencil className='w-4 h-4 mr-2' />
+									Edit
+								</DropdownMenuItem>
+							</DialogTrigger>
+							<DropdownMenuItem onClick={() => setSettingsDialogOpen(true)}>
+								<Settings className='icon-left' />
+								Settings
+							</DropdownMenuItem>
+							<AlertDialogTrigger asChild>
+								<DropdownMenuItem className='text-red-500'>
+									<Trash2 className='w-4 h-4 mr-2' /> Delete
+								</DropdownMenuItem>
+							</AlertDialogTrigger>
+						</DropdownMenuContent>
+					</DropdownMenu>
+					<AlertDialogContent>
+						<form onSubmit={remove}>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Are you sure?</AlertDialogTitle>
+								<AlertDialogDescription>
+									This action cannot be undone. This location and all its data
+									will be removed from the system.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<Button
+									type='submit'
+									variant='destructive'
+									icon={Trash2}
+									isLoading={deleteLoading}
+								>
+									Delete
+								</Button>
+							</AlertDialogFooter>
+						</form>
+					</AlertDialogContent>
+				</AlertDialog>
+				<DialogContent>
+					<form className='flex flex-col gap-4' onSubmit={update}>
+						<DialogHeader>
+							<DialogTitle>Edit location</DialogTitle>
+							<DialogDescription>
+								Change the name of this location.
+							</DialogDescription>
+						</DialogHeader>
+						<InputGroup
+							label='Name'
+							placeholder='Location name'
+							name='location-name'
+							defaultValue={name}
+						/>
+						<DialogFooter>
+							<Button icon={Save} type='submit' isLoading={editLoading}>
+								Save
+							</Button>
+						</DialogFooter>
 					</form>
-				</AlertDialogContent>
-			</AlertDialog>
-			<DialogContent>
-				<form className='flex flex-col gap-4' onSubmit={update}>
-					<DialogHeader>
-						<DialogTitle>Edit location</DialogTitle>
-						<DialogDescription>
-							Change the name of this location.
-						</DialogDescription>
-					</DialogHeader>
-					<InputGroup
-						label='Name'
-						placeholder='Location name'
-						name='location-name'
-						defaultValue={name}
-					/>
-					<DialogFooter>
-						<Button icon={Save} type='submit' isLoading={editLoading}>
-							Save
-						</Button>
-					</DialogFooter>
-				</form>
-			</DialogContent>
-		</Dialog>
+				</DialogContent>
+			</Dialog>
+		</>
 	);
 }
