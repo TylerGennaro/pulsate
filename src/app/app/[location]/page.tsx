@@ -1,5 +1,6 @@
 import Container from '@components/Container';
 import SignIn from '@components/SignIn';
+import ActivityTable from '@components/location/ActivityTable';
 import EditLocation from '@components/location/EditLocation';
 import InventoryTable from '@components/location/InventoryTable';
 import NewProduct from '@components/location/NewProduct';
@@ -46,10 +47,13 @@ export default async function Inventory({
 					<TabsTrigger value='settings'>Settings</TabsTrigger>
 				</TabsList>
 				<TabsContent value='products' className='pt-8'>
-					<div className='flex flex-wrap items-center gap-2 mb-4'>
+					<div className='flex justify-end mb-4'>
 						<NewProduct location={params.location} />
 					</div>
 					<InventoryTable location={params.location} />
+				</TabsContent>
+				<TabsContent value='activity' className='pt-8'>
+					<ActivityTable locationId={params.location} />
 				</TabsContent>
 			</Tabs>
 		</Container>
