@@ -14,6 +14,24 @@ export function formatDate(date: Date | string) {
 	return format(date, 'MMM d, yyyy');
 }
 
+export function formatDateTime(date: Date | string) {
+	if (typeof date === 'string') {
+		if (date.length === 0) return '';
+		date = new Date(date);
+	}
+	return format(date, 'MMM d, yyyy hh:mm a');
+}
+
+export function getUTCDate() {
+	return new Date(
+		Date.UTC(
+			new Date().getFullYear(),
+			new Date().getMonth(),
+			new Date().getDate()
+		)
+	);
+}
+
 export function formatUTCDate(date: Date | string | null) {
 	if (date === null) return null;
 	if (typeof date === 'string' && date.length === 0) return '';
