@@ -4,6 +4,7 @@ import EditLocation from '@components/location/EditLocation';
 import InventoryTable from '@components/location/InventoryTable';
 import NewProduct from '@components/location/NewProduct';
 import { Button } from '@components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { authOptions } from '@lib/auth';
 import { fetchLocationInfo } from '@lib/data';
 import { populateMetadata } from '@lib/utils';
@@ -37,18 +38,20 @@ export default async function Inventory({
 			header={name}
 			description={`Managed by ${userName ?? 'Unknown User'}`}
 			action={<EditLocation name={name} id={params.location} />}
-			divider
 		>
-			<div className='flex flex-wrap items-center gap-2 mb-4'>
-				<NewProduct location={params.location} />
-				<Link href={`/app/${params.location}/activity`}>
-					<Button variant='outline'>
-						<ScrollText className='w-4 h-4 mr-2' />
-						Activity
-					</Button>
-				</Link>
-			</div>
-			<InventoryTable location={params.location} />
+			<Tabs defaultValue='products' className='mt-8'>
+				<TabsList>
+					<TabsTrigger value='products'>Products</TabsTrigger>
+					<TabsTrigger value='activity'>Activity</TabsTrigger>
+					<TabsTrigger value='settings'>Settings</TabsTrigger>
+				</TabsList>
+				<TabsContent value='products' className='pt-8'>
+					<div className='flex flex-wrap items-center gap-2 mb-4'>
+						<NewProduct location={params.location} />
+					</div>
+					<InventoryTable location={params.location} />
+				</TabsContent>
+			</Tabs>
 		</Container>
 	);
 }
