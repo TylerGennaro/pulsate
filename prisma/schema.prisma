@@ -43,11 +43,12 @@ model User {
 }
 
 model Location {
-  id       String    @id @default(cuid())
+  id       String             @id @default(cuid())
   name     String
   userId   String
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   products Product[]
+  settings LocationSettings[]
 }
 
 model Product {
@@ -55,7 +56,7 @@ model Product {
   name       String
   package    String
   min        Int       @default(5)
-  max        Int			 @default(0)
+  max        Int       @default(0)
   position   String?
   lastOrder  DateTime? @db.Date()
   url        String?
@@ -93,6 +94,17 @@ model Notification {
   message  String
   redirect String?
   read     Boolean  @default(false)
+}
+
+model LocationSettings {
+  id         String   @id @default(cuid())
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  key        String
+  value      String
+  isNumber   Boolean  @default(false)
+
+	@@unique ([locationId, key])
 }
 
 model Subscription {
