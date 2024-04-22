@@ -95,7 +95,7 @@ export async function POST(req: Request) {
 					id: data.productId,
 				},
 				data: {
-					lastOrder: new Date(),
+					lastOrder: getUTCDate(),
 				},
 			});
 		} else

@@ -32,6 +32,20 @@ export function getUTCDate() {
 	);
 }
 
+export function getUTCDateTime() {
+	return new Date(
+		Date.UTC(
+			new Date().getFullYear(),
+			new Date().getMonth(),
+			new Date().getDate(),
+			new Date().getHours(),
+			new Date().getMinutes(),
+			new Date().getSeconds(),
+			new Date().getMilliseconds()
+		)
+	);
+}
+
 export function formatUTCDate(date: Date | string | null) {
 	if (date === null) return null;
 	if (typeof date === 'string' && date.length === 0) return '';
