@@ -7,152 +7,177 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { useQuery } from '@tanstack/react-query';
-import { CSSProperties } from 'react';
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { CSSProperties, useState } from 'react';
+import {
+	Bar,
+	BarChart,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis,
+} from 'recharts';
 
-/*
-const data = [
-	{
-		name: 'Location 1',
-		week: [
-			{
-				name: 'Cervical Collar',
-				quantity: 10,
-				weekday: 'Sun',
-			},
-			{
-				name: 'Cervical Collar',
-				quantity: 8,
-				weekday: 'Mon',
-			},
-			{
-				name: 'Cervical Collar',
-				quantity: 8,
-				weekday: 'Tue',
-			},
-			{
-				name: 'Cervical Collar',
-				quantity: 8,
-				weekday: 'Wed',
-			},
-			{
-				name: 'Cervical Collar',
-				quantity: 7,
-				weekday: 'Thu',
-			},
-			{
-				name: 'Cervical Collar',
-				quantity: 5,
-				weekday: 'Fri',
-			},
-			{
-				name: 'Cervical Collar',
-				quantity: 8,
-				weekday: 'Sat',
-			}
-		],
-		biweek: [
+type DateRangeEntry = {
+	quantity: number;
+	date: Date;
+};
 
-		],
-		month: [
+type DashboardStat = {
+	name: string;
+	week: DateRangeEntry[];
+	biweek: DateRangeEntry[];
+	month: DateRangeEntry[];
+};
 
-		]
+const CustomTooltip = ({ active, payload, label }: any) => {
+	if (active && payload && payload.length) {
+		return (
+			<div className='px-3 py-2 border rounded-md shadow-md bg-content'>
+				<p>{`${label} - ${payload[0].value}`}</p>
+			</div>
+		);
 	}
-]
-*/
-
-const data = [
-	{
-		name: 'Cervical Collar',
-		quantity: 10,
-		weekday: 'Sun',
-	},
-	{
-		name: 'Cervical Collar',
-		quantity: 8,
-		weekday: 'Mon',
-	},
-	{
-		name: 'Cervical Collar',
-		quantity: 8,
-		weekday: 'Tue',
-	},
-	{
-		name: 'Cervical Collar',
-		quantity: 8,
-		weekday: 'Wed',
-	},
-	{
-		name: 'Cervical Collar',
-		quantity: 7,
-		weekday: 'Thu',
-	},
-	{
-		name: 'Cervical Collar',
-		quantity: 5,
-		weekday: 'Fri',
-	},
-	{
-		name: 'Cervical Collar',
-		quantity: 8,
-		weekday: 'Sat',
-	},
-];
+	return null;
+};
 
 export default function CheckoutHistory() {
-	// const { data } = useQuery({
-	// 	queryKey: ['checkout-history'],
-	// 	queryFn: async () => {
-	// 		const results = await fetch('/api/locations/stats');
-	// 		return results.json();
-	// 	},
-	// });
-	// console.log(data);
+	const [selectedLocation, setSelectedLocation] = useState<string>('');
+	const {
+		data,
+		isPending,
+	}: { data: DashboardStat[] | undefined; isPending: boolean } = useQuery({
+		queryKey: ['checkout-history'],
+		queryFn: async () => {
+			const results = await fetch('/api/locations/stats');
+			const json = await results.json();
+			if (selectedLocation === '') {
+				setSelectedLocation(json[0].name);
+			}
+			return json;
+		},
+	});
+	console.log(data);
 	return (
 		<div className='mt-8'>
 			<div className='flex flex-wrap items-center justify-between gap-8'>
-				<Select value='ghdfsm'>
-					<SelectTrigger className='w-[250px] [&>span]:overflow-hidden [&>span]:overflow-ellipsis [&>span]:whitespace-nowrap [&>span]:pr-1'>
+				<Select value={selectedLocation} onValueChange={setSelectedLocation}>
+					<SelectTrigger
+						isLoading={isPending}
+						className='w-[250px] [&>span]:overflow-hidden [&>span]:overflow-ellipsis [&>span]:whitespace-nowrap [&>span]:pr-1'
+					>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value='abcded'>Test Location</SelectItem>
-						<SelectItem value='ghdfsm'>
-							Long location name blah blah blah
-						</SelectItem>
+						{data?.map((entry) => (
+							<SelectItem key={entry.name} value={entry.name}>
+								{entry.name}
+							</SelectItem>
+						))}
 					</SelectContent>
 				</Select>
 			</div>
 			<Tabs className='mt-8' defaultValue='week'>
 				<TabsList>
 					<TabsTrigger value='week'>Week</TabsTrigger>
-					<TabsTrigger value='2week'>2 Weeks</TabsTrigger>
+					<TabsTrigger value='biweek'>2 Weeks</TabsTrigger>
 					<TabsTrigger value='month'>Month</TabsTrigger>
 				</TabsList>
+				<TabsContent value='week'>
+					<div className='h-[200px] mt-8'>
+						<ResponsiveContainer width='100%' height='100%'>
+							<BarChart
+								data={
+									data?.find((entry) => entry.name === selectedLocation)
+										?.week ?? []
+								}
+								margin={{
+									left: -32,
+								}}
+							>
+								<XAxis dataKey='date' />
+								<YAxis />
+								<Tooltip
+									cursor={{ fill: 'hsl(var(--muted))', radius: 4 }}
+									content={<CustomTooltip />}
+									isAnimationActive={false}
+								/>
+								<Bar
+									dataKey='quantity'
+									style={
+										{
+											fill: 'hsl(var(--primary))',
+										} as CSSProperties
+									}
+								/>
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
+				</TabsContent>
+				<TabsContent value='biweek'>
+					<div className='h-[200px] mt-8'>
+						<ResponsiveContainer width='100%' height='100%'>
+							<BarChart
+								data={
+									data?.find((entry) => entry.name === selectedLocation)
+										?.biweek ?? []
+								}
+								margin={{
+									left: -32,
+								}}
+							>
+								<XAxis dataKey='date' />
+								<YAxis />
+								<Tooltip
+									cursor={{ fill: 'hsl(var(--muted))', radius: 4 }}
+									content={<CustomTooltip />}
+									isAnimationActive={false}
+								/>
+								<Bar
+									dataKey='quantity'
+									style={
+										{
+											fill: 'hsl(var(--primary))',
+										} as CSSProperties
+									}
+								/>
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
+				</TabsContent>
+				<TabsContent value='month'>
+					<div className='h-[200px] mt-8'>
+						<ResponsiveContainer width='100%' height='100%'>
+							<BarChart
+								data={
+									data?.find((entry) => entry.name === selectedLocation)
+										?.month ?? []
+								}
+								margin={{
+									left: -32,
+								}}
+							>
+								<XAxis dataKey='date' />
+								<YAxis />
+								<Tooltip
+									cursor={{ fill: 'hsl(var(--muted))', radius: 4 }}
+									content={<CustomTooltip />}
+									isAnimationActive={false}
+								/>
+								<Bar
+									dataKey='quantity'
+									style={
+										{
+											fill: 'hsl(var(--primary))',
+										} as CSSProperties
+									}
+								/>
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
+				</TabsContent>
 			</Tabs>
-			<div className='h-[200px] mt-8'>
-				<ResponsiveContainer width='100%' height='100%'>
-					<BarChart
-						data={data}
-						margin={{
-							left: -32,
-						}}
-					>
-						<XAxis dataKey='weekday' />
-						<YAxis />
-						<Bar
-							dataKey='quantity'
-							style={
-								{
-									fill: 'hsl(var(--primary))',
-								} as CSSProperties
-							}
-						/>
-					</BarChart>
-				</ResponsiveContainer>
-			</div>
 		</div>
 	);
 }
