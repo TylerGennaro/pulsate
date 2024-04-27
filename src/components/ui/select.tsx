@@ -5,6 +5,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '@lib/utils';
+import Loader from './loader';
 
 const Select = SelectPrimitive.Root;
 
@@ -12,18 +13,26 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
+type SelectTriggerProps = React.ComponentPropsWithoutRef<
+	typeof SelectPrimitive.Trigger
+> & {
+	isLoading?: boolean;
+};
+
 const SelectTrigger = React.forwardRef<
 	React.ElementRef<typeof SelectPrimitive.Trigger>,
-	React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+	SelectTriggerProps
+>(({ className, children, isLoading, disabled, ...props }, ref) => (
 	<SelectPrimitive.Trigger
 		ref={ref}
 		className={cn(
 			'flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm ring-offset-zinc-100 dark:ring-offset-zinc-900 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:focus:ring-zinc-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
 			className
 		)}
+		disabled={disabled || isLoading}
 		{...props}
 	>
+		{isLoading && <Loader className='w-4 h-4' />}
 		{children}
 		<SelectPrimitive.Icon asChild>
 			<ChevronDown className='w-4 h-4 opacity-50' />
