@@ -39,9 +39,11 @@
 	☐ Send email on every checkout
 	☐ Only allow authenticated users to checkout
 		☐ Specify which email extensions can checkout
+	☐ Location permissions
+		☐ Individual permissions per added user
+		☐ Ensure separate read/write permissions
 
 ✔ Improve mobile UX @done(24-03-19 00:51)
-☐ Management sharing
 ☐ Global location log w/ filters
 ✔ Link to product order page @done(24-03-19 00:51)
 ☐ Dashboard @started(24-03-09 11:36)
