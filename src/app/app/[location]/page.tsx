@@ -4,6 +4,7 @@ import ActivityTable from '@components/location/ActivityTable';
 import EditLocation from '@components/location/EditLocation';
 import InventoryTable from '@components/location/InventoryTable';
 import NewProduct from '@components/location/NewProduct';
+import SettingsPage from '@components/location/SettingsPage';
 import { Button } from '@components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { authOptions } from '@lib/auth';
@@ -54,6 +55,9 @@ export default async function Inventory({
 				</TabsContent>
 				<TabsContent value='activity' className='pt-8'>
 					<ActivityTable locationId={params.location} />
+				</TabsContent>
+				<TabsContent value='settings' className='pt-8'>
+					<SettingsPage />
 				</TabsContent>
 			</Tabs>
 		</Container>
