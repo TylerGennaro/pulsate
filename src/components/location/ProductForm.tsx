@@ -40,14 +40,6 @@ export default function ProductForm({
 				type='number'
 				desc="When the product's quantity goes below this number, it will be marked as low quantity. Default: 5"
 			/>
-			<InputGroup
-				label='Max Quantity'
-				name='max'
-				placeholder='Maximum quantity'
-				defaultValue={defaultValues?.max}
-				type='number'
-				desc='The maximum number of this product that can be stored in this location. This does not limit the quantity.'
-			/>
 			<div className='grid items-center grid-cols-4 gap-y-1'>
 				<label className='col-span-1 mr-4 text-right'>
 					Packaging<span className='ml-1 text-red-500'>*</span>

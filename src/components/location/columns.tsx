@@ -34,12 +34,6 @@ export const columns: ColumnDef<FormattedProduct>[] = [
 			<span className='text-muted-foreground'>
 				{row.original.quantity}{' '}
 				{packageTypes[row.original.package as PackageType]}
-				{row.original.max && row.original.max > 0 ? (
-					<span className='ml-1 text-xs text-muted-foreground'>
-						{'/ '}
-						{row.original.max || ''}
-					</span>
-				) : null}
 			</span>
 		),
 	},
@@ -102,7 +96,6 @@ export const columns: ColumnDef<FormattedProduct>[] = [
 						defaultValues={{
 							name: row.original.name,
 							min: row.original.min,
-							max: row.original.max,
 							packageType: row.original.package,
 							position: row.original.position,
 							url: row.original.url,
