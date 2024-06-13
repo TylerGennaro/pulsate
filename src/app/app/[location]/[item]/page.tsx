@@ -173,7 +173,6 @@ export default async function Inventory({
 								defaultValues={{
 									name: data.name,
 									min: data.min,
-									max: data.max || undefined,
 									packageType: data.package as PackageType,
 									position: data.position || undefined,
 									url: data.url || undefined,
@@ -204,12 +203,6 @@ export default async function Inventory({
 						<InfoBlock
 							label='Minimum quantity'
 							value={data.min.toString() + ` ${units}`}
-						/>
-						<InfoBlock
-							label='Maximum quantity'
-							value={
-								data.max ? data.max?.toString() + ` ${units}` : 'Unlimited'
-							}
 						/>
 						<InfoBlock
 							label='Package type'

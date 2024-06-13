@@ -82,7 +82,6 @@ export async function POST(req: Request) {
 			data: {
 				name: parseData.name,
 				min: parseData.min ?? 0,
-				max: parseData.max ?? undefined,
 				package: parseData.packageType,
 				position: parseData.position,
 				locationId,
