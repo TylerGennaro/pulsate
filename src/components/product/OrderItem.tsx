@@ -1,5 +1,6 @@
 'use client';
 
+import ArrowButton from '@components/ArrowButton';
 import Form from '@components/Form';
 import FormGroup from '@components/FormGroup';
 import { Button } from '@components/ui/button';
@@ -46,9 +47,7 @@ export default function OrderItem({ product }: { product: Product }) {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button icon={CreditCard} variant='outline'>
-					Order
-				</Button>
+				<Button icon={CreditCard}>Order</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<Form onSubmit={submit}>
@@ -65,9 +64,14 @@ export default function OrderItem({ product }: { product: Product }) {
 						type='number'
 					/>
 					<DialogFooter>
-						<Button type='submit' icon={CreditCard} isLoading={loading}>
+						<ArrowButton
+							variant='primary'
+							type='submit'
+							Icon={CreditCard}
+							isLoading={loading}
+						>
 							Place Order
-						</Button>
+						</ArrowButton>
 					</DialogFooter>
 				</Form>
 			</DialogContent>
