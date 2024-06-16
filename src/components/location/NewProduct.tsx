@@ -16,6 +16,7 @@ import { Plus } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
 import ProductForm from './ProductForm';
+import ArrowButton from '@components/ArrowButton';
 
 export default function NewItemSheet({ location }: { location: string }) {
 	const [open, setOpen] = useState(false);
@@ -40,8 +41,8 @@ export default function NewItemSheet({ location }: { location: string }) {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>
-					<Plus className='w-4 h-4 mr-2' />
+				<Button variant='primary'>
+					<Plus className='icon-left' />
 					New Product
 				</Button>
 			</DialogTrigger>
@@ -56,14 +57,15 @@ export default function NewItemSheet({ location }: { location: string }) {
 					</DialogHeader>
 					<ProductForm />
 					<DialogFooter>
-						<Button
+						<ArrowButton
 							className='ml-auto'
 							type='submit'
-							icon={Plus}
+							Icon={Plus}
 							isLoading={isPending}
+							variant='primary'
 						>
 							Add
-						</Button>
+						</ArrowButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>
