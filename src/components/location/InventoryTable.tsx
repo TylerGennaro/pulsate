@@ -13,11 +13,9 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 import { Input } from '@components/ui/input';
-import { isExpiring } from '@lib/date';
-import { Tag } from '@lib/enum';
 import { printQRCodes } from '@lib/qrcode';
 import { tags } from '@lib/relations';
-import { Item, Product } from '@prisma/client';
+import { Product } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { Row, useReactTable } from '@tanstack/react-table';
 import { X } from 'lucide-react';
@@ -119,37 +117,7 @@ export default function InventoryTable({ location }: { location: string }) {
 		queryKey: ['products', location],
 		queryFn: async () => {
 			const res = await fetch(`/api/products?location=${location}`);
-			const products = await res.json();
-			const reformattedProducts: FormattedProduct[] = await Promise.all(
-				products.map(async (product: Product & { items: Item[] }) => {
-					const quantity = product.items.reduce(
-						(acc: number, item: Item) =>
-							!item.onOrder ? acc + item.quantity : acc,
-						0
-					);
-					const exp = product.items.reduce(
-						(acc: number, item: Item) =>
-							item.expires !== null &&
-							(new Date(item.expires).getTime() < acc || acc === -1)
-								? new Date(item.expires).getTime()
-								: acc,
-						-1
-					);
-					const hasOnOrder = product.items.some((item) => item.onOrder);
-					const tags = [];
-					if (quantity < product.min) tags.push(Tag.LOW);
-					if (exp !== -1 && isExpiring(new Date(exp)) && quantity > 0)
-						tags.push(Tag.EXPIRES);
-					if (hasOnOrder) tags.push(Tag.ONORDER);
-					return {
-						quantity,
-						exp,
-						tags,
-						...product,
-					};
-				})
-			);
-			return reformattedProducts;
+			return res.json();
 		},
 	});
 	return (
@@ -159,6 +127,7 @@ export default function InventoryTable({ location }: { location: string }) {
 			toolbar={Toolbar}
 			isLoading={isLoading}
 			enableSelection
+			classNames={{ cell: 'p-3' }}
 		/>
 	);
 }
