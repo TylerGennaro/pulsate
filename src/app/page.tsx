@@ -32,7 +32,7 @@ export default function Home() {
 						size='3xl'
 					>
 						<Link href='/app' className='mt-2 w-fit'>
-							<Button className='shadow-md group'>
+							<Button className='shadow-md group' variant='primary'>
 								Get started
 								<ArrowRight className='transition-transform icon-right group-hover:translate-x-1' />
 							</Button>
