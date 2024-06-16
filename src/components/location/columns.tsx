@@ -1,23 +1,18 @@
 'use client';
 
-import { Button } from '@components/ui/button';
-import { ColumnDef } from '@tanstack/react-table';
-import { ChevronsUpDown, MoreVertical } from 'lucide-react';
-import Link from 'next/link';
-import { packageTypes, tags } from '@lib/relations';
-import { PackageType, Tag } from '@lib/enum';
-import { formatDate, formatUTCDate } from '@lib/date';
-import EditProduct from './EditProduct';
-import TagBadge from '@components/TagBadge';
+import ArrowButton from '@components/ArrowButton';
 import DataTableSortableHeader from '@components/DataTableSortableHeader';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu';
+import TagBadge from '@components/TagBadge';
+import { Button } from '@components/ui/button';
+import { formatUTCDate } from '@lib/date';
+import { PackageType, Tag } from '@lib/enum';
+import { packageTypes, tags } from '@lib/relations';
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreVertical } from 'lucide-react';
+import Link from 'next/link';
+import EditProduct from './EditProduct';
 
-export const columns: ColumnDef<FormattedProduct>[] = [
+export const columns: ColumnDef<ProductListing>[] = [
 	{
 		header: ({ column }) => (
 			<DataTableSortableHeader column={column} header='Name' />
@@ -34,12 +29,6 @@ export const columns: ColumnDef<FormattedProduct>[] = [
 			<span className='text-muted-foreground'>
 				{row.original.quantity}{' '}
 				{packageTypes[row.original.package as PackageType]}
-				{row.original.max && row.original.max > 0 ? (
-					<span className='ml-1 text-xs text-muted-foreground'>
-						{'/ '}
-						{row.original.max || ''}
-					</span>
-				) : null}
 			</span>
 		),
 	},
@@ -48,7 +37,7 @@ export const columns: ColumnDef<FormattedProduct>[] = [
 			<DataTableSortableHeader column={column} header='Expiration' />
 		),
 		accessorKey: 'exp',
-		cell: ({ row }: { row: { original: FormattedProduct } }) => {
+		cell: ({ row }: { row: { original: ProductListing } }) => {
 			return (
 				<p className='text-muted-foreground'>
 					{row.original.exp > 0
@@ -69,9 +58,9 @@ export const columns: ColumnDef<FormattedProduct>[] = [
 	{
 		header: 'Tags',
 		accessorKey: 'tags',
-		cell: ({ row }: { row: any }) => {
+		cell: ({ row }: { row: { original: ProductListing } }) => {
 			return (
-				<div className='flex flex-col gap-2'>
+				<div className='flex gap-1'>
 					{row.original.tags.map((tag: any) => (
 						<TagBadge tag={tag} key={tag} />
 					))}
@@ -89,28 +78,25 @@ export const columns: ColumnDef<FormattedProduct>[] = [
 	},
 	{
 		id: 'actions',
-		cell: ({ row }: { row: any }) => {
+		cell: ({ row }: { row: { original: ProductListing } }) => {
 			return (
-				<div className='flex gap-2'>
-					<Button variant='outline' asChild>
-						<Link href={`/app/${row.original.locationId}/${row.original.id}`}>
-							View
-						</Link>
-					</Button>
+				<div className='flex gap-4'>
+					<Link href={`/app/${row.original.locationId}/${row.original.id}`}>
+						<ArrowButton size='sm'>View</ArrowButton>
+					</Link>
 					<EditProduct
 						id={row.original.id}
 						defaultValues={{
 							name: row.original.name,
 							min: row.original.min,
-							max: row.original.max,
-							packageType: row.original.package,
-							position: row.original.position,
-							url: row.original.url,
+							packageType: row.original.package as PackageType,
+							position: row.original.position ?? undefined,
+							url: row.original.url ?? undefined,
 						}}
 					>
-						<Button variant='ghost'>
-							{/* <span className='sr-only'>Open menu</span> */}
-							<MoreVertical size={20} />
+						<Button size='icon'>
+							<span className='sr-only'>Open menu</span>
+							<MoreVertical size={16} />
 						</Button>
 					</EditProduct>
 				</div>
