@@ -1,3 +1,8 @@
+export enum Constants {
+	IS_EXPIRED = 1,
+	IS_EXPIRING,
+}
+
 export enum LogType {
 	QUANTITY_CHANGE,
 	ITEM_ADD,
@@ -8,8 +13,8 @@ export enum LogType {
 export enum Tag {
 	LOW = 'low',
 	EXPIRES = 'expires',
+	EXPIRED = 'expired',
 	ONORDER = 'onOrder',
-	NONE = 'none',
 }
 
 export enum PackageType {
