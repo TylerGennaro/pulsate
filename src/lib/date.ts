@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import {} from 'date-fns/locale';
+import { Constants } from './enum';
 
 export function toDateTime(seconds: number | null) {
 	if (seconds === null) return null;
@@ -23,12 +24,9 @@ export function formatDateTime(date: Date | string) {
 }
 
 export function getUTCDate() {
+	const date = new Date();
 	return new Date(
-		Date.UTC(
-			new Date().getFullYear(),
-			new Date().getMonth(),
-			new Date().getDate()
-		)
+		Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
 	);
 }
 
@@ -46,6 +44,12 @@ export function getUTCDateTime() {
 	);
 }
 
+export function dateToUTC(date: Date | undefined | null) {
+	if (!date) return null;
+	// return zonedTimeToUtc(date, 'America/New_York');
+	// use dayjs
+}
+
 export function formatUTCDate(date: Date | string | null) {
 	if (date === null) return null;
 	if (typeof date === 'string' && date.length === 0) return '';
@@ -54,15 +58,17 @@ export function formatUTCDate(date: Date | string | null) {
 	return format(date, 'MMM d, yyyy');
 }
 
-export function isExpiring(date: Date | string | null) {
-	if (date === null) return false;
+export function isExpired(date: Date | string | null): number {
+	if (date === null) return 0;
 	if (typeof date === 'string') {
-		if (date.length === 0) return false;
+		if (date.length === 0) return 0;
 		date = new Date(date);
 	}
 	const today = new Date();
 	const diff = date.getTime() - today.getTime();
-	return diff <= 1000 * 60 * 60 * 24 * 7;
+	if (diff < 0) return Constants.IS_EXPIRED;
+	if (diff <= 1000 * 60 * 60 * 24 * 7) return Constants.IS_EXPIRING; // 7 days
+	return 0;
 }
 
 export function timeSince(date: Date) {
