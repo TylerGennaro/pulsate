@@ -26,7 +26,7 @@ const SelectTrigger = React.forwardRef<
 	<SelectPrimitive.Trigger
 		ref={ref}
 		className={cn(
-			'flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm ring-offset-zinc-100 dark:ring-offset-zinc-900 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-zinc-300 dark:focus:ring-zinc-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+			'flex h-10 w-full items-center justify-between rounded-md border bg-muted/30 focus-visible:border-muted-foreground/30 px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:ring-offset-2 ring-offset-zinc-100 dark:focus-visible:ring-zinc-700 dark:ring-offset-zinc-900',
 			className
 		)}
 		disabled={disabled || isLoading}
@@ -89,7 +89,7 @@ const SelectItem = React.forwardRef<
 	<SelectPrimitive.Item
 		ref={ref}
 		className={cn(
-			'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-zinc-200 dark:focus:bg-zinc-800 focus:text-zinc-950 dark:focus:text-zinc-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+			'relative flex w-full select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-muted cursor-pointer focus:bg-zinc-200 dark:focus:bg-zinc-800 focus:text-zinc-950 dark:focus:text-zinc-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 			className
 		)}
 		{...props}
