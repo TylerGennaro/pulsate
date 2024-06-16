@@ -39,7 +39,6 @@ export default function ItemCard({
 
 			<div className='flex justify-end'>
 				<Button
-					variant='outline'
 					className='rounded-none rounded-l-full'
 					onClick={() => {
 						const newCart = new Map(cart);
@@ -67,7 +66,6 @@ export default function ItemCard({
 					type='number'
 				/>
 				<Button
-					variant='outline'
 					className='rounded-none rounded-r-full'
 					onClick={() => {
 						const newCart = new Map(cart);
