@@ -30,8 +30,10 @@ import {
 } from '@components/ui/dialog';
 import InputGroup from '@components/FormGroup';
 import { FormEvent, useState } from 'react';
-import { crud } from '@lib/utils';
+import { crud, parseFormData } from '@lib/utils';
 import SettingsDialog from './SettingsDialog';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 export default function EditLocation({
 	name,
@@ -40,27 +42,45 @@ export default function EditLocation({
 	name: string;
 	id: string;
 }) {
+	const queryClient = useQueryClient();
 	const [open, setOpen] = useState(false);
-	const [editLoading, setEditLoading] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
-
 	const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
 
-	async function update(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setEditLoading(true);
-		const data = {
-			name: e.currentTarget['location-name'].value as string,
-		};
-		const result = await crud({
-			url: `/locations`,
-			method: 'PUT',
-			data,
-			params: { id },
-		});
-		setEditLoading(false);
-		if (result?.status === 200) setOpen(false);
-	}
+	const { mutate: updateMutate, isPending: updatePending } = useMutation({
+		mutationFn: (e: FormEvent<HTMLFormElement>) => {
+			const data = parseFormData(e);
+			return fetch(`/api/locations?id=${id}`, {
+				method: 'PUT',
+				body: data,
+			});
+		},
+		onSettled: async (res) => {
+			if (res?.ok) {
+				setOpen(false);
+				toast.success('Location updated.');
+				queryClient.invalidateQueries({
+					queryKey: ['locations'],
+				});
+			} else toast.error('Failed to update location.');
+		},
+	});
+
+	// async function update(e: FormEvent<HTMLFormElement>) {
+	// 	e.preventDefault();
+	// 	setEditLoading(true);
+	// 	const data = {
+	// 		name: e.currentTarget['location-name'].value as string,
+	// 	};
+	// 	const result = await crud({
+	// 		url: `/locations`,
+	// 		method: 'PUT',
+	// 		data,
+	// 		params: { id },
+	// 	});
+	// 	setEditLoading(false);
+	// 	if (result?.status === 200) setOpen(false);
+	// }
 
 	async function remove(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -131,7 +151,7 @@ export default function EditLocation({
 					</AlertDialogContent>
 				</AlertDialog>
 				<DialogContent>
-					<form className='flex flex-col gap-4' onSubmit={update}>
+					<form className='flex flex-col gap-4' onSubmit={updateMutate}>
 						<DialogHeader>
 							<DialogTitle>Edit location</DialogTitle>
 							<DialogDescription>
@@ -141,11 +161,11 @@ export default function EditLocation({
 						<InputGroup
 							label='Name'
 							placeholder='Location name'
-							name='location-name'
+							name='name'
 							defaultValue={name}
 						/>
 						<DialogFooter>
-							<Button icon={Save} type='submit' isLoading={editLoading}>
+							<Button icon={Save} type='submit' isLoading={updatePending}>
 								Save
 							</Button>
 						</DialogFooter>
