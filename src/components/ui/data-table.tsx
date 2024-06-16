@@ -23,7 +23,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@components/ui/table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Skeleton } from './skeleton';
 import { cn } from '@lib/utils';
 
@@ -58,32 +58,40 @@ export function DataTable<TData, TValue>({
 	const [rowSelection, setRowSelection] = useState({});
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [sorting, setSorting] = useState<SortingState>([]);
+	const [newColumns, setNewColumns] = useState(columns);
 
-	if (enableSelection && !columns.find((column) => column.id === 'select')) {
-		columns.unshift({
-			id: 'select',
-			header: ({ table }) => (
-				<Checkbox
-					checked={table.getIsAllPageRowsSelected()}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label='Select all'
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label='Select row'
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		});
-	}
+	useEffect(() => {
+		if (enableSelection && !columns.find((column) => column.id === 'select')) {
+			setNewColumns([
+				{
+					id: 'select',
+					header: ({ table }) => (
+						<Checkbox
+							checked={table.getIsAllPageRowsSelected()}
+							onCheckedChange={(value) =>
+								table.toggleAllPageRowsSelected(!!value)
+							}
+							aria-label='Select all'
+						/>
+					),
+					cell: ({ row }) => (
+						<Checkbox
+							checked={row.getIsSelected()}
+							onCheckedChange={(value) => row.toggleSelected(!!value)}
+							aria-label='Select row'
+						/>
+					),
+					enableSorting: false,
+					enableHiding: false,
+				},
+				...newColumns,
+			]);
+		}
+	}, []);
 
 	const table = useReactTable({
 		data,
-		columns,
+		columns: newColumns,
 		getCoreRowModel: getCoreRowModel(),
 		onRowSelectionChange: setRowSelection,
 		onColumnFiltersChange: setColumnFilters,
