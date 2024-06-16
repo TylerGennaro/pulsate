@@ -6,6 +6,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { getUrl, printQRCode } from '@lib/qrcode';
 import { Slider } from './ui/slider';
 import { cn } from '@lib/utils';
+import ArrowButton from './ArrowButton';
 
 interface QRCodeProps {
 	location: string;
@@ -49,12 +50,12 @@ const QRCode: FC<QRCodeProps> = ({ location, id, onPrint, style }) => {
 				</div>
 				<span>{size}px</span>
 			</div>
-			<Button
+			<ArrowButton
 				onClick={() => onPrint(size)}
 				className={cn('mt-4', style?.button)}
 			>
 				Print QR Code
-			</Button>
+			</ArrowButton>
 		</div>
 	);
 };
