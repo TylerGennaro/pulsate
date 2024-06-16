@@ -1,5 +1,6 @@
 'use client';
 
+import ArrowButton from '@components/ArrowButton';
 import { Button } from '@components/ui/button';
 import Heading from '@components/ui/heading';
 import { Skeleton } from '@components/ui/skeleton';
@@ -8,9 +9,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ExternalLink, ShoppingCart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { Link as LinkIcon } from 'lucide-react';
 import { useState } from 'react';
-import ItemCard from './ItemCard';
 import toast from 'react-hot-toast';
+import ItemCard from './ItemCard';
 
 export default function Checkout({ productId }: { productId: string }) {
 	const queryClient = useQueryClient();
@@ -57,10 +59,7 @@ export default function Checkout({ productId }: { productId: string }) {
 				)}
 				{!isLoading && session?.data?.user.id === data.location.userId && (
 					<Link href={`/app/${data.location.id}/${productId}`}>
-						<Button variant='outline'>
-							View Page
-							<ExternalLink className='w-4 h-4 ml-2' />
-						</Button>
+						<ArrowButton Icon={LinkIcon}>View Page</ArrowButton>
 					</Link>
 				)}
 			</div>
@@ -100,18 +99,19 @@ export default function Checkout({ productId }: { productId: string }) {
 					)}
 				</>
 			)}
-			<Button
-				icon={ShoppingCart}
+			<ArrowButton
+				Icon={ShoppingCart}
 				className='self-end mt-8 w-fit'
 				disabled={isLoading || !data.items.length}
 				type='submit'
 				isLoading={isPending}
 				onClick={() => mutate()}
+				variant='primary'
 			>
 				Checkout (
 				{Array.from(cart).reduce((acc, [, quantity]) => acc + quantity, 0)}{' '}
 				items)
-			</Button>
+			</ArrowButton>
 			{/* </form> */}
 		</div>
 	);
