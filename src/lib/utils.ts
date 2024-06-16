@@ -1,3 +1,4 @@
+import { Item, Product } from '@prisma/client';
 import { ClassValue, clsx } from 'clsx';
 import { format } from 'date-fns';
 import { Metadata } from 'next';
@@ -6,6 +7,8 @@ import { FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
+import { Constants, Tag } from './enum';
+import { isExpired } from './date';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -91,6 +94,7 @@ export async function fetchJSON(
 }
 
 export function catchError(e: any) {
+	console.error(e);
 	if (e instanceof z.ZodError) {
 		return new NextResponse(
 			e.issues[0]?.message || 'Invalid request. Try again.',
@@ -121,4 +125,29 @@ export function populateMetadata(title: string): Metadata {
 		title: `${title} | Pulsate`,
 		description: 'Pulsate is a platform for managing EMS medical closets.',
 	};
+}
+
+export function parseProductInfo(product: Product & { items: Item[] }) {
+	const quantity = product.items.reduce(
+		(acc: number, item: Item) => (!item.onOrder ? acc + item.quantity : acc),
+		0
+	);
+	const exp = product.items.reduce(
+		(acc: number, item: Item) =>
+			item.expires !== null &&
+			(new Date(item.expires).getTime() < acc || acc === -1)
+				? new Date(item.expires).getTime()
+				: acc,
+		-1
+	);
+	const hasOnOrder = product.items.some((item) => item.onOrder);
+	const tags = [];
+	if (quantity < product.min) tags.push(Tag.LOW);
+	if (exp !== -1 && quantity > 0) {
+		const expired = isExpired(new Date(exp));
+		if (expired === Constants.IS_EXPIRED) tags.push(Tag.EXPIRED);
+		else if (expired === Constants.IS_EXPIRING) tags.push(Tag.EXPIRES);
+	}
+	if (hasOnOrder) tags.push(Tag.ONORDER);
+	return { tags: tags, exp: exp, quantity: quantity };
 }
