@@ -1,19 +1,12 @@
 import Container from '@components/Container';
-import SignIn from '@components/SignIn';
-import ActivityTable from '@components/location/ActivityTable';
-import EditLocation from '@components/location/EditLocation';
+import ActivityTable from '@components/ActivityTable';
 import InventoryTable from '@components/location/InventoryTable';
+import LocationHeader from '@components/location/LocationHeader';
 import NewProduct from '@components/location/NewProduct';
-import SettingsPage from '@components/location/SettingsPage';
-import { Button } from '@components/ui/button';
+import SettingsPage from '@components/location/settings/SettingsPage';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
-import { authOptions } from '@lib/auth';
 import { fetchLocationInfo } from '@lib/data';
 import { populateMetadata } from '@lib/utils';
-import { ScrollText } from 'lucide-react';
-import { getServerSession } from 'next-auth';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
 
 export async function generateMetadata({
 	params,
@@ -29,18 +22,9 @@ export default async function Inventory({
 }: {
 	params: { location: string };
 }) {
-	const session = await getServerSession(authOptions);
-	if (!session) return <SignIn />;
-	const { name, userId, userName } = await fetchLocationInfo(params.location);
-	if (!name) return notFound();
-	if (userId !== session.user.id) return notFound();
-
 	return (
-		<Container
-			header={name}
-			description={`Managed by ${userName ?? 'Unknown User'}`}
-			action={<EditLocation name={name} id={params.location} />}
-		>
+		<Container>
+			<LocationHeader location={params.location} />
 			<Tabs defaultValue='products' className='mt-8'>
 				<TabsList>
 					<TabsTrigger value='products'>Products</TabsTrigger>
@@ -57,7 +41,7 @@ export default async function Inventory({
 					<ActivityTable locationId={params.location} />
 				</TabsContent>
 				<TabsContent value='settings' className='pt-8'>
-					<SettingsPage />
+					<SettingsPage locationId={params.location} />
 				</TabsContent>
 			</Tabs>
 		</Container>
