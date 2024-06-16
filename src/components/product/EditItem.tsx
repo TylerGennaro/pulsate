@@ -82,9 +82,9 @@ export default function EditItem({ item }: { item: Item }) {
 			<AlertDialog>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant='ghost'>
+						<Button size='icon'>
 							<span className='sr-only'>Open menu</span>
-							<MoreVertical size={20} />
+							<MoreVertical size={16} />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
