@@ -92,8 +92,11 @@ export default function NavHeader({
 				<div className='flex items-center justify-end gap-2'>
 					<ThemeToggle />
 					{session ? (
-						<Link href='/app'>
-							<Button variant='outline'>Dashboard</Button>
+						<Link href='/app' className='group'>
+							<Button variant='outline'>
+								Dashboard{' '}
+								<ArrowRight className='transition-transform group-hover:translate-x-1 icon-right' />
+							</Button>
 						</Link>
 					) : (
 						<SignInButton variant='outline'>
