@@ -36,6 +36,7 @@ import ProductForm from './ProductForm';
 import { PackageType } from '@lib/enum';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import ArrowButton from '@components/ArrowButton';
 
 export default function EditProduct({
 	defaultValues,
@@ -84,6 +85,7 @@ export default function EditProduct({
 			if (res?.ok) {
 				queryClient.invalidateQueries({ queryKey: ['products'] });
 				setAlertOpen(false);
+				toast.success('Product deleted.');
 			} else toast.error('Failed to update product: ' + (await res?.text()));
 		},
 	});
@@ -141,13 +143,14 @@ export default function EditProduct({
 					</DialogHeader>
 					<ProductForm defaultValues={defaultValues} />
 					<DialogFooter>
-						<Button
-							icon={Save}
+						<ArrowButton
+							Icon={Save}
 							type='submit'
 							isLoading={updateMutation.isPending}
+							variant='primary'
 						>
 							Save
-						</Button>
+						</ArrowButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>
