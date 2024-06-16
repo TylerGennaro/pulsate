@@ -3,10 +3,10 @@ import { authOptions } from '@lib/auth';
 import '@styles/globals.css';
 import { getServerSession } from 'next-auth';
 import { db } from '@lib/prisma';
-import { isExpiring } from '@lib/date';
 import { Tag } from '@lib/enum';
 import SignIn from '@components/SignIn';
 import { populateMetadata } from '@lib/utils';
+import { isExpired } from '@lib/date';
 
 export const metadata = populateMetadata('App');
 
@@ -75,7 +75,7 @@ async function getLocations() {
 			location.tags = [];
 			if (hasLow.length > 0 || hasNone.length > 0) location.tags.push(Tag.LOW);
 			for (const item of exp) {
-				if (isExpiring(item.expires)) {
+				if (isExpired(item.expires)) {
 					location.tags.push(Tag.EXPIRES);
 					break;
 				}
@@ -91,8 +91,8 @@ export default async function Layout({
 }: {
 	children: React.ReactNode;
 }) {
-	const locations = await getLocations();
+	// const locations = await getLocations();
 	const session = await getServerSession(authOptions);
 	if (!session) return <SignIn />;
-	return <AppShell locations={locations}>{children}</AppShell>;
+	return <AppShell>{children}</AppShell>;
 }
