@@ -8,9 +8,10 @@ export async function GET(req: Request) {
 	if (!session || !session?.user?.id)
 		return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
-	// Get locationId from query params
+	// Get locationId and productId from query params
 	const { searchParams } = new URL(req.url);
 	const locationId = searchParams.get('location');
+	const productId = searchParams.get('product');
 
 	// Check if the location exists
 	if (!locationId)
@@ -42,6 +43,7 @@ export async function GET(req: Request) {
 			product: {
 				locationId,
 			},
+			...(productId && { productId }),
 		},
 		orderBy: {
 			timestamp: 'desc',
