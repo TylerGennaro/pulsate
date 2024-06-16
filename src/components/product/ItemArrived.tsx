@@ -28,7 +28,7 @@ export default function ItemArrived({ item }: { item: Item }) {
 		setLoading(false);
 	}
 	return (
-		<Button variant='outline' icon={Check} onClick={click} isLoading={loading}>
+		<Button size='sm' icon={Check} onClick={click} isLoading={loading}>
 			Arrived
 		</Button>
 	);
