@@ -31,12 +31,6 @@ export const tags = {
 		icon: Package2,
 		color: 'blue',
 	},
-	[Tag.NONE]: {
-		value: 'none',
-		label: 'None',
-		icon: null,
-		color: 'gray',
-	},
 };
 
 export const packageTypes = {

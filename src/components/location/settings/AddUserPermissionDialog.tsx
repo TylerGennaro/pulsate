@@ -67,8 +67,8 @@ export default function AddUserPermissionDialog({
 				<DialogHeader>
 					<DialogTitle>Add User to Location</DialogTitle>
 					<DialogDescription className='block'>
-						Enter the user's email to send an invitation to share. Once the user
-						accepts the invitation, you can manage their permissions.
+						Enter the user&apos;s email to send an invitation to share. Once the
+						user accepts the invitation, you can manage their permissions.
 					</DialogDescription>
 				</DialogHeader>
 				<hr className='mt-1' />
