@@ -1,8 +1,9 @@
 import { authOptions } from '@lib/auth';
+import { Tag } from '@lib/enum';
 import { log } from '@lib/log';
 import { db } from '@lib/prisma';
-import { catchError, formDataToObject } from '@lib/utils';
-import { LogType } from '@prisma/client';
+import { catchError, formDataToObject, parseProductInfo } from '@lib/utils';
+import { LogType, Product } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -20,11 +21,6 @@ const schema = z.object({
 		.number({ invalid_type_error: 'Min quantity is not a number.' })
 		.int({ message: 'Min quantity is not an integer.' })
 		.min(1, { message: 'Minimum quantity must be greater than 1.' })
-		.nullable(),
-	max: z.coerce
-		.number({ invalid_type_error: 'Max quantity is not a number.' })
-		.int({ message: 'Max quantity is not an integer.' })
-		.min(0, { message: 'Maximum quantity must be greater than 0.' })
 		.nullable(),
 	packageType: z.enum(['single', 'pack', 'box', 'case'], {
 		invalid_type_error: 'Package type is not valid.',
@@ -44,6 +40,8 @@ export async function GET(req: Request) {
 
 	const { searchParams } = new URL(req.url);
 	const locationId = searchParams.get('location') || '';
+	if (!locationId)
+		return new NextResponse('Invalid location ID.', { status: 400 });
 
 	try {
 		const products = await db.product.findMany({
@@ -58,7 +56,16 @@ export async function GET(req: Request) {
 				position: { sort: 'asc', nulls: 'last' },
 			},
 		});
-		return NextResponse.json(products, { status: 200 });
+		const productListings: ProductListing[] = products.map((product) => {
+			const productInfo = parseProductInfo(product);
+			return {
+				...product,
+				tags: productInfo.tags,
+				exp: productInfo.exp,
+				quantity: productInfo.quantity,
+			};
+		});
+		return NextResponse.json(productListings, { status: 200 });
 	} catch (e) {
 		console.error(e);
 		return catchError(e);
@@ -82,7 +89,6 @@ export async function POST(req: Request) {
 			data: {
 				name: parseData.name,
 				min: parseData.min ?? 0,
-				max: parseData.max ?? undefined,
 				package: parseData.packageType,
 				position: parseData.position,
 				locationId,
@@ -111,7 +117,7 @@ export async function PUT(req: Request) {
 
 	const data = formDataToObject(await req.formData());
 	try {
-		const { name, min, max, packageType, position, url } = schema.parse(data);
+		const { name, min, packageType, position, url } = schema.parse(data);
 		const product = await db.product.findFirst({
 			where: {
 				id,
@@ -120,31 +126,6 @@ export async function PUT(req: Request) {
 		if (!product)
 			return new NextResponse('Could not find product.', { status: 404 });
 
-		// let shortUrl: number | null = null;
-		// if (url) {
-		// 	if (product.url) {
-		// 		const matchingURL = await db.product.findMany({
-		// 			where: {
-		// 				url: product.url,
-		// 			},
-		// 		});
-		// 		if (matchingURL.length > 1) {
-		// 			const newUrl = await shortenURL(url);
-		// 			shortUrl = newUrl;
-		// 		} else {
-		// 			console.log('updating to ' + url);
-		// 			console.log(await updateShortURL(product.url, url));
-		// 			shortUrl = product.url;
-		// 		}
-		// 	} else {
-		// 		shortUrl = await shortenURL(url);
-		// 	}
-		// } else {
-		// 	if (product.url) {
-		// 		await deleteShortUrl(product.url);
-		// 	}
-		// }
-
 		await db.product.update({
 			where: {
 				id,
@@ -152,7 +133,6 @@ export async function PUT(req: Request) {
 			data: {
 				name,
 				min: min ?? 0,
-				max: max ?? undefined,
 				package: packageType,
 				position,
 				url,
@@ -209,19 +189,16 @@ export async function DELETE(req: Request) {
 		if (!product)
 			return new NextResponse('Could not find product.', { status: 404 });
 
-		// if (product.url) {
-		// 	await deleteShortUrl(product.url);
-		// }
-
 		await db.product.delete({
 			where: {
 				id,
 			},
 		});
-		// log(LogType.PRODUCT_REMOVE, {
-		// 	product: deletedProduct.id,
-		// });
-		return new NextResponse('Product deleted.', { status: 200 });
+
+		const url = new URL(req.url);
+		url.pathname = '/app/' + product.locationId;
+		url.search = '';
+		return NextResponse.redirect(url.toString());
 	} catch (e) {
 		return catchError(e);
 	}
