@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+	url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  access_token      String?
+  expires_at        Int?
+  ext_expires_in    Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model User {
+  id                 String         @id @default(cuid())
+  name               String?
+  email              String?        @unique
+  emailVerified      DateTime?
+  image              String?
+  stripe_customer_id String?
+  accounts           Account[]
+  locations          Location[]
+  logs               Log[]
+  notifications      Notification[]
+  payments           Payment[]
+  subscriptions      Subscription[]
+
+  @@index([stripe_customer_id])
+}
+
+model Location {
+  id       String             @id @default(cuid())
+  name     String
+  userId   String
+  user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products Product[]
+  settings LocationSettings[]
+}
+
+model Product {
+  id         String    @id @default(cuid())
+  name       String
+  package    String
+  min        Int       @default(5)
+  position   String?
+  lastOrder  DateTime? @db.Date()
+  url        String?
+  locationId String
+  items      Item[]
+  logs       Log[]
+  location   Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+}
+
+model Item {
+  id        String    @id @default(cuid())
+  productId String
+  quantity  Int
+  expires   DateTime? @default(now()) @db.Date
+  onOrder   Boolean   @default(false)
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  timestamp DateTime @default(now())
+  userId    String?
+  productId String?
+  type      LogType
+  quantity  Int?
+  footnote  String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  created  DateTime @id @default(now())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message  String
+  redirect String?
+  read     Boolean  @default(false)
+}
+
+model LocationSettings {
+  id         String   @id @default(cuid())
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  key        String
+  value      String
+  isNumber   Boolean  @default(false)
+
+	@@unique ([locationId, key])
+}
+
+model Subscription {
+  id                   String    @id
+  userId               String?
+  tier                 Tier
+  status               String
+  cancel_at_period_end Boolean   @default(false)
+  current_period_start DateTime? @db.Date
+  current_period_end   DateTime? @db.Date
+  created              DateTime? @db.Date
+  ended_at             DateTime? @db.Date
+  user                 User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Payment {
+  id     String  @id
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+enum Tier {
+  FREE
+  MANAGER
+  EXECUTIVE
+}
+
+enum LogType {
+  ITEM_ORDER
+  ITEM_ADD
+  ITEM_REMOVE
+  ITEM_UPDATE
+  PRODUCT_ADD
+  PRODUCT_REMOVE
+  PRODUCT_UPDATE
+  ITEM_CHECKOUT
+}
