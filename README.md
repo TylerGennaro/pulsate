@@ -1,34 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pulsate
+## Your solution to organizing your medical inventory
 
-## Getting Started
+[Link](https://pulsate.cloud)
 
-First, run the development server
+### Summary
+Pulsate is designed to help you manage your medical closet. Instead of using outdated spreadsheets that require lots of manual updating, our service allows your employees to "checkout" items from your closet, automatically updating your stock. This is done via QR codes associated with each product. Users can scan the QR code and select the expiration dates associated with the items they are taking, and that's it! Once a product's stock is marked as low or an item from that stock is close to expiring, you'll receive a notification via email and through the application to ensure you are always up-to-date with the status of your inventory.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Key Features
+- Expiration date tracking - 
+- Instant deployment - Once you make an account, you are ready to go!
+- Easy setup - Setting up your closet is as easy as making an account, creating a location, and documenting your current stock.
+- Intuitive interface - The interface is designed to hasten your workflow so you spend less time clicking.
+- Metric tracking - We provide useful metrics related to your inventories right on your dashboard so you gain meaningful insights.
