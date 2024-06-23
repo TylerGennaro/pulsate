@@ -6,7 +6,6 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Features from './Features';
 import Plans from './plans/Plans';
-import Image from 'next/image';
 
 export const metadata = populateMetadata('Home');
 
