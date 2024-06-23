@@ -1,5 +1,6 @@
 import { cn } from '@lib/utils';
 import Heading from './ui/heading';
+import { ReactNode } from 'react';
 
 type ContainerProps = {
 	children: React.ReactNode;
@@ -38,16 +39,23 @@ export default function Container({
 type ContainerHeaderProps = {
 	header: string;
 	description?: string;
-	action?: React.ReactNode;
+	action?: ReactNode;
+	className?: string;
 };
 
 export function ContainerHeader({
 	header,
 	description,
 	action,
+	className,
 }: ContainerHeaderProps) {
 	return (
-		<div className='flex flex-wrap items-center justify-between gap-y-4'>
+		<div
+			className={cn(
+				'flex flex-wrap items-center justify-between gap-y-4',
+				className
+			)}
+		>
 			{header && <Heading header={header} description={description} />}
 			{action}
 		</div>
