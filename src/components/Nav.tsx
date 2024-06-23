@@ -151,7 +151,15 @@ export function Nav({ toggle }: { toggle: (open: boolean) => void }) {
 				label={
 					<span className='flex items-center justify-between'>
 						Locations
-						<NewLocation />
+						<NewLocation>
+							<Button
+								icon={Plus}
+								className='px-2 py-1 text-xs h-fit'
+								variant='primary'
+							>
+								New Location
+							</Button>
+						</NewLocation>
 					</span>
 				}
 			>
