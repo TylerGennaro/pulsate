@@ -8,6 +8,10 @@ import PopularItems from './(modules)/PopularItems';
 import StockAlerts from './(modules)/StockAlerts';
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@components/ui/skeleton';
+import Header from '@components/ui/header';
+import ArrowButton from '@components/ArrowButton';
+import { Plus } from 'lucide-react';
+import NewLocationDialog from '@components/NewLocation';
 
 export type DateRangeEntry = {
 	quantity: number;
@@ -41,14 +45,16 @@ export default function DashboardModules() {
 		data,
 		isPending,
 	}: { data: DashboardModuleData | undefined; isPending: boolean } = useQuery({
-		queryKey: ['checkout-history'],
+		queryKey: ['dashboard'],
 		queryFn: async () => {
 			const results = await fetch('/api/locations/stats');
+			if (results.status === 204) return undefined;
 			const json = await results.json();
 			return json;
 		},
 	});
-	if (isPending || data === undefined) return <DashboardModulesSkeleton />;
+	if (isPending) return <DashboardModulesSkeleton />;
+	if (!data) return <NoDashboardData />;
 	return (
 		<>
 			<div className='grid grid-cols-3 col-span-2 gap-8'>
@@ -97,6 +103,17 @@ export default function DashboardModules() {
 function DashboardModulesSkeleton() {
 	return (
 		<>
+			<div className='grid grid-cols-3 col-span-2 gap-8'>
+				<Container>
+					<span>Locations</span>
+				</Container>
+				<Container>
+					<span>Products</span>
+				</Container>
+				<Container>
+					<span>Total Stock</span>
+				</Container>
+			</div>
 			<Container>
 				<Heading
 					header='Checkout History'
@@ -150,5 +167,18 @@ function DashboardModulesSkeleton() {
 				<CheckoutUsers />
 			</Container>
 		</>
+	);
+}
+
+function NoDashboardData() {
+	return (
+		<div className='flex flex-col items-center col-span-2 mt-32'>
+			<Header className='mb-4'>You have no locations!</Header>
+			<NewLocationDialog>
+				<ArrowButton Icon={Plus} variant='primary'>
+					Create your first
+				</ArrowButton>
+			</NewLocationDialog>
+		</div>
 	);
 }
