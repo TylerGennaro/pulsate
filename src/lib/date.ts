@@ -46,8 +46,7 @@ export function getUTCDateTime() {
 
 export function dateToUTC(date: Date | undefined | null) {
 	if (!date) return null;
-	// return zonedTimeToUtc(date, 'America/New_York');
-	// use dayjs
+	return new Date(date.getTime() + date.getTimezoneOffset() * 60000); // 60,000 ms in a minute, getTimezoneOffset returns minutes
 }
 
 export function formatUTCDate(date: Date | string | null) {
