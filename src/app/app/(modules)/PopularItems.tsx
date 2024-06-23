@@ -17,7 +17,7 @@ export default function PopularItems({
 	data: DashboardPopularItemData[];
 }) {
 	const [selectedLocation, setSelectedLocation] = useState<string>(
-		data[0].name
+		data[0]?.name ?? ''
 	);
 
 	return (

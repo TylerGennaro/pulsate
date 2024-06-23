@@ -10,7 +10,7 @@ import {
 } from '@components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DashboardDateRangeData } from '../DashboardModules';
 
 function TabChart({
@@ -22,12 +22,20 @@ function TabChart({
 	dataKey: keyof Omit<DashboardDateRangeData, 'name'>;
 	selectedLocation: string;
 }) {
+	const locationData = data.find((entry) => entry.name === selectedLocation);
+	if (!locationData) return <span>No data available.</span>;
+	const totals = useMemo(() => {
+		return {
+			week: locationData.week.reduce((acc, curr) => acc + curr.quantity, 0),
+			biweek: locationData.biweek.reduce((acc, curr) => acc + curr.quantity, 0),
+			month: locationData.month.reduce((acc, curr) => acc + curr.quantity, 0),
+		};
+	}, [locationData]);
+	const isEmpty = totals.week + totals.biweek + totals.month === 0;
 	return (
 		<div className='h-[200px] mt-8'>
 			<BarChart
-				data={
-					data.find((entry) => entry.name === selectedLocation)?.[dataKey] ?? []
-				}
+				data={isEmpty ? [] : locationData[dataKey] ?? []}
 				xAxisKey='date'
 			/>
 		</div>
@@ -40,7 +48,7 @@ export default function CheckoutHistory({
 	data: DashboardDateRangeData[];
 }) {
 	const [selectedLocation, setSelectedLocation] = useState<string>(
-		data[0].name
+		data[0]?.name ?? ''
 	);
 
 	return (

@@ -15,7 +15,7 @@ const data = [
 		tag: Tag.EXPIRES,
 	},
 	{
-		name: 'Cervical Collar',
+		name: 'Cervical Collar2',
 		location: 'Other Location',
 		quantity: 4,
 		tag: Tag.LOW,
