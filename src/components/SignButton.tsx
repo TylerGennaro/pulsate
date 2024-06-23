@@ -12,7 +12,12 @@ export function SignInButton({
 	...props
 }: ButtonProps & { redirect?: boolean; className?: string }) {
 	return (
-		<Button className={className} onClick={() => signIn()} {...props}>
+		<Button
+			variant='primary'
+			className={className}
+			onClick={() => signIn()}
+			{...props}
+		>
 			{children || 'Sign In'}
 		</Button>
 	);
