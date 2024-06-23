@@ -37,6 +37,7 @@ export async function GET() {
 			userId: session.user.id,
 		},
 	});
+	if (locations.length === 0) return new NextResponse(null, { status: 204 });
 	const checkoutHistory = await parseCheckoutHistory(locations);
 	const popularItems = await parsePopularItems(locations);
 	parseStockAlerts(locations.map((location) => location.id));
@@ -53,7 +54,7 @@ async function parseCheckoutHistory(data: LocationData[]) {
 			const rawData: { date: Date; quantity: string }[] =
 				await db.$queryRaw`SELECT date_trunc('day', "timestamp")::date as date, sum(quantity) as quantity FROM "Log" WHERE "type" = ${
 					LogType.ITEM_CHECKOUT
-				} AND "productId" IN (${Prisma.join(
+				}::"LogType" AND "productId" IN (${Prisma.join(
 					location.products.map((product) => product.id)
 				)}) AND "timestamp" >= NOW() - INTERVAL '1 month' GROUP BY date`;
 			const allEntries = rawData.map((result) => ({
@@ -81,7 +82,9 @@ async function parsePopularItems(data: LocationData[]) {
 			const rawData: { date: Date; quantity: string; name: string }[] =
 				await db.$queryRaw`SELECT sum(quantity) as quantity, "Product"."name" FROM "Log"
 				INNER JOIN "Product" ON "Product"."id" = "Log"."productId"
-				WHERE "type" = ${LogType.ITEM_CHECKOUT} AND "productId" IN (${Prisma.join(
+				WHERE "type" = ${
+					LogType.ITEM_CHECKOUT
+				}::"LogType" AND "productId" IN (${Prisma.join(
 					location.products.map((product) => product.id)
 				)}) AND "timestamp" >= NOW() - INTERVAL '1 month'
 				GROUP BY "Product"."name" ORDER BY quantity DESC LIMIT 10`;
@@ -158,5 +161,5 @@ async function parseStockAlerts(locationIds: string[]) {
 		AND "Product"."locationId" IN (${Prisma.join(locationIds)})
 		GROUP BY "Product"."name", "Product"."locationId"`;
 
-	console.log(expiringItems);
+	// console.log(expiringItems);
 }
