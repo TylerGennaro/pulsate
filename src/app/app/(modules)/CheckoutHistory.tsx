@@ -9,7 +9,6 @@ import {
 	SelectValue,
 } from '@components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
-import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DashboardDateRangeData } from '../DashboardModules';
 
@@ -23,14 +22,16 @@ function TabChart({
 	selectedLocation: string;
 }) {
 	const locationData = data.find((entry) => entry.name === selectedLocation);
-	if (!locationData) return <span>No data available.</span>;
 	const totals = useMemo(() => {
+		if (!locationData) return;
 		return {
 			week: locationData.week.reduce((acc, curr) => acc + curr.quantity, 0),
 			biweek: locationData.biweek.reduce((acc, curr) => acc + curr.quantity, 0),
 			month: locationData.month.reduce((acc, curr) => acc + curr.quantity, 0),
 		};
 	}, [locationData]);
+	if (totals === undefined || locationData === undefined)
+		return <span>No data available.</span>;
 	const isEmpty = totals.week + totals.biweek + totals.month === 0;
 	return (
 		<div className='h-[200px] mt-8'>
