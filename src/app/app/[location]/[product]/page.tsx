@@ -148,7 +148,7 @@ export default async function Inventory({
 	const units = packageTypes[data.package as PackageType];
 	return (
 		<div className='lg:px-2'>
-			<div className='flex items-center gap-4 mt-4 mb-4'>
+			<div className='flex items-center gap-4 my-4'>
 				<Link href={`/app/${params.location}`} className='block w-fit'>
 					<Button size='icon' variant='outline' className='bg-content'>
 						<ChevronLeft size={16} />
@@ -156,7 +156,7 @@ export default async function Inventory({
 				</Link>
 				<Header size='md'>{data.name}</Header>
 				<div className='flex gap-2'>
-					{tags.length &&
+					{tags.length > 0 &&
 						tags.map((tag) => {
 							return <TagBadge key={tag} tag={tag} />;
 						})}
