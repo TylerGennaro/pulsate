@@ -1,7 +1,7 @@
 import { authOptions } from '@lib/auth';
 import { Tag } from '@lib/enum';
 import { db } from '@lib/prisma';
-import { LogType, Prisma } from '@prisma/client';
+import { Location, LogType, Prisma } from '@prisma/client';
 import { format } from 'date-fns';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
@@ -38,10 +38,28 @@ export async function GET() {
 		},
 	});
 	if (locations.length === 0) return new NextResponse(null, { status: 204 });
+	// const parseAllData = await Promise.all([
+	// 	parseCheckoutHistory(locations),
+	// 	parsePopularItems(locations),
+	// 	parseStockAlerts(locations),
+	// ]);
+	// const checkoutHistory = parseAllData[0];
+	// const popularItems = parseAllData[1];
+	// const stockAlerts = parseAllData[2];
+	const now = Date.now();
 	const checkoutHistory = await parseCheckoutHistory(locations);
+	const time1 = Date.now() - now;
 	const popularItems = await parsePopularItems(locations);
-	parseStockAlerts(locations.map((location) => location.id));
-	return NextResponse.json({ checkoutHistory, popularItems }, { status: 200 });
+	const time2 = Date.now() - now - time1;
+	const stockAlerts = await parseStockAlerts(locations);
+	const time3 = Date.now() - now - time1 - time2;
+	console.log('Time taken for checkout history:', time1);
+	console.log('Time taken for popular items:', time2);
+	console.log('Time taken for stock alerts:', time3);
+	return NextResponse.json(
+		{ checkoutHistory, popularItems, stockAlerts },
+		{ status: 200 }
+	);
 }
 
 async function parseCheckoutHistory(data: LocationData[]) {
@@ -122,13 +140,32 @@ function parseCheckoutHistoryResultsByDateRange(
 	});
 }
 
-async function parseStockAlerts(locationIds: string[]) {
+type StockAlertsReturn =
+	| {
+			name: string;
+			location: string;
+			expires: string;
+	  }
+	| {
+			name: string;
+			location: string;
+			quantity: number;
+	  };
+
+async function parseStockAlerts(
+	locations: LocationData[]
+): Promise<StockAlertsReturn[]> {
+	const locationNames: Record<string, string> = locations.reduce(
+		(acc, location) => ({ ...acc, [location.id]: location.name }),
+		{}
+	);
+	const locationIds = Object.keys(locationNames);
 	const lowQuantityWithItems: {
 		name: string;
 		quantity: number;
 		location: string;
-	} = await db.$queryRaw`
-		SELECT name, sum("quantity") as quantity, "Product"."locationId" as location FROM "Item"
+	}[] = await db.$queryRaw`
+		SELECT name, CAST(SUM("quantity") as INTEGER) as quantity, "Product"."locationId" as location FROM "Item"
 		INNER JOIN "Product" ON "Product"."id" = "Item"."productId"
 		WHERE "Product"."locationId" IN (${Prisma.join(locationIds)})
 		GROUP BY "Product"."name", "Product"."min", "Product"."locationId"
@@ -154,12 +191,29 @@ async function parseStockAlerts(locationIds: string[]) {
 		location: product.locationId,
 	}));
 
-	const expiringItems = await db.$queryRaw`
+	const expiringItems: {
+		name: string;
+		location: string;
+		expires: string;
+	}[] = await db.$queryRaw`
 		SELECT "Product"."name", "Product"."locationId" as location, min("Item"."expires") as expires FROM "Item"
 		INNER JOIN "Product" ON "Product"."id" = "Item"."productId"
 		WHERE "Item"."expires" IS NOT NULL AND "Item"."expires" <= NOW() + INTERVAL '7 days'
 		AND "Product"."locationId" IN (${Prisma.join(locationIds)})
 		GROUP BY "Product"."name", "Product"."locationId"`;
 
-	// console.log(expiringItems);
+	return [
+		...lowQuantityNoItems.map((product) => ({
+			...product,
+			location: locationNames[product.location],
+		})),
+		...lowQuantityWithItems.map((product) => ({
+			...product,
+			location: locationNames[product.location],
+		})),
+		...expiringItems.map((product) => ({
+			...product,
+			location: locationNames[product.location],
+		})),
+	];
 }
