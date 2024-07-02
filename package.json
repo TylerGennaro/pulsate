@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --turbo",
+		"dev": "dotenv -e .env.development -- \"prisma generate --schema ./prisma/postgresql/schema.prisma && next dev --turbo\"",
+		"dev-prod-db": "dotenv -e .env.production -- \"prisma generate --schema ./prisma/cockroachdb/schema.prisma && next dev --turbo\"",
 		"build-local": "prisma generate --schema ./prisma/postgresql/schema.prisma && next build",
 		"build-prod": "prisma generate --schema ./prisma/cockroachdb/schema.prisma && next build",
 		"start-local": "dotenv -e .env.development -- next start",
