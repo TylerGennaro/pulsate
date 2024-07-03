@@ -30,7 +30,13 @@ const PlanPurchaseButton = React.forwardRef<HTMLButtonElement, Props>(
 			setLoading(false);
 		}
 		return (
-			<Button onClick={handleClick} isLoading={loading} {...props} ref={ref}>
+			<Button
+				variant='primary'
+				onClick={handleClick}
+				isLoading={loading}
+				{...props}
+				ref={ref}
+			>
 				{children}
 			</Button>
 		);
