@@ -124,8 +124,7 @@ export function Nav({ toggle }: { toggle: (open: boolean) => void }) {
 		queryKey: ['locations'],
 		queryFn: async () => {
 			const res = await fetch('/api/locations');
-			const json: { locations: LocationInfo[] } = await res.json();
-			return json.locations;
+			return res.json();
 		},
 	});
 	return (

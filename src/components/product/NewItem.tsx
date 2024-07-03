@@ -20,10 +20,12 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useRef, useState } from 'react';
 import ItemForm from './ItemForm';
 import ArrowButton from '@components/ArrowButton';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function NewItemDialog({ product }: { product: string }) {
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const queryClient = useQueryClient();
 	const router = useRouter();
 
 	const session = useSession();
@@ -46,6 +48,10 @@ export default function NewItemDialog({ product }: { product: string }) {
 		if (result.status === 200) {
 			setOpen(false);
 			router.refresh();
+			queryClient.invalidateQueries({ queryKey: ['locations'] });
+			queryClient.invalidateQueries({
+				queryKey: ['activity', product],
+			});
 		}
 		setLoading(false);
 	}

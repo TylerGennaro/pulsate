@@ -4,11 +4,12 @@ import { Badge } from '@components/ui/badge';
 import { DataTable } from '@components/ui/data-table';
 import { formatDateTime } from '@lib/date';
 import { templates } from '@lib/logTemplates';
-import { LogType } from '@prisma/client';
+import { Log, LogType } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import { useState } from 'react';
 import Pagination from './Pagination';
+import Loader from './ui/loader';
 
 type ActivityLog = {
 	id: string;
@@ -31,19 +32,26 @@ export default function ActivityTable({
 	locationId: string;
 	productId?: string;
 }) {
-	const { data, isLoading } = useQuery({
-		queryKey: ['activity', locationId, productId],
+	const [page, setPage] = useState(1);
+	const PER_PAGE = 10;
+
+	const {
+		data,
+		isLoading,
+	}: {
+		data: { logs: ActivityLog[]; total: number } | undefined;
+		isLoading: boolean;
+	} = useQuery({
+		queryKey: ['activity', productId, page],
 		queryFn: async () => {
 			const response = await fetch(
 				`/api/locations/activity?location=${locationId}${
 					productId ? `&product=${productId}` : ''
-				}`
+				}&page=${page}&perPage=${PER_PAGE}`
 			);
 			return response.json();
 		},
 	});
-	const [page, setPage] = useState(1);
-	const PER_PAGE = 20;
 
 	const columns: ColumnDef<ActivityLog>[] = [
 		{
@@ -83,7 +91,7 @@ export default function ActivityTable({
 		<>
 			<DataTable
 				columns={columns}
-				data={data ?? []}
+				data={data?.logs ?? []}
 				isLoading={isLoading}
 				onRowClick={(row) => {
 					console.log(row);
@@ -91,7 +99,7 @@ export default function ActivityTable({
 				classNames={{ cell: 'p-2' }}
 			/>
 			<Pagination
-				total={45}
+				total={data?.total || 1}
 				page={page}
 				onChange={setPage}
 				perPage={PER_PAGE}

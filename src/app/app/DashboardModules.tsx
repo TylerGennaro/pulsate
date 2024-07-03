@@ -1,17 +1,17 @@
 'use client';
 
+import ArrowButton from '@components/ArrowButton';
 import Container from '@components/Container';
+import NewLocationDialog from '@components/NewLocation';
+import Header from '@components/ui/header';
 import Heading from '@components/ui/heading';
+import { Skeleton } from '@components/ui/skeleton';
+import { useQuery } from '@tanstack/react-query';
+import { Archive, Package, Plus, Warehouse } from 'lucide-react';
 import CheckoutHistory from './(modules)/CheckoutHistory';
 import CheckoutUsers from './(modules)/CheckoutUsers';
 import PopularItems from './(modules)/PopularItems';
 import StockAlerts from './(modules)/StockAlerts';
-import { useQuery } from '@tanstack/react-query';
-import { Skeleton } from '@components/ui/skeleton';
-import Header from '@components/ui/header';
-import ArrowButton from '@components/ArrowButton';
-import { Plus } from 'lucide-react';
-import NewLocationDialog from '@components/NewLocation';
 
 export type DateRangeEntry = {
 	quantity: number;
@@ -35,9 +35,22 @@ export type DashboardPopularItemEntry = {
 	quantity: number;
 };
 
+export type StockAlert =
+	| {
+			name: string;
+			location: string;
+			expires: string;
+	  }
+	| {
+			name: string;
+			location: string;
+			quantity: number;
+	  };
+
 type DashboardModuleData = {
 	checkoutHistory: DashboardDateRangeData[];
 	popularItems: DashboardPopularItemData[];
+	stockAlerts: StockAlert[];
 };
 
 export default function DashboardModules() {
@@ -59,13 +72,31 @@ export default function DashboardModules() {
 		<>
 			<div className='grid grid-cols-3 col-span-2 gap-8'>
 				<Container>
-					<span>Locations</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Locations
+						</p>
+						<Warehouse size={16} className='text-muted-foreground' />
+					</div>
+					<p className='text-2xl font-bold'>3</p>
 				</Container>
 				<Container>
-					<span>Products</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Products
+						</p>
+						<Archive size={16} className='text-muted-foreground' />
+					</div>
+					<p className='text-2xl font-bold'>156</p>
 				</Container>
 				<Container>
-					<span>Total Stock</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Total Stock
+						</p>
+						<Package size={16} className='text-muted-foreground' />
+					</div>
+					<p className='text-2xl font-bold'>692</p>
 				</Container>
 			</div>
 			<Container>
@@ -87,7 +118,7 @@ export default function DashboardModules() {
 					header='Stock Alerts'
 					description='Products with low or expiring stock.'
 				/>
-				<StockAlerts />
+				<StockAlerts data={data.stockAlerts} />
 			</Container>
 			<Container className='h-fit'>
 				<Heading
@@ -105,13 +136,31 @@ function DashboardModulesSkeleton() {
 		<>
 			<div className='grid grid-cols-3 col-span-2 gap-8'>
 				<Container>
-					<span>Locations</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Locations
+						</p>
+						<Warehouse size={16} className='text-muted-foreground' />
+					</div>
+					<Skeleton className='w-8 h-8' />
 				</Container>
 				<Container>
-					<span>Products</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Products
+						</p>
+						<Archive size={16} className='text-muted-foreground' />
+					</div>
+					<Skeleton className='w-16 h-8' />
 				</Container>
 				<Container>
-					<span>Total Stock</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Total Stock
+						</p>
+						<Package size={16} className='text-muted-foreground' />
+					</div>
+					<Skeleton className='w-16 h-8' />
 				</Container>
 			</div>
 			<Container>

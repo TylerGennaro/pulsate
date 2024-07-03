@@ -28,8 +28,7 @@ export default function LocationHeader({ location }: LocationHeaderProps) {
 		queryKey: ['locations', location],
 		queryFn: async () => {
 			const res = await fetch(`/api/locations?id=${location}&single=true`);
-			const json: { locations: LocationData } = await res.json();
-			return json.locations;
+			return await res.json();
 		},
 	});
 	if (isLoading)
