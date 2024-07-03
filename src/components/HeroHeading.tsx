@@ -26,7 +26,7 @@ export default function HeroHeading({
 		>
 			<Header
 				size={size}
-				className='block leading-tight tracking-tight text-center duration-500 animate-in fade-in slide-in-from-bottom-6 bg-gradient-to-br from-black to-zinc-700 dark:from-white dark:to-zinc-400 bg-clip-text !text-transparent'
+				className='block !leading-tight tracking-tight text-center duration-500 animate-in fade-in slide-in-from-bottom-6 bg-gradient-to-br from-black to-zinc-700 dark:from-white dark:to-zinc-400 bg-clip-text !text-transparent'
 			>
 				<Balancer>{title}</Balancer>
 			</Header>
