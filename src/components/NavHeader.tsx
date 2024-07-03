@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Logo from './Logo';
+import ArrowButton from './ArrowButton';
 
 export default function NavHeader({
 	items,
@@ -36,10 +37,11 @@ export default function NavHeader({
 			if (window.scrollY > 0) setScrolled(true);
 			else setScrolled(false);
 		});
+		if (typeof window !== 'undefined' && window.scrollY > 0) setScrolled(true); // Fixes client/server inconsistency on initial load
 	}, [sidebarOpen]);
 	return (
 		<div
-			className={`sticky top-0 z-50 w-full bg-background/0 border-b transition ${
+			className={`sticky top-0 z-50 w-full bg-transparent border-b transition ${
 				scrolled ? 'shadow-md !bg-background' : 'border-zinc-200/0'
 			}`}
 			ref={sidebarRef}
@@ -92,17 +94,11 @@ export default function NavHeader({
 				<div className='flex items-center justify-end gap-2'>
 					<ThemeToggle />
 					{session ? (
-						<Link href='/app' className='group'>
-							<Button variant='outline'>
-								Dashboard{' '}
-								<ArrowRight className='transition-transform group-hover:translate-x-1 icon-right' />
-							</Button>
+						<Link href='/app'>
+							<ArrowButton>Dashboard</ArrowButton>
 						</Link>
 					) : (
-						<SignInButton variant='outline'>
-							Sign In
-							<ArrowRight className='w-4 h-4 ml-2' />
-						</SignInButton>
+						<SignInButton />
 					)}
 				</div>
 			</div>
