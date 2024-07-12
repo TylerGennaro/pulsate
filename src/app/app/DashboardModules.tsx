@@ -51,6 +51,11 @@ type DashboardModuleData = {
 	checkoutHistory: DashboardDateRangeData[];
 	popularItems: DashboardPopularItemData[];
 	stockAlerts: StockAlert[];
+	totals: {
+		totalLocations: number;
+		totalProducts: number;
+		totalStock: number;
+	};
 };
 
 export default function DashboardModules() {
@@ -78,7 +83,7 @@ export default function DashboardModules() {
 						</p>
 						<Warehouse size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>3</p>
+					<p className='text-2xl font-bold'>{data.totals.totalLocations}</p>
 				</Container>
 				<Container>
 					<div className='flex justify-between mb-2'>
@@ -87,7 +92,7 @@ export default function DashboardModules() {
 						</p>
 						<Archive size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>156</p>
+					<p className='text-2xl font-bold'>{data.totals.totalProducts}</p>
 				</Container>
 				<Container>
 					<div className='flex justify-between mb-2'>
@@ -96,7 +101,7 @@ export default function DashboardModules() {
 						</p>
 						<Package size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>692</p>
+					<p className='text-2xl font-bold'>{data.totals.totalStock}</p>
 				</Container>
 			</div>
 			<Container>

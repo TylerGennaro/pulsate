@@ -30,6 +30,11 @@ export async function GET() {
 				select: {
 					id: true,
 					name: true,
+					items: {
+						select: {
+							quantity: true,
+						},
+					},
 				},
 			},
 		},
@@ -48,18 +53,55 @@ export async function GET() {
 	// const stockAlerts = parseAllData[2];
 	const now = Date.now();
 	const checkoutHistory = await parseCheckoutHistory(locations);
-	const time1 = Date.now() - now;
+	// const time1 = Date.now() - now;
 	const popularItems = await parsePopularItems(locations);
-	const time2 = Date.now() - now - time1;
+	// const time2 = Date.now() - now - time1;
 	const stockAlerts = await parseStockAlerts(locations);
-	const time3 = Date.now() - now - time1 - time2;
-	console.log('Time taken for checkout history:', time1);
-	console.log('Time taken for popular items:', time2);
-	console.log('Time taken for stock alerts:', time3);
+	// const time3 = Date.now() - now - time1 - time2;
+	const totals = parseTotals(locations);
+	// const time4 = Date.now() - now - time1 - time2 - time3;
+	const time4 = Date.now() - now;
+	// console.log('Time taken for checkout history:', time1);
+	// console.log('Time taken for popular items:', time2);
+	// console.log('Time taken for stock alerts:', time3);
+	// console.log('Time taken for totals:', time4);
+	console.log('Time taken for all:', time4);
 	return NextResponse.json(
-		{ checkoutHistory, popularItems, stockAlerts },
+		{ checkoutHistory, popularItems, stockAlerts, totals },
 		{ status: 200 }
 	);
+}
+
+interface LocationTotalsParam extends LocationData {
+	products: {
+		id: string;
+		name: string;
+		items: {
+			quantity: number;
+		}[];
+	}[];
+}
+
+function parseTotals(data: LocationTotalsParam[]) {
+	const totalProducts = data.reduce(
+		(acc, location) => acc + location.products.length,
+		0
+	);
+	const totalStock = data.reduce(
+		(acc, location) =>
+			acc +
+			location.products.reduce(
+				(acc, product) =>
+					acc + product.items.reduce((acc, item) => acc + item.quantity, 0),
+				0
+			),
+		0
+	);
+	return {
+		totalLocations: data.length,
+		totalProducts,
+		totalStock,
+	};
 }
 
 async function parseCheckoutHistory(data: LocationData[]) {
