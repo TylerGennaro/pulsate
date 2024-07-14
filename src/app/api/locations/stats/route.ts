@@ -1,7 +1,6 @@
 import { authOptions } from '@lib/auth';
-import { Tag } from '@lib/enum';
 import { db } from '@lib/prisma';
-import { Location, LogType, Prisma } from '@prisma/client';
+import { LogType, Prisma } from '@prisma/client';
 import { format } from 'date-fns';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
@@ -43,29 +42,16 @@ export async function GET() {
 		},
 	});
 	if (locations.length === 0) return new NextResponse(null, { status: 204 });
-	// const parseAllData = await Promise.all([
-	// 	parseCheckoutHistory(locations),
-	// 	parsePopularItems(locations),
-	// 	parseStockAlerts(locations),
-	// ]);
-	// const checkoutHistory = parseAllData[0];
-	// const popularItems = parseAllData[1];
-	// const stockAlerts = parseAllData[2];
-	const now = Date.now();
-	const checkoutHistory = await parseCheckoutHistory(locations);
-	// const time1 = Date.now() - now;
-	const popularItems = await parsePopularItems(locations);
-	// const time2 = Date.now() - now - time1;
-	const stockAlerts = await parseStockAlerts(locations);
-	// const time3 = Date.now() - now - time1 - time2;
-	const totals = parseTotals(locations);
-	// const time4 = Date.now() - now - time1 - time2 - time3;
-	const time4 = Date.now() - now;
-	// console.log('Time taken for checkout history:', time1);
-	// console.log('Time taken for popular items:', time2);
-	// console.log('Time taken for stock alerts:', time3);
-	// console.log('Time taken for totals:', time4);
-	console.log('Time taken for all:', time4);
+	const parseAllData = await Promise.all([
+		parseCheckoutHistory(locations),
+		parsePopularItems(locations),
+		parseStockAlerts(locations),
+		parseTotals(locations),
+	]);
+	const checkoutHistory = parseAllData[0];
+	const popularItems = parseAllData[1];
+	const stockAlerts = parseAllData[2];
+	const totals = parseAllData[3];
 	return NextResponse.json(
 		{ checkoutHistory, popularItems, stockAlerts, totals },
 		{ status: 200 }
