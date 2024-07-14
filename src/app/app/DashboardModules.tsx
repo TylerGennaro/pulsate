@@ -12,6 +12,7 @@ import CheckoutHistory from './(modules)/CheckoutHistory';
 import CheckoutUsers from './(modules)/CheckoutUsers';
 import PopularItems from './(modules)/PopularItems';
 import StockAlerts from './(modules)/StockAlerts';
+import CountUp from '@components/CountUp';
 
 export type DateRangeEntry = {
 	quantity: number;
@@ -83,7 +84,9 @@ export default function DashboardModules() {
 						</p>
 						<Warehouse size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>{data.totals.totalLocations}</p>
+					<p className='text-2xl font-bold'>
+						<CountUp value={data.totals.totalLocations} />
+					</p>
 				</Container>
 				<Container>
 					<div className='flex justify-between mb-2'>
@@ -92,7 +95,9 @@ export default function DashboardModules() {
 						</p>
 						<Archive size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>{data.totals.totalProducts}</p>
+					<p className='text-2xl font-bold'>
+						<CountUp value={data.totals.totalProducts} />
+					</p>
 				</Container>
 				<Container>
 					<div className='flex justify-between mb-2'>
@@ -101,7 +106,9 @@ export default function DashboardModules() {
 						</p>
 						<Package size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>{data.totals.totalStock}</p>
+					<p className='text-2xl font-bold'>
+						<CountUp value={data.totals.totalStock} />
+					</p>
 				</Container>
 			</div>
 			<Container>
