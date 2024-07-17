@@ -5,7 +5,7 @@ import FormGroup from '@components/FormGroup';
 import Loader from '@components/ui/loader';
 import { useQuery } from '@tanstack/react-query';
 import { Plus, Save } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type LocationData = {
 	name: string;
@@ -16,7 +16,6 @@ export default function InformationSettings({
 }: {
 	locationId: string;
 }) {
-	// const locationNameInputRef = useRef<HTMLInputElement>(null);
 	const [locationName, setLocationName] = useState('');
 	const {
 		data,
@@ -25,13 +24,13 @@ export default function InformationSettings({
 		queryKey: ['locations', locationId],
 		queryFn: async () => {
 			const res = await fetch(`/api/locations?id=${locationId}&single=true`);
-			if (res.ok) {
-				const json: { locations: LocationData } = await res.json();
-				setLocationName(json?.locations.name);
-				return json.locations;
-			}
+			return await res.json();
 		},
 	});
+
+	useEffect(() => {
+		if (data) setLocationName(data.name);
+	}, [data]);
 
 	return (
 		<>
