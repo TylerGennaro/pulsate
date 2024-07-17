@@ -5,6 +5,7 @@
 @layer base {
 	:root {
 		--content: 0 0% 100%;
+		--content-muted: 0 0% 95%;
 		--background: 0 0% 98%;
 		--foreground: 0 0% 10%;
 		--card: 0 0% 100%;
@@ -30,6 +31,7 @@
 
 	.dark {
 		--content: 240 10% 5.9%;
+		--content-muted: 240 10% 9%;
 		--background: 240 10% 3.9%;
 		--foreground: 0 0% 98%;
 		--card: 240 10% 3.9%;
