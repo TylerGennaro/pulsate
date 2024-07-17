@@ -78,20 +78,36 @@ input[type='number'].no-arrows {
 	appearance: textfield;
 }
 
-@layer base {
-	* {
-		@apply border-border scroll-smooth;
+* {
+	@apply border-border scroll-smooth;
+}
+body {
+	@apply bg-background text-foreground;
+}
+.icon-left {
+	@apply w-4 h-4 mr-2;
+}
+.icon-right {
+	@apply w-4 h-4 ml-2;
+}
+.absolute-center {
+	@apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
 	}
-	body {
-		@apply bg-background text-foreground;
+	to {
+		opacity: 1;
 	}
-	.icon-left {
-		@apply w-4 h-4 mr-2;
+}
+
+@keyframes fade-out {
+	from {
+		opacity: 1;
 	}
-	.icon-right {
-		@apply w-4 h-4 ml-2;
-	}
-	.absolute-center {
-		@apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+	to {
+		opacity: 0;
 	}
 }
