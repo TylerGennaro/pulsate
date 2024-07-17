@@ -120,9 +120,9 @@ export function capitalize(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
-export function populateMetadata(title: string): Metadata {
+export function populateMetadata(title?: string): Metadata {
 	return {
-		title: `${title} | Pulsate`,
+		title: title !== undefined ? `${title} | Pulsate` : 'Pulsate',
 		description: 'Pulsate is a platform for managing EMS medical closets.',
 	};
 }
