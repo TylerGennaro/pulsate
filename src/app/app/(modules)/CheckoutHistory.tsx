@@ -11,6 +11,26 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { useMemo, useState } from 'react';
 import { DashboardDateRangeData } from '../DashboardModules';
+import {
+	Area,
+	AreaChart,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis,
+} from 'recharts';
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+	if (active && payload && payload.length) {
+		return (
+			<div className='px-3 py-2 border rounded-md shadow-md bg-content'>
+				<span>{label}</span>
+				<span className='ml-6'>{payload[0].value}</span>
+			</div>
+		);
+	}
+	return null;
+};
 
 function TabChart({
 	data,
@@ -35,10 +55,48 @@ function TabChart({
 	const isEmpty = totals.week + totals.biweek + totals.month === 0;
 	return (
 		<div className='h-[200px] mt-8'>
-			<BarChart
+			<ResponsiveContainer width='100%' height='100%'>
+				{/* <BarChart
 				data={isEmpty ? [] : locationData[dataKey] ?? []}
 				xAxisKey='date'
-			/>
+			/> */}
+				<AreaChart
+					data={isEmpty ? [] : locationData[dataKey] ?? []}
+					margin={{
+						left: -32,
+					}}
+				>
+					<defs>
+						<linearGradient id='colorPrimary' x1='0' y1='0' x2='0' y2='1'>
+							<stop
+								offset='5%'
+								stopColor='hsl(var(--primary))'
+								stopOpacity={0.8}
+							/>
+							<stop
+								offset='95%'
+								stopColor='hsl(var(--primary))'
+								stopOpacity={0}
+							/>
+						</linearGradient>
+					</defs>
+					<XAxis dataKey='date' />
+					<YAxis />
+					<Tooltip
+						cursor={{ fill: 'hsl(var(--muted))', radius: 4 }}
+						content={<CustomTooltip />}
+						isAnimationActive={false}
+					/>
+					<Area
+						type='monotone'
+						dataKey='quantity'
+						fill='url(#colorPrimary)'
+						stroke='hsl(var(--primary))'
+						animationDuration={600}
+						animationEasing='ease-in-out'
+					/>
+				</AreaChart>
+			</ResponsiveContainer>
 		</div>
 	);
 }
@@ -53,7 +111,7 @@ export default function CheckoutHistory({
 	);
 
 	return (
-		<div className='mt-8'>
+		<div className='mt-8 animate-[fade-in_500ms]'>
 			<div className='flex flex-wrap items-center justify-between gap-8'>
 				<Select value={selectedLocation} onValueChange={setSelectedLocation}>
 					<SelectTrigger className='w-[250px] [&>span]:overflow-hidden [&>span]:overflow-ellipsis [&>span]:whitespace-nowrap [&>span]:pr-1'>
