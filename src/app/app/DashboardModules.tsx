@@ -48,6 +48,14 @@ export type StockAlert =
 			quantity: number;
 	  };
 
+export type CheckoutUser = {
+	userId: string;
+	name: string;
+	email: string;
+	image: string | null;
+	quantity: number;
+};
+
 type DashboardModuleData = {
 	checkoutHistory: DashboardDateRangeData[];
 	popularItems: DashboardPopularItemData[];
@@ -57,6 +65,7 @@ type DashboardModuleData = {
 		totalProducts: number;
 		totalStock: number;
 	};
+	checkoutUsers: CheckoutUser[];
 };
 
 export default function DashboardModules() {
@@ -84,7 +93,7 @@ export default function DashboardModules() {
 						</p>
 						<Warehouse size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>
+					<p className='text-2xl font-bold animate-[fade-in_500ms]'>
 						<CountUp value={data.totals.totalLocations} />
 					</p>
 				</Container>
@@ -95,7 +104,7 @@ export default function DashboardModules() {
 						</p>
 						<Archive size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>
+					<p className='text-2xl font-bold animate-[fade-in_500ms]'>
 						<CountUp value={data.totals.totalProducts} />
 					</p>
 				</Container>
@@ -106,7 +115,7 @@ export default function DashboardModules() {
 						</p>
 						<Package size={16} className='text-muted-foreground' />
 					</div>
-					<p className='text-2xl font-bold'>
+					<p className='text-2xl font-bold animate-[fade-in_500ms]'>
 						<CountUp value={data.totals.totalStock} />
 					</p>
 				</Container>
@@ -137,7 +146,7 @@ export default function DashboardModules() {
 					header='Users'
 					description='Users who have checked out items'
 				/>
-				<CheckoutUsers />
+				<CheckoutUsers data={data.checkoutUsers} />
 			</Container>
 		</>
 	);
@@ -225,7 +234,23 @@ function DashboardModulesSkeleton() {
 					header='Users'
 					description='Users who have checked out items'
 				/>
-				<CheckoutUsers />
+				<div className='mt-8'>
+					{Array.from({ length: 2 }).map((_, i) => (
+						<div
+							key={i}
+							className='flex items-center justify-between py-4 border-b last-of-type:border-none'
+						>
+							<div className='flex items-center gap-4'>
+								<Skeleton className='w-10 h-10 rounded-full' />
+								<div className='flex flex-col gap-2'>
+									<Skeleton className='h-6 w-28' />
+									<Skeleton className='w-48 h-4' />
+								</div>
+							</div>
+							<Skeleton className='w-20 h-6' />
+						</div>
+					))}
+				</div>
 			</Container>
 		</>
 	);

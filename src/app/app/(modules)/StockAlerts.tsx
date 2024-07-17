@@ -6,7 +6,7 @@ import { dateToUTC, isExpired } from '@lib/date';
 
 export default function StockAlerts({ data }: { data: StockAlert[] }) {
 	return (
-		<ul className='mt-8'>
+		<ul className='mt-8 animate-[fade-in_500ms]'>
 			{data.map((item) => {
 				const expDate =
 					'expires' in item
