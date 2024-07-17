@@ -192,10 +192,10 @@ async function parseStockAlerts(
 	const locationIds = Object.keys(locationNames);
 	const lowQuantityWithItems: {
 		name: string;
-		quantity: number;
+		quantity: bigint;
 		location: string;
 	}[] = await db.$queryRaw`
-		SELECT name, CAST(SUM("quantity") as INTEGER) as quantity, "Product"."locationId" as location FROM "Item"
+		SELECT name, SUM("quantity") as quantity, "Product"."locationId" as location FROM "Item"
 		INNER JOIN "Product" ON "Product"."id" = "Item"."productId"
 		WHERE "Product"."locationId" IN (${Prisma.join(locationIds)})
 		GROUP BY "Product"."name", "Product"."min", "Product"."locationId"
@@ -239,6 +239,7 @@ async function parseStockAlerts(
 		})),
 		...lowQuantityWithItems.map((product) => ({
 			...product,
+			quantity: Number(product.quantity),
 			location: locationNames[product.location],
 		})),
 		...expiringItems.map((product) => ({
