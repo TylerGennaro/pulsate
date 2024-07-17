@@ -27,8 +27,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export default function BarChart({ data, xAxisKey }: BarChartProps) {
 	if (data.length === 0)
 		return (
-			<div className='grid w-full h-full place-content-center'>
-				No data available.
+			<div className='grid w-full h-full place-content-center text-muted-foreground'>
+				No checkout data to aggregate.
 			</div>
 		);
 	return (
@@ -56,7 +56,7 @@ export default function BarChart({ data, xAxisKey }: BarChartProps) {
 				<XAxis dataKey={xAxisKey} />
 				<YAxis allowDecimals={false} />
 				<Tooltip
-					cursor={{ fill: 'hsl(var(--muted))', radius: 4 }}
+					cursor={{ fill: 'hsl(var(--content-muted))', radius: 4 }}
 					content={<CustomTooltip />}
 					isAnimationActive={false}
 				/>
