@@ -1,13 +1,18 @@
 'use client';
 
+import ArrowButton from '@components/ArrowButton';
 import Container from '@components/Container';
+import NewLocationDialog from '@components/NewLocation';
+import Header from '@components/ui/header';
 import Heading from '@components/ui/heading';
+import { Skeleton } from '@components/ui/skeleton';
+import { useQuery } from '@tanstack/react-query';
+import { Archive, Package, Plus, Warehouse } from 'lucide-react';
 import CheckoutHistory from './(modules)/CheckoutHistory';
 import CheckoutUsers from './(modules)/CheckoutUsers';
 import PopularItems from './(modules)/PopularItems';
 import StockAlerts from './(modules)/StockAlerts';
-import { useQuery } from '@tanstack/react-query';
-import { Skeleton } from '@components/ui/skeleton';
+import CountUp from '@components/CountUp';
 
 export type DateRangeEntry = {
 	quantity: number;
@@ -31,9 +36,36 @@ export type DashboardPopularItemEntry = {
 	quantity: number;
 };
 
+export type StockAlert =
+	| {
+			name: string;
+			location: string;
+			expires: string;
+	  }
+	| {
+			name: string;
+			location: string;
+			quantity: number;
+	  };
+
+export type CheckoutUser = {
+	userId: string;
+	name: string;
+	email: string;
+	image: string | null;
+	quantity: number;
+};
+
 type DashboardModuleData = {
 	checkoutHistory: DashboardDateRangeData[];
 	popularItems: DashboardPopularItemData[];
+	stockAlerts: StockAlert[];
+	totals: {
+		totalLocations: number;
+		totalProducts: number;
+		totalStock: number;
+	};
+	checkoutUsers: CheckoutUser[];
 };
 
 export default function DashboardModules() {
@@ -41,25 +73,51 @@ export default function DashboardModules() {
 		data,
 		isPending,
 	}: { data: DashboardModuleData | undefined; isPending: boolean } = useQuery({
-		queryKey: ['checkout-history'],
+		queryKey: ['dashboard'],
 		queryFn: async () => {
 			const results = await fetch('/api/locations/stats');
+			if (results.status === 204) return undefined;
 			const json = await results.json();
 			return json;
 		},
 	});
-	if (isPending || data === undefined) return <DashboardModulesSkeleton />;
+	if (isPending) return <DashboardModulesSkeleton />;
+	if (!data) return <NoDashboardData />;
 	return (
 		<>
 			<div className='grid grid-cols-3 col-span-2 gap-8'>
 				<Container>
-					<span>Locations</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Locations
+						</p>
+						<Warehouse size={16} className='text-muted-foreground' />
+					</div>
+					<p className='text-2xl font-bold animate-[fade-in_500ms]'>
+						<CountUp value={data.totals.totalLocations} />
+					</p>
 				</Container>
 				<Container>
-					<span>Products</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Products
+						</p>
+						<Archive size={16} className='text-muted-foreground' />
+					</div>
+					<p className='text-2xl font-bold animate-[fade-in_500ms]'>
+						<CountUp value={data.totals.totalProducts} />
+					</p>
 				</Container>
 				<Container>
-					<span>Total Stock</span>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Total Stock
+						</p>
+						<Package size={16} className='text-muted-foreground' />
+					</div>
+					<p className='text-2xl font-bold animate-[fade-in_500ms]'>
+						<CountUp value={data.totals.totalStock} />
+					</p>
 				</Container>
 			</div>
 			<Container>
@@ -81,14 +139,14 @@ export default function DashboardModules() {
 					header='Stock Alerts'
 					description='Products with low or expiring stock.'
 				/>
-				<StockAlerts />
+				<StockAlerts data={data.stockAlerts} />
 			</Container>
 			<Container className='h-fit'>
 				<Heading
 					header='Users'
 					description='Users who have checked out items'
 				/>
-				<CheckoutUsers />
+				<CheckoutUsers data={data.checkoutUsers} />
 			</Container>
 		</>
 	);
@@ -97,6 +155,35 @@ export default function DashboardModules() {
 function DashboardModulesSkeleton() {
 	return (
 		<>
+			<div className='grid grid-cols-3 col-span-2 gap-8'>
+				<Container>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Locations
+						</p>
+						<Warehouse size={16} className='text-muted-foreground' />
+					</div>
+					<Skeleton className='w-8 h-8' />
+				</Container>
+				<Container>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Products
+						</p>
+						<Archive size={16} className='text-muted-foreground' />
+					</div>
+					<Skeleton className='w-16 h-8' />
+				</Container>
+				<Container>
+					<div className='flex justify-between mb-2'>
+						<p className='text-sm font-medium text-muted-foreground'>
+							Total Stock
+						</p>
+						<Package size={16} className='text-muted-foreground' />
+					</div>
+					<Skeleton className='w-16 h-8' />
+				</Container>
+			</div>
 			<Container>
 				<Heading
 					header='Checkout History'
@@ -147,8 +234,37 @@ function DashboardModulesSkeleton() {
 					header='Users'
 					description='Users who have checked out items'
 				/>
-				<CheckoutUsers />
+				<div className='mt-8'>
+					{Array.from({ length: 2 }).map((_, i) => (
+						<div
+							key={i}
+							className='flex items-center justify-between py-4 border-b last-of-type:border-none'
+						>
+							<div className='flex items-center gap-4'>
+								<Skeleton className='w-10 h-10 rounded-full' />
+								<div className='flex flex-col gap-2'>
+									<Skeleton className='h-6 w-28' />
+									<Skeleton className='w-48 h-4' />
+								</div>
+							</div>
+							<Skeleton className='w-20 h-6' />
+						</div>
+					))}
+				</div>
 			</Container>
 		</>
+	);
+}
+
+function NoDashboardData() {
+	return (
+		<div className='flex flex-col items-center col-span-2 mt-32'>
+			<Header className='mb-4'>You have no locations!</Header>
+			<NewLocationDialog>
+				<ArrowButton Icon={Plus} variant='primary'>
+					Create your first
+				</ArrowButton>
+			</NewLocationDialog>
+		</div>
 	);
 }

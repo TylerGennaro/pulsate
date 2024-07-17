@@ -46,8 +46,7 @@ export function getUTCDateTime() {
 
 export function dateToUTC(date: Date | undefined | null) {
 	if (!date) return null;
-	// return zonedTimeToUtc(date, 'America/New_York');
-	// use dayjs
+	return new Date(date.getTime() + date.getTimezoneOffset() * 60000); // 60,000 ms in a minute, getTimezoneOffset returns minutes
 }
 
 export function formatUTCDate(date: Date | string | null) {
@@ -64,8 +63,17 @@ export function isExpired(date: Date | string | null): number {
 		if (date.length === 0) return 0;
 		date = new Date(date);
 	}
-	const today = new Date();
-	const diff = date.getTime() - today.getTime();
+	const newDate = new Date();
+	const today = new Date(
+		newDate.getFullYear(),
+		newDate.getMonth(),
+		newDate.getDate(),
+		0,
+		0,
+		0
+	);
+	const diff =
+		date.getTime() - (today.getTime() - today.getTimezoneOffset() * 60000);
 	if (diff < 0) return Constants.IS_EXPIRED;
 	if (diff <= 1000 * 60 * 60 * 24 * 7) return Constants.IS_EXPIRING; // 7 days
 	return 0;

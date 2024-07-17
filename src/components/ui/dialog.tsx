@@ -6,7 +6,10 @@ import { X } from 'lucide-react';
 
 import { cn } from '@lib/utils';
 
-const Dialog = DialogPrimitive.Root;
+const Dialog = ({ children, ...props }: DialogPrimitive.DialogProps) => (
+	<DialogPrimitive.Dialog {...props}>{children}</DialogPrimitive.Dialog>
+);
+Dialog.displayName = DialogPrimitive.Portal.displayName;
 
 const DialogTrigger = DialogPrimitive.Trigger;
 
@@ -29,7 +32,7 @@ const DialogOverlay = React.forwardRef<
 	<DialogPrimitive.Overlay
 		ref={ref}
 		className={cn(
-			'fixed inset-0 z-50 bg-background/40 backdrop-blur-sm transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in',
+			'fixed inset-0 z-50 bg-background/80 transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in',
 			className
 		)}
 		{...props}

@@ -12,6 +12,8 @@ export async function GET(req: Request) {
 	const { searchParams } = new URL(req.url);
 	const locationId = searchParams.get('location');
 	const productId = searchParams.get('product');
+	const page = parseInt(searchParams.get('page') ?? '1');
+	const perPage = parseInt(searchParams.get('perPage') ?? '10');
 
 	// Check if the location exists
 	if (!locationId)
@@ -48,6 +50,17 @@ export async function GET(req: Request) {
 		orderBy: {
 			timestamp: 'desc',
 		},
+		skip: (page - 1) * perPage,
+		take: perPage,
 	});
-	return NextResponse.json(logs, { status: 200 });
+
+	const logCount = await db.log.count({
+		where: {
+			product: {
+				locationId,
+			},
+			...(productId && { productId }),
+		},
+	});
+	return NextResponse.json({ logs, total: logCount }, { status: 200 });
 }

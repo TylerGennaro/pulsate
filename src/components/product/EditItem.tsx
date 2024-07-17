@@ -1,15 +1,5 @@
 'use client';
 
-import { MoreVertical, Pencil, Save, Trash2 } from 'lucide-react';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu';
-import { Button } from '@components/ui/button';
-import { useRouter } from 'next/navigation';
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -20,6 +10,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@components/ui/alert-dialog';
+import { Button } from '@components/ui/button';
 import {
 	Dialog,
 	DialogContent,
@@ -29,15 +20,27 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { FormEvent, useState } from 'react';
-import { crud, formDataToObject } from '@lib/utils';
-import ItemForm from './ItemForm';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuTrigger,
+} from '@components/ui/dropdown-menu';
+import { crud } from '@lib/utils';
 import { Item } from '@prisma/client';
+import { MoreVertical, Pencil, Save, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
+import ItemForm from './ItemForm';
+import { useQueryClient } from '@tanstack/react-query';
+import ArrowButton from '@components/ArrowButton';
 
 export default function EditItem({ item }: { item: Item }) {
 	const [open, setOpen] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
+	const queryClient = useQueryClient();
 	const router = useRouter();
 
 	async function update(e: FormEvent<HTMLFormElement>) {
@@ -58,6 +61,10 @@ export default function EditItem({ item }: { item: Item }) {
 		if (result.status === 200) {
 			setOpen(false);
 			router.refresh();
+			queryClient.invalidateQueries({ queryKey: ['locations'] });
+			queryClient.invalidateQueries({
+				queryKey: ['activity', item.productId],
+			});
 		}
 		setEditLoading(false);
 	}
@@ -73,6 +80,10 @@ export default function EditItem({ item }: { item: Item }) {
 		if (result.status === 200) {
 			setOpen(false);
 			router.refresh();
+			queryClient.invalidateQueries({ queryKey: ['locations'] });
+			queryClient.invalidateQueries({
+				queryKey: ['activity', item.productId],
+			});
 		}
 		setDeleteLoading(false);
 	}
@@ -113,13 +124,14 @@ export default function EditItem({ item }: { item: Item }) {
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
-							<Button
+							<ArrowButton
 								type='submit'
+								Icon={Trash2}
 								variant='destructive'
 								isLoading={deleteLoading}
 							>
 								Delete
-							</Button>
+							</ArrowButton>
 						</AlertDialogFooter>
 					</form>
 				</AlertDialogContent>
@@ -134,9 +146,14 @@ export default function EditItem({ item }: { item: Item }) {
 					</DialogHeader>
 					<ItemForm item={item} />
 					<DialogFooter>
-						<Button icon={Save} type='submit' isLoading={editLoading}>
+						<ArrowButton
+							variant='primary'
+							Icon={Save}
+							type='submit'
+							isLoading={editLoading}
+						>
 							Save
-						</Button>
+						</ArrowButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>

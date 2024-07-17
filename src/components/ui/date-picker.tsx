@@ -47,7 +47,7 @@ export function DatePicker({
 			<PopoverTrigger asChild>
 				<Button
 					className={cn(
-						'w-[280px] justify-start text-left font-normal',
+						'w-[280px] justify-start text-left font-normal bg-muted/30 hover:bg-muted',
 						!date && 'text-muted-foreground',
 						className
 					)}

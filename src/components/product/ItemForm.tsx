@@ -1,18 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { DatePicker } from '@components/ui/date-picker';
 import { Checkbox } from '@components/ui/checkbox';
+import { DatePicker } from '@components/ui/date-picker';
 import { Input } from '@components/ui/input';
+import { dateToUTC } from '@lib/date';
 import { Item } from '@prisma/client';
-import { dateToUTC, getUTCDate } from '@lib/date';
+import { useState } from 'react';
 
 export default function ItemForm({ item }: { item?: Item }) {
 	const [date, setDate] = useState<Date>(
 		dateToUTC(item?.expires) || new Date()
 	);
 	const [hasExpiration, setHasExpiration] = useState(item?.expires !== null);
-	console.log(item?.expires, date, getUTCDate());
 	return (
 		<div className='grid grid-cols-[min-content_repeat(3,_minmax(0,_1fr))] gap-2 items-center'>
 			<label className='col-span-1 text-right'>

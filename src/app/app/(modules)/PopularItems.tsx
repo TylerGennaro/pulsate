@@ -17,11 +17,11 @@ export default function PopularItems({
 	data: DashboardPopularItemData[];
 }) {
 	const [selectedLocation, setSelectedLocation] = useState<string>(
-		data[0].name
+		data[0]?.name ?? ''
 	);
 
 	return (
-		<div className='mt-8'>
+		<div className='mt-8 animate-[fade-in_500ms]'>
 			<div className='flex flex-wrap items-center justify-between gap-8'>
 				<Select value={selectedLocation} onValueChange={setSelectedLocation}>
 					<SelectTrigger className='w-[250px] [&>span]:overflow-hidden [&>span]:overflow-ellipsis [&>span]:whitespace-nowrap [&>span]:pr-1'>

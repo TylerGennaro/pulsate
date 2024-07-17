@@ -7,6 +7,7 @@ export const indicatorVariants = cva('w-1.5 h-1.5 rounded-full', {
 			red: 'bg-red-500',
 			blue: 'bg-blue-500',
 			yellow: 'bg-yellow-500',
+			orange: 'bg-orange-500',
 		},
 	},
 	defaultVariants: {
@@ -21,6 +22,7 @@ const indicatorBackgroundVariants = cva('flex-none rounded-full p-1', {
 			red: 'bg-red-500/20 animate-pulse',
 			blue: 'bg-blue-500/20 animate-pulse',
 			yellow: 'bg-yellow-500/20 animate-pulse',
+			orange: 'bg-orange-500/20 animate-pulse',
 		},
 	},
 	defaultVariants: {

@@ -4,6 +4,7 @@ import { Button, ButtonProps } from './ui/button';
 import { signIn, signOut } from 'next-auth/react';
 import { DropdownMenuItem } from './ui/dropdown-menu';
 import { LogOut } from 'lucide-react';
+import ArrowButton from './ArrowButton';
 
 export function SignInButton({
 	redirect = true,
@@ -12,9 +13,14 @@ export function SignInButton({
 	...props
 }: ButtonProps & { redirect?: boolean; className?: string }) {
 	return (
-		<Button className={className} onClick={() => signIn()} {...props}>
+		<ArrowButton
+			variant='primary'
+			className={className}
+			onClick={() => signIn()}
+			{...props}
+		>
 			{children || 'Sign In'}
-		</Button>
+		</ArrowButton>
 	);
 }
 

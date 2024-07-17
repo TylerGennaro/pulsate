@@ -20,6 +20,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Row, useReactTable } from '@tanstack/react-table';
 import { X } from 'lucide-react';
 import { columns } from './columns';
+import { usePathname } from 'next/navigation';
+import NewProduct from './NewProduct';
 
 function printSelectedCodes(size: number, rows: Row<Product>[]) {
 	const codes = rows.map((row) => {
@@ -41,6 +43,8 @@ function Toolbar({
 	const isFiltered =
 		table.getPreFilteredRowModel().rows.length >
 		table.getFilteredRowModel().rows.length;
+	const pathname = usePathname();
+	const locationId = pathname.split('/').pop();
 
 	return (
 		<div className='flex flex-wrap justify-between gap-4 mb-4'>
@@ -108,6 +112,7 @@ function Toolbar({
 					/>
 				</DialogContent>
 			</Dialog>
+			{locationId && <NewProduct location={locationId} />}
 		</div>
 	);
 }

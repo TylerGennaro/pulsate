@@ -1,4 +1,6 @@
 import { authOptions } from '@lib/auth';
+import { isExpired } from '@lib/date';
+import { Constants, Tag } from '@lib/enum';
 import { db } from '@lib/prisma';
 import { catchError, formDataToObject } from '@lib/utils';
 import { getServerSession } from 'next-auth';
@@ -28,36 +30,73 @@ export async function GET(req: Request) {
 	const id = searchParams.get('id');
 	const single = searchParams.get('single') ?? false;
 
-	const locations = await db.location.findMany({
-		where: {
-			userId: session.user.id,
-			id: id ? { equals: id } : undefined,
-		},
-		select: {
-			id: true,
-			name: true,
-			user: {
-				select: {
-					name: true,
+	if (single === 'true') {
+		const locations = await db.location.findMany({
+			where: {
+				userId: session.user.id,
+				id: id ? { equals: id } : undefined,
+			},
+			select: {
+				id: true,
+				name: true,
+				user: {
+					select: {
+						name: true,
+					},
 				},
 			},
-		},
-	});
-
-	if (single === 'true')
-		return NextResponse.json(
-			{ locations: locations[0] },
-			{
-				status: locations[0] ? 200 : 404,
-			}
-		);
-	else
-		return NextResponse.json(
-			{ locations },
-			{
-				status: 200,
-			}
-		);
+		});
+		return NextResponse.json(locations[0], {
+			status: locations[0] ? 200 : 404,
+		});
+	} else {
+		const locations = await db.location.findMany({
+			where: {
+				userId: session.user.id,
+				id: id ? { equals: id } : undefined,
+			},
+			select: {
+				id: true,
+				name: true,
+				products: {
+					select: {
+						items: {
+							select: {
+								quantity: true,
+								expires: true,
+							},
+						},
+						min: true,
+					},
+				},
+			},
+		});
+		const locationsWithTags = locations.map((location) => {
+			const tags: Tag[] = [];
+			const hasLow = location.products.some(
+				(product) =>
+					product.items.reduce((acc, item) => acc + item.quantity, 0) <
+					product.min
+			);
+			const expireStatus = location.products.reduce((acc, product) => {
+				const productExpireStatus = product.items.reduce((acc, item) => {
+					const getExpiredTag = isExpired(item.expires);
+					return Math.min(acc, getExpiredTag);
+				}, Infinity);
+				return Math.min(acc, productExpireStatus);
+			}, Infinity);
+			if (hasLow) tags.push(Tag.LOW);
+			if (expireStatus === Constants.IS_EXPIRED) tags.push(Tag.EXPIRED);
+			else if (expireStatus === Constants.IS_EXPIRING) tags.push(Tag.EXPIRES);
+			return {
+				...location,
+				tags,
+			};
+		});
+		return NextResponse.json(locationsWithTags, {
+			status: 200,
+		});
+	}
 }
 
 export async function POST(req: Request) {

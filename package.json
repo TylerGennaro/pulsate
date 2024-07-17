@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --turbo",
+		"dev": "dotenv -e .env.development -- \"prisma generate --schema ./prisma/postgresql/schema.prisma && next dev --turbo\"",
+		"dev-prod-db": "dotenv -e .env.production -- \"prisma generate --schema ./prisma/cockroachdb/schema.prisma && next dev --turbo\"",
 		"build-local": "prisma generate --schema ./prisma/postgresql/schema.prisma && next build",
 		"build-prod": "prisma generate --schema ./prisma/cockroachdb/schema.prisma && next build",
 		"start-local": "dotenv -e .env.development -- next start",
@@ -64,6 +65,7 @@
 		"react-icons": "^4.9.0",
 		"react-wrap-balancer": "^1.0.0",
 		"recharts": "^2.13.0-alpha.4",
+		"sonner": "^1.5.0",
 		"stripe": "^12.9.0",
 		"tailwind-merge": "^1.14.0",
 		"tailwindcss": "3.3.2",

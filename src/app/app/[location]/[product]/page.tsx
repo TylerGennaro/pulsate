@@ -1,5 +1,23 @@
+import ActivityTable from '@components/ActivityTable';
+import ArrowButton from '@components/ArrowButton';
+import Container from '@components/Container';
+import DeleteProduct from '@components/product/DeleteProduct';
+import EditProductButton from '@components/product/EditProductButton';
+import ItemTable from '@components/product/ItemTable';
+import NewItem from '@components/product/NewItem';
+import OrderItem from '@components/product/OrderItem';
+import PrintQRCode from '@components/product/PrintQRCode';
+import SignIn from '@components/SignIn';
+import TagBadge from '@components/TagBadge';
 import { Button } from '@components/ui/button';
+import Header from '@components/ui/header';
+import { authOptions } from '@lib/auth';
+import { formatUTCDate, isExpired } from '@lib/date';
+import { PackageType, Tag } from '@lib/enum';
+import { db } from '@lib/prisma';
+import { packageTypes } from '@lib/relations';
 import { cn, populateMetadata } from '@lib/utils';
+import { Item, Product } from '@prisma/client';
 import {
 	ChevronLeft,
 	ExternalLink,
@@ -8,30 +26,9 @@ import {
 	ShoppingCart,
 	Trash2,
 } from 'lucide-react';
-import Link from 'next/link';
-import { db } from '@lib/prisma';
-import ItemTable from '@components/product/ItemTable';
-import NewItem from '@components/product/NewItem';
-import { Item, Product } from '@prisma/client';
-import { PackageType, Tag } from '@lib/enum';
-import { formatUTCDate, isExpired } from '@lib/date';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@lib/auth';
-import SignIn from '@components/SignIn';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import TagBadge from '@components/TagBadge';
-import { packageTypes } from '@lib/relations';
-import { Suspense } from 'react';
-import { Skeleton } from '@components/ui/skeleton';
-import Container from '@components/Container';
-import Logs from '@components/product/Logs';
-import OrderItem from '@components/product/OrderItem';
-import EditProduct from '@components/location/EditProduct';
-import PrintQRCode from '@components/product/PrintQRCode';
-import Header from '@components/ui/header';
-import ArrowButton from '@components/ArrowButton';
-import ActivityTable from '@components/ActivityTable';
-import DeleteProduct from '@components/product/DeleteProduct';
 
 export async function generateMetadata({
 	params,
@@ -148,7 +145,7 @@ export default async function Inventory({
 	const units = packageTypes[data.package as PackageType];
 	return (
 		<div className='lg:px-2'>
-			<div className='flex items-center gap-4 mt-4 mb-4'>
+			<div className='flex items-center gap-4 my-4'>
 				<Link href={`/app/${params.location}`} className='block w-fit'>
 					<Button size='icon' variant='outline' className='bg-content'>
 						<ChevronLeft size={16} />
@@ -156,7 +153,7 @@ export default async function Inventory({
 				</Link>
 				<Header size='md'>{data.name}</Header>
 				<div className='flex gap-2'>
-					{tags.length &&
+					{tags.length > 0 &&
 						tags.map((tag) => {
 							return <TagBadge key={tag} tag={tag} />;
 						})}
@@ -204,26 +201,12 @@ export default async function Inventory({
 						description='General product information'
 						divider
 						action={
-							<div className='flex flex-wrap gap-2'>
+							<div>
 								{data.url && (
 									<Link href={data.url} target='_blank'>
 										<ArrowButton Icon={ExternalLink}>Go to Page</ArrowButton>
 									</Link>
 								)}
-								<EditProduct
-									id={params.product}
-									defaultValues={{
-										name: data.name,
-										min: data.min,
-										packageType: data.package as PackageType,
-										position: data.position || undefined,
-										url: data.url || undefined,
-									}}
-								>
-									<Button size='icon' className='min-w-[2.5rem]'>
-										<MoreVertical size={16} />
-									</Button>
-								</EditProduct>
 							</div>
 						}
 					>
@@ -250,6 +233,21 @@ export default async function Inventory({
 										: 'Never'
 								}
 							/>
+							<EditProductButton
+								id={params.product}
+								defaultValues={{
+									name: data.name,
+									min: data.min,
+									packageType: data.package as PackageType,
+									position: data.position || undefined,
+									url: data.url || undefined,
+								}}
+							>
+								<Button className='w-full'>
+									<Pencil className='icon-left' />
+									Edit
+								</Button>
+							</EditProductButton>
 						</div>
 					</Container>
 					<Container

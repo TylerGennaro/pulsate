@@ -13,7 +13,7 @@ function Perk({
 	return (
 		<li className='flex items-center gap-2 py-2 text-sm font-light border-b last-of-type:border-none'>
 			{included ? (
-				<Check className='w-4 h-4 text-blue-700' />
+				<Check className='w-4 h-4 text-primary' />
 			) : (
 				<X className='w-4 h-4 text-red-700' />
 			)}
@@ -41,7 +41,7 @@ export default function PlanCard({ name, monthly, price, perks }: Props) {
 			<div className='flex flex-col gap-1'>
 				<div className='flex justify-between'>
 					<span className='font-semibold'>{name}</span>
-					{name === 'Executive' && <Badge>Best value</Badge>}
+					{name === 'Executive' && <Badge variant='primary'>Best value</Badge>}
 				</div>
 				<div className='flex items-center gap-2'>
 					<span className='text-4xl font-bold'>${monthly}</span>

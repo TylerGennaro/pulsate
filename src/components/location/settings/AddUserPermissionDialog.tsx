@@ -15,19 +15,6 @@ import { Input } from '@components/ui/input';
 import { Mail } from 'lucide-react';
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 
-const USERS = [
-	{
-		name: 'John Doe',
-		email: 'johndoe@example.com',
-		imageUrl: '/images/avatar.jpg',
-	},
-	{
-		name: 'Jane Doe',
-		email: 'janedoe@example.com',
-		imageUrl: '/images/avatar.jpg',
-	},
-];
-
 type AddUserPermissionDialogProps = {
 	children: ReactNode;
 };
@@ -35,33 +22,8 @@ type AddUserPermissionDialogProps = {
 export default function AddUserPermissionDialog({
 	children,
 }: AddUserPermissionDialogProps) {
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [selectedUser, setSelectedUser] = useState('');
-	const [searchValue, setSearchValue] = useState('');
-
-	const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-		setSearchValue(e.target.value);
-		if (e.target.value !== '') {
-			setIsDropdownOpen(true);
-			setTimeout(() => e.target.focus(), 50);
-		} else {
-			setIsDropdownOpen(false);
-		}
-	};
-
-	const handleOpenChange = (open: boolean) => {
-		if (!open) setIsDropdownOpen(false);
-	};
-
-	useEffect(() => {
-		if (selectedUser) {
-			setIsDropdownOpen(false);
-			setSearchValue(selectedUser);
-		}
-	}, [selectedUser]);
-
 	return (
-		<Dialog onOpenChange={handleOpenChange}>
+		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
@@ -75,6 +37,10 @@ export default function AddUserPermissionDialog({
 				<div className='py-4'>
 					<label className='block mb-2'>Email</label>
 					<Input />
+					<p className='mt-2 text-xs text-muted-foreground'>
+						An invitation will only be sent if an account exists with the given
+						email.
+					</p>
 				</div>
 				<DialogFooter>
 					<Button>Cancel</Button>

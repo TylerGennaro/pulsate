@@ -1,5 +1,4 @@
 import { authOptions } from '@lib/auth';
-import { Tag } from '@lib/enum';
 import { db } from '@lib/prisma';
 import { LogType, Prisma } from '@prisma/client';
 import { format } from 'date-fns';
@@ -30,6 +29,11 @@ export async function GET() {
 				select: {
 					id: true,
 					name: true,
+					items: {
+						select: {
+							quantity: true,
+						},
+					},
 				},
 			},
 		},
@@ -37,10 +41,55 @@ export async function GET() {
 			userId: session.user.id,
 		},
 	});
-	const checkoutHistory = await parseCheckoutHistory(locations);
-	const popularItems = await parsePopularItems(locations);
-	parseStockAlerts(locations.map((location) => location.id));
-	return NextResponse.json({ checkoutHistory, popularItems }, { status: 200 });
+	if (locations.length === 0) return new NextResponse(null, { status: 204 });
+	const parseAllData = await Promise.all([
+		parseCheckoutHistory(locations),
+		parsePopularItems(locations),
+		parseStockAlerts(locations),
+		parseTotals(locations),
+		parseCheckoutUsers(locations),
+	]);
+	const checkoutHistory = parseAllData[0];
+	const popularItems = parseAllData[1];
+	const stockAlerts = parseAllData[2];
+	const totals = parseAllData[3];
+	const checkoutUsers = parseAllData[4];
+	return NextResponse.json(
+		{ checkoutHistory, popularItems, stockAlerts, totals, checkoutUsers },
+		{ status: 200 }
+	);
+}
+
+interface LocationTotalsParam extends LocationData {
+	products: {
+		id: string;
+		name: string;
+		items: {
+			quantity: number;
+		}[];
+	}[];
+}
+
+function parseTotals(data: LocationTotalsParam[]) {
+	const totalProducts = data.reduce(
+		(acc, location) => acc + location.products.length,
+		0
+	);
+	const totalStock = data.reduce(
+		(acc, location) =>
+			acc +
+			location.products.reduce(
+				(acc, product) =>
+					acc + product.items.reduce((acc, item) => acc + item.quantity, 0),
+				0
+			),
+		0
+	);
+	return {
+		totalLocations: data.length,
+		totalProducts,
+		totalStock,
+	};
 }
 
 async function parseCheckoutHistory(data: LocationData[]) {
@@ -53,7 +102,7 @@ async function parseCheckoutHistory(data: LocationData[]) {
 			const rawData: { date: Date; quantity: string }[] =
 				await db.$queryRaw`SELECT date_trunc('day', "timestamp")::date as date, sum(quantity) as quantity FROM "Log" WHERE "type" = ${
 					LogType.ITEM_CHECKOUT
-				} AND "productId" IN (${Prisma.join(
+				}::"LogType" AND "productId" IN (${Prisma.join(
 					location.products.map((product) => product.id)
 				)}) AND "timestamp" >= NOW() - INTERVAL '1 month' GROUP BY date`;
 			const allEntries = rawData.map((result) => ({
@@ -81,7 +130,9 @@ async function parsePopularItems(data: LocationData[]) {
 			const rawData: { date: Date; quantity: string; name: string }[] =
 				await db.$queryRaw`SELECT sum(quantity) as quantity, "Product"."name" FROM "Log"
 				INNER JOIN "Product" ON "Product"."id" = "Log"."productId"
-				WHERE "type" = ${LogType.ITEM_CHECKOUT} AND "productId" IN (${Prisma.join(
+				WHERE "type" = ${
+					LogType.ITEM_CHECKOUT
+				}::"LogType" AND "productId" IN (${Prisma.join(
 					location.products.map((product) => product.id)
 				)}) AND "timestamp" >= NOW() - INTERVAL '1 month'
 				GROUP BY "Product"."name" ORDER BY quantity DESC LIMIT 10`;
@@ -119,13 +170,32 @@ function parseCheckoutHistoryResultsByDateRange(
 	});
 }
 
-async function parseStockAlerts(locationIds: string[]) {
+type StockAlertsReturn =
+	| {
+			name: string;
+			location: string;
+			expires: string;
+	  }
+	| {
+			name: string;
+			location: string;
+			quantity: number;
+	  };
+
+async function parseStockAlerts(
+	locations: LocationData[]
+): Promise<StockAlertsReturn[]> {
+	const locationNames: Record<string, string> = locations.reduce(
+		(acc, location) => ({ ...acc, [location.id]: location.name }),
+		{}
+	);
+	const locationIds = Object.keys(locationNames);
 	const lowQuantityWithItems: {
 		name: string;
 		quantity: number;
 		location: string;
-	} = await db.$queryRaw`
-		SELECT name, sum("quantity") as quantity, "Product"."locationId" as location FROM "Item"
+	}[] = await db.$queryRaw`
+		SELECT name, CAST(SUM("quantity") as INTEGER) as quantity, "Product"."locationId" as location FROM "Item"
 		INNER JOIN "Product" ON "Product"."id" = "Item"."productId"
 		WHERE "Product"."locationId" IN (${Prisma.join(locationIds)})
 		GROUP BY "Product"."name", "Product"."min", "Product"."locationId"
@@ -151,12 +221,79 @@ async function parseStockAlerts(locationIds: string[]) {
 		location: product.locationId,
 	}));
 
-	const expiringItems = await db.$queryRaw`
+	const expiringItems: {
+		name: string;
+		location: string;
+		expires: string;
+	}[] = await db.$queryRaw`
 		SELECT "Product"."name", "Product"."locationId" as location, min("Item"."expires") as expires FROM "Item"
 		INNER JOIN "Product" ON "Product"."id" = "Item"."productId"
 		WHERE "Item"."expires" IS NOT NULL AND "Item"."expires" <= NOW() + INTERVAL '7 days'
 		AND "Product"."locationId" IN (${Prisma.join(locationIds)})
 		GROUP BY "Product"."name", "Product"."locationId"`;
 
-	console.log(expiringItems);
+	return [
+		...lowQuantityNoItems.map((product) => ({
+			...product,
+			location: locationNames[product.location],
+		})),
+		...lowQuantityWithItems.map((product) => ({
+			...product,
+			location: locationNames[product.location],
+		})),
+		...expiringItems.map((product) => ({
+			...product,
+			location: locationNames[product.location],
+		})),
+	];
+}
+
+type UserAggregateQuantity = {
+	userId: string;
+	name: string;
+	email: string;
+	image: string | null;
+	quantity: number;
+};
+
+async function parseCheckoutUsers(locations: LocationData[]) {
+	const locationIds = locations.map((location) => location.id);
+	const checkoutLogs = await db.log.findMany({
+		select: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					image: true,
+				},
+			},
+			quantity: true,
+		},
+		where: {
+			product: {
+				locationId: {
+					in: locationIds,
+				},
+			},
+			type: LogType.ITEM_CHECKOUT,
+		},
+	});
+	const aggregatedQuantity: Record<string, UserAggregateQuantity> =
+		checkoutLogs.reduce((acc, log) => {
+			if (!log.user) return acc;
+			return {
+				...acc,
+				[log.user.id]: {
+					name: log.user.name ?? '',
+					email: log.user.email ?? '',
+					userId: log.user.id,
+					image: log.user.image,
+					quantity: (acc[log.user.id]?.quantity ?? 0) + (log.quantity ?? 0),
+				},
+			};
+		}, {} as Record<string, UserAggregateQuantity>);
+	return Object.values(aggregatedQuantity).sort(
+		(a, b) => b.quantity - a.quantity
+	);
 }

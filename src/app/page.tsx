@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Features from './Features';
 import Plans from './plans/Plans';
-import Image from 'next/image';
+import ArrowButton from '@components/ArrowButton';
 
 export const metadata = populateMetadata('Home');
 
@@ -59,10 +59,9 @@ export default function Home() {
 						className='mb-20'
 					>
 						<Link href='/plans'>
-							<Button className='shadow-md'>
+							<ArrowButton variant='primary' className='shadow-md'>
 								View plans
-								<ArrowRight className='icon-right' />
-							</Button>
+							</ArrowButton>
 						</Link>
 					</HeroHeading>
 					<Plans />
