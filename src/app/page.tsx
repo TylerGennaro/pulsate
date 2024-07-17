@@ -8,7 +8,7 @@ import Features from './Features';
 import Plans from './plans/Plans';
 import ArrowButton from '@components/ArrowButton';
 
-export const metadata = populateMetadata('Home');
+export const metadata = populateMetadata();
 
 const links = [
 	{ label: 'Features', href: '#features' },
