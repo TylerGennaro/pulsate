@@ -23,7 +23,7 @@ export default function FAQ() {
 			<Header>Frequently Asked Questions</Header>
 			<ul className='flex flex-col'>
 				<FAQEntry>
-					<FAQQestion>Why the one-time fee?</FAQQestion>
+					<FAQQestion>Why is there a one-time fee?</FAQQestion>
 					<FAQAnswer>
 						The one-time fee helps us invest early into better infrastructure,
 						ultimately providing you with a better user experience.
