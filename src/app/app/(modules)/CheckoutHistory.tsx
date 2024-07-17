@@ -42,26 +42,23 @@ function TabChart({
 	selectedLocation: string;
 }) {
 	const locationData = data.find((entry) => entry.name === selectedLocation);
-	const totals = useMemo(() => {
-		if (!locationData) return;
-		return {
-			week: locationData.week.reduce((acc, curr) => acc + curr.quantity, 0),
-			biweek: locationData.biweek.reduce((acc, curr) => acc + curr.quantity, 0),
-			month: locationData.month.reduce((acc, curr) => acc + curr.quantity, 0),
-		};
-	}, [locationData]);
-	if (totals === undefined || locationData === undefined)
-		return <span>No data available.</span>;
-	const isEmpty = totals.week + totals.biweek + totals.month === 0;
+	if (locationData === undefined)
+		return (
+			<div className='grid w-full h-[200px] place-content-center text-muted-foreground'>
+				No data available.
+			</div>
+		);
+	if (locationData[dataKey].length === 0)
+		return (
+			<div className='grid w-full h-[200px] place-content-center text-muted-foreground'>
+				No products to aggregate.
+			</div>
+		);
 	return (
 		<div className='h-[200px] mt-8'>
 			<ResponsiveContainer width='100%' height='100%'>
-				{/* <BarChart
-				data={isEmpty ? [] : locationData[dataKey] ?? []}
-				xAxisKey='date'
-			/> */}
 				<AreaChart
-					data={isEmpty ? [] : locationData[dataKey] ?? []}
+					data={locationData[dataKey]}
 					margin={{
 						left: -32,
 					}}
