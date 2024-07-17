@@ -6,7 +6,7 @@ import { dateToUTC, isExpired } from '@lib/date';
 
 export default function StockAlerts({ data }: { data: StockAlert[] }) {
 	return (
-		<ul className='mt-8 animate-[fade-in_500ms]'>
+		<ul className='mt-8 animate-[fade-in_500ms] max-h-96 overflow-y-auto'>
 			{data.map((item) => {
 				const expDate =
 					'expires' in item
@@ -17,7 +17,7 @@ export default function StockAlerts({ data }: { data: StockAlert[] }) {
 						key={item.name}
 						className='py-2 border-b last-of-type:border-none'
 					>
-						<a className='flex items-center justify-between p-2 transition-colors rounded-md hover:bg-muted'>
+						<a className='flex items-center justify-between px-4 py-2 transition-colors rounded-md hover:bg-content-muted'>
 							<div className='flex items-center gap-8'>
 								<div>
 									<TagBadge
