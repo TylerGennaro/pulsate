@@ -21,7 +21,7 @@ export default function Page() {
 	return (
 		<main className='flex flex-col scroll-smooth'>
 			<NavHeader items={links} />
-			<div className='container flex flex-col items-center gap-32 py-16 bg-zinc-50 dark:bg-zinc-950'>
+			<div className='container flex flex-col items-center gap-32 py-16'>
 				<div className='flex justify-center w-full'>
 					<div className='flex flex-col items-center max-w-screen-md gap-2'>
 						<HeroHeading
@@ -32,7 +32,7 @@ export default function Page() {
 								<Button variant='outline'>FAQ</Button>
 							</a>
 							<a href='#compare'>
-								<Button>
+								<Button variant='primary'>
 									Compare Plans
 									<ArrowRight className='w-4 h-4 ml-2' />
 								</Button>
