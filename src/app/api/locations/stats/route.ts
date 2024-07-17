@@ -47,13 +47,15 @@ export async function GET() {
 		parsePopularItems(locations),
 		parseStockAlerts(locations),
 		parseTotals(locations),
+		parseCheckoutUsers(locations),
 	]);
 	const checkoutHistory = parseAllData[0];
 	const popularItems = parseAllData[1];
 	const stockAlerts = parseAllData[2];
 	const totals = parseAllData[3];
+	const checkoutUsers = parseAllData[4];
 	return NextResponse.json(
-		{ checkoutHistory, popularItems, stockAlerts, totals },
+		{ checkoutHistory, popularItems, stockAlerts, totals, checkoutUsers },
 		{ status: 200 }
 	);
 }
@@ -244,4 +246,54 @@ async function parseStockAlerts(
 			location: locationNames[product.location],
 		})),
 	];
+}
+
+type UserAggregateQuantity = {
+	userId: string;
+	name: string;
+	email: string;
+	image: string | null;
+	quantity: number;
+};
+
+async function parseCheckoutUsers(locations: LocationData[]) {
+	const locationIds = locations.map((location) => location.id);
+	const checkoutLogs = await db.log.findMany({
+		select: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					image: true,
+				},
+			},
+			quantity: true,
+		},
+		where: {
+			product: {
+				locationId: {
+					in: locationIds,
+				},
+			},
+			type: LogType.ITEM_CHECKOUT,
+		},
+	});
+	const aggregatedQuantity: Record<string, UserAggregateQuantity> =
+		checkoutLogs.reduce((acc, log) => {
+			if (!log.user) return acc;
+			return {
+				...acc,
+				[log.user.id]: {
+					name: log.user.name ?? '',
+					email: log.user.email ?? '',
+					userId: log.user.id,
+					image: log.user.image,
+					quantity: (acc[log.user.id]?.quantity ?? 0) + (log.quantity ?? 0),
+				},
+			};
+		}, {} as Record<string, UserAggregateQuantity>);
+	return Object.values(aggregatedQuantity).sort(
+		(a, b) => b.quantity - a.quantity
+	);
 }
