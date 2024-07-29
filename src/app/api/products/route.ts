@@ -21,11 +21,6 @@ const schema = z.object({
 		.int({ message: 'Min quantity is not an integer.' })
 		.min(1, { message: 'Minimum quantity must be greater than 1.' })
 		.nullable(),
-	max: z.coerce
-		.number({ invalid_type_error: 'Max quantity is not a number.' })
-		.int({ message: 'Max quantity is not an integer.' })
-		.min(0, { message: 'Maximum quantity must be greater than 0.' })
-		.nullable(),
 	packageType: z.enum(['single', 'pack', 'box', 'case'], {
 		invalid_type_error: 'Package type is not valid.',
 		required_error: 'Package type is required.',
@@ -110,7 +105,7 @@ export async function PUT(req: Request) {
 
 	const data = formDataToObject(await req.formData());
 	try {
-		const { name, min, max, packageType, position, url } = schema.parse(data);
+		const { name, min, packageType, position, url } = schema.parse(data);
 		const product = await db.product.findFirst({
 			where: {
 				id,
