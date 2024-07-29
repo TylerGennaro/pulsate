@@ -43,7 +43,6 @@ function Toolbar({
 	const isFiltered =
 		table.getPreFilteredRowModel().rows.length >
 		table.getFilteredRowModel().rows.length;
-	console.log(table.getColumn('name')?.getFilterValue());
 
 	return (
 		<div className='flex flex-wrap justify-between gap-4 mb-4'>
