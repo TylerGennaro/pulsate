@@ -1,21 +1,21 @@
-import SignIn from '@components/SignIn';
-import { authOptions } from '@lib/auth';
 import { fetchLocationInfo } from '@lib/data';
-import { getServerSession } from 'next-auth';
-import { notFound } from 'next/navigation';
+import { populateMetadata } from '@lib/utils';
 import { ReactNode } from 'react';
 
-export default async function Layout({
-	children,
+export async function generateMetadata({
 	params,
 }: {
-	children: ReactNode;
 	params: { location: string };
 }) {
-	const session = await getServerSession(authOptions);
-	if (!session) return <SignIn />;
-	const { name, userId } = await fetchLocationInfo(params.location);
-	if (!name) return notFound();
-	if (userId !== session.user.id) return notFound();
+	const { name } = await fetchLocationInfo(params.location);
+	return populateMetadata(name ?? 'Unknown Location');
+}
+
+export default function Layout({
+	children,
+}: {
+	tabs: ReactNode;
+	children: ReactNode;
+}) {
 	return <>{children}</>;
 }
