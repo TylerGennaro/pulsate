@@ -2,12 +2,13 @@ import { Button } from '@components/ui/button';
 import Header from '@components/ui/header';
 import { Skeleton } from '@components/ui/skeleton';
 import { Plus, Trash } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import AddUserPermissionDialog from './AddUserPermissionDialog';
 import InformationSettings from './InformationSettings';
 import ArrowButton from '@components/ArrowButton';
 import { cn } from '@lib/utils';
 import DeleteLocationDialog from './DeleteLocationDialog';
+import SharedUserList, { SharedUserListSkeleton } from './SharedUserList';
 
 function Section({
 	children,
@@ -19,7 +20,7 @@ function Section({
 	return (
 		<div className='mb-6'>
 			{children}
-			{hasDivider && <hr className='mt-12 mb-12' />}
+			{hasDivider && <hr className='my-16' />}
 		</div>
 	);
 }
@@ -63,26 +64,16 @@ export default function SettingsPage({ locationId }: { locationId: string }) {
 					title='Permissions'
 					desc='Manage user permissions for this location.'
 				>
-					<AddUserPermissionDialog>
+					<AddUserPermissionDialog locationId={locationId}>
 						<Button variant='flat' size='icon'>
 							<Plus />
 						</Button>
 					</AddUserPermissionDialog>
 				</SectionTitle>
-				<div className='flex justify-center'>
-					{/* <PlusButton>Add user</PlusButton> */}
-					<ul className='flex justify-start w-full'>
-						<li className='flex items-center gap-4'>
-							<Skeleton className='w-12 h-12 rounded-full' />
-							<div className='flex flex-col gap-1'>
-								<span className='font-medium'>Tyler Gennaro</span>
-								<span className='text-sm text-muted-foreground'>
-									tylergennaro10@gmail.com
-								</span>
-							</div>
-						</li>
-					</ul>
-				</div>
+				<Suspense fallback={<SharedUserListSkeleton />}>
+					<SharedUserListSkeleton />
+					{/* <SharedUserList locationId={locationId} /> */}
+				</Suspense>
 			</Section>
 			<Section>
 				<SectionTitle
