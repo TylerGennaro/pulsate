@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-	url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
@@ -27,9 +27,9 @@ model Account {
 }
 
 model User {
-  id                 String         @id @default(cuid())
+  id                 String          @id @default(cuid())
   name               String?
-  email              String?        @unique
+  email              String?         @unique
   emailVerified      DateTime?
   image              String?
   stripe_customer_id String?
@@ -39,6 +39,7 @@ model User {
   notifications      Notification[]
   payments           Payment[]
   subscriptions      Subscription[]
+  shares             LocationShare[]
 
   @@index([stripe_customer_id])
 }
@@ -50,6 +51,7 @@ model Location {
   user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   products Product[]
   settings LocationSettings[]
+  shares   LocationShare[]
 }
 
 model Product {
@@ -104,7 +106,7 @@ model LocationSettings {
   value      String
   isNumber   Boolean  @default(false)
 
-	@@unique ([locationId, key])
+  @@unique([locationId, key])
 }
 
 model Subscription {
@@ -128,6 +130,16 @@ model Payment {
   user   User?   @relation(fields: [userId], references: [id])
 }
 
+model LocationShare {
+  id          Int         @id @default(autoincrement())
+  locationId  String
+  location    Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      ShareStatus
+  lastUpdated DateTime    @updatedAt
+}
+
 enum Tier {
   FREE
   MANAGER
@@ -143,4 +155,10 @@ enum LogType {
   PRODUCT_REMOVE
   PRODUCT_UPDATE
   ITEM_CHECKOUT
+}
+
+enum ShareStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
