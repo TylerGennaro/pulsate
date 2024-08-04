@@ -159,7 +159,7 @@ export default async function Inventory({
 						})}
 				</div>
 			</div>
-			<div className='flex gap-8'>
+			<div className='flex flex-col-reverse gap-8 md:flex-row lg:flex-col-reverse xl:flex-row'>
 				<div className='flex flex-col w-full gap-8'>
 					<Container className='xl:col-span-2'>
 						<div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
@@ -193,6 +193,18 @@ export default async function Inventory({
 							locationId={params.location}
 							productId={params.product}
 						/>
+					</Container>
+					<Container
+						header='Delete Product'
+						description='Delete this product and all its data.'
+						className='md:hidden lg:block xl:hidden'
+					>
+						<DeleteProduct id={params.product}>
+							<Button variant='destructive' className='mt-8'>
+								<Trash2 className='icon-left' />
+								Delete Product
+							</Button>
+						</DeleteProduct>
 					</Container>
 				</div>
 				<div className='flex flex-col flex-shrink gap-8'>
@@ -265,6 +277,7 @@ export default async function Inventory({
 					<Container
 						header='Delete Product'
 						description='Delete this product and all its data.'
+						className='hidden md:block lg:hidden xl:block'
 					>
 						<DeleteProduct id={params.product}>
 							<Button variant='destructive' className='mt-8'>
