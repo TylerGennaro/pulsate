@@ -151,3 +151,31 @@ export function parseProductInfo(product: Product & { items: Item[] }) {
 	if (hasOnOrder) tags.push(Tag.ONORDER);
 	return { tags: tags, exp: exp, quantity: quantity };
 }
+
+/**
+ * A response object for server actions.
+ */
+export class ActionResponse {
+	/**
+	 * Send a response message from a server action.
+	 * @param ok If the action was successful.
+	 * @param message The message to send if unsuccessful.
+	 * @returns A response object.
+	 */
+	static send(ok: false, message: string): { ok: boolean; message: string };
+	static send(ok: true, message?: string): { ok: boolean; message: string };
+	static send(ok: boolean, message?: string) {
+		return { ok, message };
+	}
+}
+
+/**
+ * Get the error message from an error object.
+ * @param error The error object.
+ * @returns The message parsed from the error object.
+ */
+export function getErrorMessage(error: unknown) {
+	if (error instanceof z.ZodError) return error.issues[0]?.message;
+	if (error instanceof Error) return error.message;
+	return 'An unknown error occurred. Try again.';
+}
