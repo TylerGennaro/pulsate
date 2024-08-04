@@ -13,7 +13,7 @@ export default async function Page() {
 	if (!session) return <SignIn />;
 
 	return (
-		<div className='grid grid-cols-1 gap-8 p-6 md:grid-cols-2'>
+		<div className='grid grid-cols-1 gap-8 p-6 xl:grid-cols-2'>
 			<DashboardModules />
 		</div>
 	);
