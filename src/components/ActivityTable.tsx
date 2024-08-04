@@ -7,7 +7,7 @@ import { templates } from '@lib/logTemplates';
 import { Log, LogType } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Pagination from './Pagination';
 import Loader from './ui/loader';
 
@@ -33,6 +33,7 @@ export default function ActivityTable({
 	productId?: string;
 }) {
 	const [page, setPage] = useState(1);
+	const totalItems = useRef(1);
 	const PER_PAGE = 10;
 
 	const {
@@ -49,7 +50,9 @@ export default function ActivityTable({
 					productId ? `&product=${productId}` : ''
 				}&page=${page}&perPage=${PER_PAGE}`
 			);
-			return response.json();
+			const data = await response.json();
+			totalItems.current = data.total;
+			return data;
 		},
 	});
 
@@ -99,7 +102,7 @@ export default function ActivityTable({
 				classNames={{ cell: 'p-2' }}
 			/>
 			<Pagination
-				total={data?.total || 1}
+				total={totalItems.current}
 				page={page}
 				onChange={setPage}
 				perPage={PER_PAGE}
