@@ -160,7 +160,7 @@ export function DataTable<TData, TValue>({
 											className={cn(
 												classNames?.row,
 												onRowClick
-													? 'cursor-pointer hover:bg-muted transition-colors'
+													? 'cursor-pointer hover:bg-content-muted transition-colors'
 													: ''
 											)}
 										>
