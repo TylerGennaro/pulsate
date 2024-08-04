@@ -80,26 +80,9 @@ export const columns: ColumnDef<ProductListing>[] = [
 		id: 'actions',
 		cell: ({ row }: { row: { original: ProductListing } }) => {
 			return (
-				<div className='flex gap-4'>
-					<Link href={`/app/${row.original.locationId}/${row.original.id}`}>
-						<ArrowButton size='sm'>View</ArrowButton>
-					</Link>
-					<EditProduct
-						id={row.original.id}
-						defaultValues={{
-							name: row.original.name,
-							min: row.original.min,
-							packageType: row.original.package as PackageType,
-							position: row.original.position ?? undefined,
-							url: row.original.url ?? undefined,
-						}}
-					>
-						<Button size='icon'>
-							<span className='sr-only'>Open menu</span>
-							<MoreVertical size={16} />
-						</Button>
-					</EditProduct>
-				</div>
+				<Link href={`/app/${row.original.locationId}/${row.original.id}`}>
+					<ArrowButton size='sm'>View</ArrowButton>
+				</Link>
 			);
 		},
 	},
