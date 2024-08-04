@@ -31,7 +31,7 @@
 	✔ Default sort products by shelf location @done(24-03-18 23:28)
 ✔ Notification system @done(24-03-07 11:58)
 	✔ Email notifications @done(24-03-07 11:56)
-☐ Remove max quantity
+✔ Remove max quantity @done(24-07-24 22:01)
 ☐ Improve notifications
 	☐ Notification settings
 	☐ Improve overall functionality
@@ -46,11 +46,11 @@
 ✔ Improve mobile UX @done(24-03-19 00:51)
 ☐ Global location log w/ filters
 ✔ Link to product order page @done(24-03-19 00:51)
-☐ Dashboard @started(24-06-15 01:16)
-	☐ Most used product per location
-	☐ Locations with low inventory
-	☐ Graphs on daily checkouts
-	☐ Activity feeds
+✔ Dashboard @started(24-06-15 01:16) @done(24-07-24 22:01) @lasted(5w4d20h45m34s)
+	✔ Most used product per location @done(24-07-24 22:01)
+	✔ Locations with low inventory @done(24-07-24 22:01)
+	✔ Graphs on daily checkouts @done(24-07-24 22:01)
+	✔ Users who have checked out items @done(24-07-24 22:01)
 ☐ Settings
 ☐ Mobile app
 
