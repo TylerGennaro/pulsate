@@ -36,7 +36,7 @@ export default function InformationSettings({
 		<>
 			<div className='max-w-md'>
 				{isLoading ? (
-					<Loader className='w-8 h-8 text-primary' />
+					<Loader />
 				) : (
 					<FormGroup
 						label='Location Name'
