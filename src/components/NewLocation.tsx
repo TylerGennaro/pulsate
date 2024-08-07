@@ -13,11 +13,11 @@ import {
 import { Plus } from 'lucide-react';
 import InputGroup from '@components/FormGroup';
 import { FormEvent, ReactNode, useState } from 'react';
-import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { parseFormData } from '@lib/utils';
 import ArrowButton from './ArrowButton';
+import { toast } from './ui/use-toast';
 
 export default function NewLocationDialog({
 	children,
@@ -42,7 +42,7 @@ export default function NewLocationDialog({
 				queryClient.invalidateQueries({ queryKey: ['locations'] });
 				setOpen(false);
 				router.push('/app/' + text);
-			} else toast.error('Failed to add location: ' + text);
+			} else toast.error('Failed to add location', text);
 		},
 	});
 	return (

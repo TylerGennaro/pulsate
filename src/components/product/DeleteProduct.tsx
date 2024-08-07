@@ -12,10 +12,10 @@ import {
 	AlertDialogTrigger,
 } from '@components/ui/alert-dialog';
 import { Button } from '@components/ui/button';
+import { toast } from '@components/ui/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
 import { FormEvent, ReactNode, useState } from 'react';
-import toast from 'react-hot-toast';
 
 export default function DeleteProduct({
 	id,
@@ -39,7 +39,7 @@ export default function DeleteProduct({
 				queryClient.invalidateQueries({ queryKey: ['products'] });
 				setAlertOpen(false);
 				if (res.redirected) window.location.replace(res.url);
-			} else toast.error('Failed to update product: ' + (await res?.text()));
+			} else toast.error('Failed to update product', await res?.text());
 		},
 	});
 

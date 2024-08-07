@@ -33,7 +33,7 @@ import { FormEvent, useState } from 'react';
 import { crud, parseFormData } from '@lib/utils';
 import SettingsDialog from './SettingsDialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { toast } from '@components/ui/use-toast';
 
 export default function EditLocation({
 	name,

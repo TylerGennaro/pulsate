@@ -11,8 +11,8 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Link as LinkIcon } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 import ItemCard from './ItemCard';
+import { toast } from '@components/ui/use-toast';
 
 export default function Checkout({ productId }: { productId: string }) {
 	const queryClient = useQueryClient();
@@ -39,7 +39,7 @@ export default function Checkout({ productId }: { productId: string }) {
 				setCart(new Map());
 				queryClient.invalidateQueries({ queryKey: ['product', productId] });
 				toast.success('Checkout recorded');
-			} else toast.error('Failed: ' + (await res.json()).message);
+			} else toast.error('Failed', (await res.json()).message);
 		},
 	});
 

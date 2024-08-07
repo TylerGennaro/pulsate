@@ -4,11 +4,11 @@ import { format } from 'date-fns';
 import { Metadata } from 'next';
 import { NextResponse } from 'next/server';
 import { FormEvent } from 'react';
-import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 import { isExpired } from './date';
 import { Constants, Tag } from './enum';
+import { toast } from '@components/ui/use-toast';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

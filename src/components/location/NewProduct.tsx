@@ -14,9 +14,9 @@ import { parseFormData } from '@lib/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { FormEvent, useState } from 'react';
-import toast from 'react-hot-toast';
 import ProductForm from './ProductForm';
 import ArrowButton from '@components/ArrowButton';
+import { toast } from '@components/ui/use-toast';
 
 export default function NewItemSheet({ location }: { location: string }) {
 	const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function NewItemSheet({ location }: { location: string }) {
 			if (res?.ok) {
 				queryClient.invalidateQueries({ queryKey: ['products'] });
 				setOpen(false);
-			} else toast.error('Failed to add product: ' + (await res?.text()));
+			} else toast.error('Failed to add product', await res?.text());
 		},
 	});
 

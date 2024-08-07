@@ -12,12 +12,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
+import { toast } from '@components/ui/use-toast';
 import { PackageType } from '@lib/enum';
 import { formDataToObject, parseFormData } from '@lib/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Save } from 'lucide-react';
 import { FormEvent, useState, useTransition } from 'react';
-import toast from 'react-hot-toast';
 
 export default function EditProduct({
 	defaultValues,
@@ -43,7 +43,7 @@ export default function EditProduct({
 			const data = formDataToObject(parseFormData(event));
 			const response = await editProduct(id, data);
 			if (!response.ok) {
-				toast.error('Failed to update product: ' + response.message);
+				toast.error('Failed to update product', response.message);
 				return;
 			}
 			toast.success('Product updated.');

@@ -10,11 +10,11 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
+import { toast } from '@components/ui/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 export default function DeleteLocationDialog({
 	locationId,

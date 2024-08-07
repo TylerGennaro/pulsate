@@ -35,8 +35,8 @@ import { crud, formDataToObject, parseFormData } from '@lib/utils';
 import ProductForm from './ProductForm';
 import { PackageType } from '@lib/enum';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import ArrowButton from '@components/ArrowButton';
+import { toast } from '@components/ui/use-toast';
 
 export default function EditProduct({
 	defaultValues,
@@ -70,7 +70,7 @@ export default function EditProduct({
 			if (res?.ok) {
 				queryClient.invalidateQueries({ queryKey: ['products'] });
 				setOpen(false);
-			} else toast.error('Failed to update product: ' + (await res?.text()));
+			} else toast.error('Failed to update product', await res?.text());
 		},
 	});
 
@@ -86,7 +86,7 @@ export default function EditProduct({
 				queryClient.invalidateQueries({ queryKey: ['products'] });
 				setAlertOpen(false);
 				toast.success('Product deleted.');
-			} else toast.error('Failed to update product: ' + (await res?.text()));
+			} else toast.error('Failed to update product', await res?.text());
 		},
 	});
 
