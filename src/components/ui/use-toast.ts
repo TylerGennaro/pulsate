@@ -168,11 +168,29 @@ function handleToast({ ...props }: Toast) {
 	};
 }
 
+function handleSuccessToast(description: string): void;
+function handleSuccessToast(title: string, description?: string): void;
+function handleSuccessToast(title: string, description?: string) {
+	return handleToast({
+		variant: 'success',
+		title: description !== undefined ? title : undefined,
+		description: description === undefined ? title : description,
+	});
+}
+
+function handleErrorToast(description: string): void;
+function handleErrorToast(title: string, description?: string): void;
+function handleErrorToast(title: string, description?: string) {
+	return handleToast({
+		variant: 'destructive',
+		title: description !== undefined ? title : undefined,
+		description: description === undefined ? title : description,
+	});
+}
+
 export const toast = {
-	success: (title: string, description?: string) =>
-		handleToast({ variant: 'success', title, description }),
-	error: (title: string, description?: string) =>
-		handleToast({ variant: 'destructive', title, description }),
+	success: handleSuccessToast,
+	error: handleErrorToast,
 };
 
 function useToast() {
