@@ -71,8 +71,7 @@ export default function SettingsPage({ locationId }: { locationId: string }) {
 					</AddUserPermissionDialog>
 				</SectionTitle>
 				<Suspense fallback={<SharedUserListSkeleton />}>
-					<SharedUserListSkeleton />
-					{/* <SharedUserList locationId={locationId} /> */}
+					<SharedUserList locationId={locationId} />
 				</Suspense>
 			</Section>
 			<Section>
