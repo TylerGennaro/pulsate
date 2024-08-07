@@ -7,6 +7,7 @@ import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_CLOSE_DELAY = 4000;
 
 type ToasterToast = ToastProps & {
 	id: string;
@@ -175,6 +176,7 @@ function handleSuccessToast(title: string, description?: string) {
 		variant: 'success',
 		title: description !== undefined ? title : undefined,
 		description: description === undefined ? title : description,
+		duration: TOAST_CLOSE_DELAY,
 	});
 }
 
@@ -185,6 +187,7 @@ function handleErrorToast(title: string, description?: string) {
 		variant: 'destructive',
 		title: description !== undefined ? title : undefined,
 		description: description === undefined ? title : description,
+		duration: TOAST_CLOSE_DELAY,
 	});
 }
 
