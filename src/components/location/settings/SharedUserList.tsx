@@ -63,7 +63,7 @@ export default async function SharedUserList({
 			</ul>
 			<div className='my-8 w-fit'>
 				<p className='font-medium text-muted-foreground'>Pending requests</p>
-				<hr className='mt-4' />
+				<hr className='mt-2' />
 			</div>
 			<ul className='flex flex-col gap-6'>
 				{usersByStatus[ShareStatus.PENDING]?.map((user) => (
