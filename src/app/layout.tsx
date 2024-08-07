@@ -2,7 +2,6 @@ import Providers from '@components/Providers';
 import '@styles/globals.css';
 import { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-import { Toaster } from 'react-hot-toast';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
 import { cn } from '@lib/utils';
@@ -27,10 +26,7 @@ export default async function RootLayout({
 	return (
 		<html lang='en'>
 			<body className={cn(roboto.className)}>
-				<Providers session={session}>
-					<Toaster position='bottom-right' />
-					{children}
-				</Providers>
+				<Providers session={session}>{children}</Providers>
 			</body>
 		</html>
 	);
