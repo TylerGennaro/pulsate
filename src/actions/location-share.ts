@@ -2,10 +2,15 @@
 
 import { authOptions } from '@lib/auth';
 import { db } from '@lib/prisma';
-import { ActionResponse } from '@lib/utils';
+import { ActionResponse, getErrorMessage } from '@lib/utils';
 import { ShareStatus } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+
+const schema = z.object({
+	email: z.string().email(),
+});
 
 export async function sendLocationShareInvitation(
 	email: string,
@@ -17,8 +22,14 @@ export async function sendLocationShareInvitation(
 	if (session.user.email === email)
 		return ActionResponse.send(
 			false,
-			'You cannot share a location with yourself'
+			'You cannot share a location with yourself.'
 		);
+
+	try {
+		schema.parse({ email });
+	} catch (error) {
+		return ActionResponse.send(false, getErrorMessage(error));
+	}
 
 	// See if the email exists
 	const user = await db.user.findFirst({
@@ -37,10 +48,10 @@ export async function sendLocationShareInvitation(
 				status: ShareStatus.PENDING,
 			},
 		});
-	}
 
-	// Refetch the location settings page
-	revalidatePath(`/app/${locationId}/settings`);
+		// Refetch the location settings page
+		revalidatePath(`/app/${locationId}/settings`);
+	}
 
 	return ActionResponse.send(true);
 }
