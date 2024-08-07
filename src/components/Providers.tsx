@@ -24,8 +24,8 @@ export default function Providers({
 					enableSystem
 				>
 					<TooltipProvider delayDuration={0}>
-						<Toaster />
 						<BalancerProvider>{children}</BalancerProvider>
+						<Toaster />
 					</TooltipProvider>
 				</NextThemesProvider>
 			</SessionProvider>
