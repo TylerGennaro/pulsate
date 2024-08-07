@@ -7,8 +7,8 @@ import { FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
-import { Constants, Tag } from './enum';
 import { isExpired } from './date';
+import { Constants, Tag } from './enum';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -175,7 +175,9 @@ export class ActionResponse {
  * @returns The message parsed from the error object.
  */
 export function getErrorMessage(error: unknown) {
-	if (error instanceof z.ZodError) return error.issues[0]?.message;
-	if (error instanceof Error) return error.message;
-	return 'An unknown error occurred. Try again.';
+	let errorMessage = 'An unknown error occurred. Try again.';
+	if (error instanceof z.ZodError) errorMessage = error.issues[0]?.message;
+	else if (error instanceof Error) errorMessage = error.message;
+	errorMessage = errorMessage.endsWith('.') ? errorMessage : errorMessage + '.';
+	return errorMessage;
 }
