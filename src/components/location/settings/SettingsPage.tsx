@@ -9,6 +9,11 @@ import ArrowButton from '@components/ArrowButton';
 import { cn } from '@lib/utils';
 import DeleteLocationDialog from './DeleteLocationDialog';
 import SharedUserList, { SharedUserListSkeleton } from './SharedUserList';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '@components/ui/tooltip';
 
 function Section({
 	children,
@@ -65,9 +70,14 @@ export default function SettingsPage({ locationId }: { locationId: string }) {
 					desc='Manage user permissions for this location.'
 				>
 					<AddUserPermissionDialog locationId={locationId}>
-						<Button variant='flat' size='icon'>
-							<Plus />
-						</Button>
+						<Tooltip>
+							<TooltipTrigger className='cursor-default'>
+								{/* <Button variant='flat' size='icon' disabled>
+								</Button> */}
+								<Plus className='opacity-50' />
+							</TooltipTrigger>
+							<TooltipContent>Feature coming soon</TooltipContent>
+						</Tooltip>
 					</AddUserPermissionDialog>
 				</SectionTitle>
 				<Suspense fallback={<SharedUserListSkeleton />}>

@@ -17,8 +17,8 @@ export default function ItemCard({
 }: {
 	item: Item;
 	packageType: PackageType;
-	cart: Map<string, number>;
-	setCart: Dispatch<SetStateAction<Map<string, number>>>;
+	cart: Map<number, number>;
+	setCart: Dispatch<SetStateAction<Map<number, number>>>;
 }) {
 	const quantity = cart.get(item.id) ?? 0;
 	// const [quantity, setQuantity] = useState(0);
@@ -49,18 +49,16 @@ export default function ItemCard({
 					<Minus size={16} />
 				</Button>
 				<Input
-					className='w-20 text-center rounded-none border-x-0 no-arrows'
+					className='w-20 py-1 text-center rounded-none border-x-0 no-arrows'
 					placeholder='Quantity'
-					value={quantity}
+					value={quantity.toString()}
 					onChange={(e) => {
 						const newCart = new Map(cart);
 						newCart.set(
 							item.id,
-							Math.min(
-								Math.max(parseInt(e.target.value) || 0, 0),
-								item.quantity
-							)
+							Math.min(Math.abs(Number(e.target.value) || 0), item.quantity)
 						);
+						setCart(newCart);
 					}}
 					name={`quantity-${item.id}`}
 					type='number'

@@ -56,7 +56,7 @@ export default function EditItem({ item }: { item: Item }) {
 				quantity: data.get('quantity'),
 				onOrder: data.get('on-order'),
 			},
-			params: { id: item.id },
+			params: { id: String(item.id) },
 		});
 		if (result.status === 200) {
 			setOpen(false);
@@ -75,7 +75,7 @@ export default function EditItem({ item }: { item: Item }) {
 		const result = await crud({
 			url: '/items',
 			method: 'DELETE',
-			params: { id: item.id },
+			params: { id: String(item.id) },
 		});
 		if (result.status === 200) {
 			setOpen(false);

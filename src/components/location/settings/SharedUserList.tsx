@@ -61,15 +61,21 @@ export default async function SharedUserList({
 					<SharedUser key={user.id} user={user} />
 				))}
 			</ul>
-			<div className='my-8 w-fit'>
-				<p className='font-medium text-muted-foreground'>Pending requests</p>
-				<hr className='mt-2' />
-			</div>
-			<ul className='flex flex-col gap-6'>
-				{usersByStatus[ShareStatus.PENDING]?.map((user) => (
-					<SharedUser key={user.id} user={user} />
-				))}
-			</ul>
+			{usersByStatus[ShareStatus.PENDING]?.length > 0 && (
+				<>
+					<div className='my-8 w-fit'>
+						<p className='font-medium text-muted-foreground'>
+							Pending requests
+						</p>
+						<hr className='mt-2' />
+					</div>
+					<ul className='flex flex-col gap-6'>
+						{usersByStatus[ShareStatus.PENDING]?.map((user) => (
+							<SharedUser key={user.id} user={user} />
+						))}
+					</ul>
+				</>
+			)}
 		</>
 	);
 }

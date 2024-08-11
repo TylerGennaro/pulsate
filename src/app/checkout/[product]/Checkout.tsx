@@ -1,23 +1,21 @@
 'use client';
 
 import ArrowButton from '@components/ArrowButton';
-import { Button } from '@components/ui/button';
 import Heading from '@components/ui/heading';
 import { Skeleton } from '@components/ui/skeleton';
+import { toast } from '@components/ui/use-toast';
 import { Item } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ExternalLink, ShoppingCart } from 'lucide-react';
+import { Link as LinkIcon, ShoppingCart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Link as LinkIcon } from 'lucide-react';
 import { useState } from 'react';
 import ItemCard from './ItemCard';
-import { toast } from '@components/ui/use-toast';
 
 export default function Checkout({ productId }: { productId: string }) {
 	const queryClient = useQueryClient();
 	const session = useSession();
-	const [cart, setCart] = useState<Map<string, number>>(new Map());
+	const [cart, setCart] = useState<Map<number, number>>(new Map());
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['product', productId],

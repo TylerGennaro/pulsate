@@ -28,7 +28,8 @@ export default function LocationHeader({ location }: LocationHeaderProps) {
 		queryKey: ['locations', location],
 		queryFn: async () => {
 			const res = await fetch(`/api/locations?id=${location}&single=true`);
-			return await res.json();
+			if (!res.ok) return undefined;
+			return res.json();
 		},
 	});
 	if (isLoading)
@@ -38,18 +39,17 @@ export default function LocationHeader({ location }: LocationHeaderProps) {
 				<Skeleton className='w-56 h-4' />
 			</div>
 		);
-	if (!data) return notFound();
 	return (
 		<div className='flex gap-4 my-4'>
-			<Link href={`/app`} className='block mt-0.5 w-fit'>
+			<Link href='/app' className='block mt-0.5 w-fit'>
 				<Button size='icon' variant='outline' className='bg-content'>
 					<ChevronLeft size={16} />
 				</Button>
 			</Link>
 			<div>
-				<Header size='md'>{data.name}</Header>
+				<Header size='md'>{data?.name ?? 'Unknown'}</Header>
 				<span className='text-sm text-muted-foreground'>{`Managed by ${
-					data.user.name ?? 'Unknown User'
+					data?.user.name ?? 'Unknown User'
 				}`}</span>
 			</div>
 		</div>

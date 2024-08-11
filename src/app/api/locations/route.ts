@@ -1,8 +1,10 @@
 import { authOptions } from '@lib/auth';
+import { LOCATION_ID_LENGTH } from '@lib/constants';
 import { isExpired } from '@lib/date';
 import { Constants, Tag } from '@lib/enum';
 import { db } from '@lib/prisma';
-import { catchError, formDataToObject } from '@lib/utils';
+import { catchError, formDataToObject, getErrorMessage } from '@lib/utils';
+import { nanoid } from 'nanoid';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -46,9 +48,12 @@ export async function GET(req: Request) {
 				},
 			},
 		});
-		return NextResponse.json(locations[0], {
-			status: locations[0] ? 200 : 404,
-		});
+		if (locations.length > 0) {
+			return NextResponse.json(locations[0], {
+				status: 200,
+			});
+		}
+		return new NextResponse('Location not found.', { status: 404 });
 	} else {
 		const locations = await db.location.findMany({
 			where: {
@@ -112,6 +117,7 @@ export async function POST(req: Request) {
 
 		const newLocation = await db.location.create({
 			data: {
+				id: nanoid(LOCATION_ID_LENGTH),
 				name,
 				userId: session.user.id,
 			},
@@ -180,9 +186,7 @@ export async function DELETE(req: Request) {
 		if (!deletedLocation.id)
 			return new NextResponse('Location not found.', { status: 404 });
 
-		const url = new URL(req.url);
-		url.pathname = '/app';
-		url.search = '';
+		const url = new URL('/app', req.url);
 		return NextResponse.redirect(url.toString());
 	} catch (e) {
 		return catchError(e);

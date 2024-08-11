@@ -49,6 +49,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 				className='ml-auto'
 				id='on-order'
 				name='on-order'
+				onCheckedChange={(checked) => setHasExpiration(!checked)}
 				defaultChecked={item?.onOrder || false}
 			/>
 			<label className='col-span-3' htmlFor='on-order'>

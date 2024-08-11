@@ -33,14 +33,14 @@ import { notFound } from 'next/navigation';
 export async function generateMetadata({
 	params,
 }: {
-	params: { item: string };
+	params: { product: string };
 }) {
 	const data = await db.product.findFirst({
 		select: {
 			name: true,
 		},
 		where: {
-			id: params.item,
+			id: params.product,
 		},
 	});
 	return populateMetadata(data?.name!);
@@ -129,7 +129,7 @@ async function getUser(id: string) {
 	return location?.location.userId;
 }
 
-export default async function Inventory({
+export default async function Page({
 	params,
 }: {
 	params: { location: string; product: string };

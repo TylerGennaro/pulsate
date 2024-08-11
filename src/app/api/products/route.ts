@@ -1,9 +1,11 @@
 import { authOptions } from '@lib/auth';
+import { PRODUCT_ID_LENGTH } from '@lib/constants';
 import { Tag } from '@lib/enum';
 import { log } from '@lib/log';
 import { db } from '@lib/prisma';
 import { catchError, formDataToObject, parseProductInfo } from '@lib/utils';
 import { LogType, Product } from '@prisma/client';
+import { nanoid } from 'nanoid';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -87,6 +89,7 @@ export async function POST(req: Request) {
 		const parseData = schema.parse(data);
 		await db.product.create({
 			data: {
+				id: nanoid(PRODUCT_ID_LENGTH),
 				name: parseData.name,
 				min: parseData.min ?? 0,
 				package: parseData.packageType,

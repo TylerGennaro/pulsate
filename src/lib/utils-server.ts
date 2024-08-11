@@ -27,53 +27,6 @@ export async function notify(options: {
 	revalidateTag('notifications');
 }
 
-export async function shortenURL(url: string) {
-	const response = await fetchJSON(
-		'https://publ.cc/api/url/add',
-		'POST',
-		{
-			url,
-		},
-		{
-			Authorization: `Bearer ${process.env.PUBLCC_API_KEY}`,
-		}
-	);
-	return parseInt(response.data.id);
-}
-
-export async function getLongURL(id: number) {
-	const response = await fetchJSON(
-		`https://publ.cc/api/url/${id}`,
-		'GET',
-		{},
-		{
-			Authorization: `Bearer ${process.env.PUBLCC_API_KEY}`,
-		}
-	);
-	return response.data.details.longurl;
-}
-
-export function updateShortURL(id: number, newUrl: string) {
-	return fetchJSON(
-		`https://publ.cc/api/url/${id}/update`,
-		'PUT',
-		{
-			url: newUrl,
-		},
-		{
-			Authorization: `Bearer ${process.env.PUBLCC_API_KEY}`,
-		}
-	);
-}
-
-export function deleteShortUrl(id: number) {
-	if (id === null) return;
-	return fetchJSON(
-		`https://publ.cc/api/url/${id}/delete`,
-		'DELETE',
-		{},
-		{
-			Authorization: `Bearer ${process.env.PUBLCC_API_KEY}`,
-		}
-	);
+export function fetchServer(url: string, options?: RequestInit) {
+	return fetch(process.env.NEXTAUTH_URL + url, options);
 }
