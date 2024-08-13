@@ -33,6 +33,19 @@ export function parseFormData(e: FormEvent<HTMLFormElement>) {
 	return formData;
 }
 
+export function parseFormDataToObject(e: FormEvent<HTMLFormElement>) {
+	e.preventDefault();
+	const target = e.target as HTMLFormElement;
+	const formData = new FormData(target);
+	const dataObject: Record<string, string | number | boolean> =
+		formDataToObject(formData);
+	for (const checkbox of target.querySelectorAll('input[type="checkbox"]')) {
+		const checkboxInput = checkbox as HTMLInputElement;
+		dataObject[checkboxInput.name] = checkboxInput.checked.toString() === 'on';
+	}
+	return dataObject;
+}
+
 export async function crud({
 	method,
 	url,
