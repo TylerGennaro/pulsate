@@ -28,7 +28,8 @@ export async function POST(req: Request) {
 	const data = await req.json();
 
 	try {
-		const { date, quantity, onOrder } = schema.parse(data);
+		let { date, quantity, onOrder } = schema.parse(data);
+		if (onOrder) date = null;
 		if (!data.productId)
 			return new NextResponse('Invalid product ID.', { status: 400 });
 
