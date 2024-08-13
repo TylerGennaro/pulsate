@@ -27,46 +27,61 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import { crud } from '@lib/utils';
+import { crud, formDataToObject } from '@lib/utils';
 import { Item } from '@prisma/client';
 import { MoreVertical, Pencil, Save, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { FormEvent, startTransition, useState, useTransition } from 'react';
 import ItemForm from './ItemForm';
 import { useQueryClient } from '@tanstack/react-query';
 import ArrowButton from '@components/ArrowButton';
+import { updateItem } from '@actions/item';
+import { toast } from '@components/ui/use-toast';
 
 export default function EditItem({ item }: { item: Item }) {
 	const [open, setOpen] = useState(false);
 	const [editLoading, setEditLoading] = useState(false);
 	const [deleteLoading, setDeleteLoading] = useState(false);
+	const [isEditPending, startEditTransition] = useTransition();
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
 	async function update(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		setEditLoading(true);
-		const data = new FormData(e.currentTarget);
-		const result = await crud({
-			url: '/items',
-			method: 'PUT',
-			data: {
-				productId: item.productId,
-				date: data.get('no-expire') !== 'on' ? data.get('date') : null,
-				quantity: data.get('quantity'),
-				onOrder: data.get('on-order'),
-			},
-			params: { id: String(item.id) },
-		});
-		if (result.status === 200) {
-			setOpen(false);
-			router.refresh();
-			queryClient.invalidateQueries({ queryKey: ['locations'] });
-			queryClient.invalidateQueries({
-				queryKey: ['activity', item.productId],
+		startEditTransition(async () => {
+			const formData = new FormData(e.currentTarget);
+			const data = formDataToObject(formData);
+			const response = await updateItem(item.id, item.productId, {
+				expires: data['no-expire'] === 'on' ? null : data['date'],
+				quantity: parseInt(data['quantity']),
+				onOrder: data['on-order'] === 'on',
 			});
-		}
-		setEditLoading(false);
+			if (!response.ok) {
+				toast.error('Failed to update item', response.message);
+				return;
+			}
+			toast.success('Item updated.');
+			setOpen(false);
+		});
+		// const result = await crud({
+		// 	url: '/items',
+		// 	method: 'PUT',
+		// 	data: {
+		// 		productId: item.productId,
+		// 		date: data.get('no-expire') !== 'on' ? data.get('date') : null,
+		// 		quantity: data.get('quantity'),
+		// 		onOrder: data.get('on-order'),
+		// 	},
+		// 	params: { id: String(item.id) },
+		// });
+		// if (result.status === 200) {
+		// 	setOpen(false);
+		// 	router.refresh();
+		// 	queryClient.invalidateQueries({ queryKey: ['locations'] });
+		// 	queryClient.invalidateQueries({
+		// 		queryKey: ['activity', item.productId],
+		// 	});
+		// }
 	}
 
 	async function remove(e: FormEvent<HTMLFormElement>) {
@@ -78,12 +93,12 @@ export default function EditItem({ item }: { item: Item }) {
 			params: { id: String(item.id) },
 		});
 		if (result.status === 200) {
-			setOpen(false);
 			router.refresh();
 			queryClient.invalidateQueries({ queryKey: ['locations'] });
 			queryClient.invalidateQueries({
 				queryKey: ['activity', item.productId],
 			});
+			setOpen(false);
 		}
 		setDeleteLoading(false);
 	}
@@ -150,7 +165,7 @@ export default function EditItem({ item }: { item: Item }) {
 							variant='primary'
 							Icon={Save}
 							type='submit'
-							isLoading={editLoading}
+							isLoading={editLoading || isEditPending}
 						>
 							Save
 						</ArrowButton>

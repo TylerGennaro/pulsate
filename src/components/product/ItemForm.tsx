@@ -12,6 +12,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 		dateToUTC(item?.expires) || new Date()
 	);
 	const [hasExpiration, setHasExpiration] = useState(item?.expires !== null);
+	const [isOnOrder, setIsOnOrder] = useState(item?.onOrder ?? false);
 	return (
 		<div className='grid grid-cols-[min-content_repeat(3,_minmax(0,_1fr))] gap-2 items-center'>
 			<label className='col-span-1 text-right'>
@@ -22,7 +23,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 				date={date}
 				setDate={setDate}
 				className='w-full col-span-3'
-				disabled={!hasExpiration}
+				disabled={!hasExpiration || isOnOrder}
 			/>
 			<label className='col-span-1 text-right'>
 				Quantity
@@ -49,7 +50,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 				className='ml-auto'
 				id='on-order'
 				name='on-order'
-				onCheckedChange={(checked) => setHasExpiration(!checked)}
+				onCheckedChange={(checked) => setIsOnOrder(!!checked)}
 				defaultChecked={item?.onOrder || false}
 			/>
 			<label className='col-span-3' htmlFor='on-order'>
