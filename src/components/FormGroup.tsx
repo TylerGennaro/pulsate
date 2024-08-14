@@ -23,7 +23,8 @@ const FormGroup = React.forwardRef<HTMLInputElement, FormGroupProps>(
 					{props.required && <span className='ml-1 text-red-500'>*</span>}
 				</label>
 				<Input
-					className={cn('col-span-3', props.className)}
+					wrapperClass='col-span-3'
+					className={props.className}
 					ref={ref}
 					{...props}
 				/>
