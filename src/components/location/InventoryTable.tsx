@@ -18,9 +18,9 @@ import { tags } from '@lib/relations';
 import { Product } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { Row, useReactTable } from '@tanstack/react-table';
-import { X } from 'lucide-react';
-import { columns } from './columns';
+import { Search, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { columns } from './columns';
 import NewProduct from './NewProduct';
 
 function printSelectedCodes(size: number, rows: Row<Product>[]) {
@@ -51,7 +51,8 @@ function Toolbar({
 			<div className='flex flex-col justify-center flex-grow gap-4 lg:flex-row lg:items-center lg:justify-start'>
 				<Input
 					placeholder='Search products'
-					className='max-w-xs'
+					wrapperClass='max-w-xs'
+					startIcon={<Search />}
 					value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
 					onChange={(event) =>
 						table.getColumn('name')?.setFilterValue(event.target.value)
