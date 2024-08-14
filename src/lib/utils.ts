@@ -1,11 +1,14 @@
+import { Item, Product } from '@prisma/client';
 import { ClassValue, clsx } from 'clsx';
 import { format } from 'date-fns';
 import { Metadata } from 'next';
 import { NextResponse } from 'next/server';
 import { FormEvent } from 'react';
-import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
+import { isExpired } from './date';
+import { Constants, Tag } from './enum';
+import { toast } from '@components/ui/use-toast';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -28,6 +31,19 @@ export function parseFormData(e: FormEvent<HTMLFormElement>) {
 		formData.set(checkboxInput.name, checkboxInput.checked.toString());
 	}
 	return formData;
+}
+
+export function parseFormDataToObject(e: FormEvent<HTMLFormElement>) {
+	e.preventDefault();
+	const target = e.target as HTMLFormElement;
+	const formData = new FormData(target);
+	const dataObject: Record<string, string | number | boolean> =
+		formDataToObject(formData);
+	for (const checkbox of target.querySelectorAll('input[type="checkbox"]')) {
+		const checkboxInput = checkbox as HTMLInputElement;
+		dataObject[checkboxInput.name] = checkboxInput.checked.toString() === 'on';
+	}
+	return dataObject;
 }
 
 export async function crud({
@@ -91,6 +107,7 @@ export async function fetchJSON(
 }
 
 export function catchError(e: any) {
+	console.error(e);
 	if (e instanceof z.ZodError) {
 		return new NextResponse(
 			e.issues[0]?.message || 'Invalid request. Try again.',
@@ -116,9 +133,64 @@ export function capitalize(string: string) {
 	return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
-export function populateMetadata(title: string): Metadata {
+export function populateMetadata(title?: string): Metadata {
 	return {
-		title: `${title} | Pulsate`,
+		title: title !== undefined ? `${title} | Pulsate` : 'Pulsate',
 		description: 'Pulsate is a platform for managing EMS medical closets.',
 	};
+}
+
+export function parseProductInfo(product: Product & { items: Item[] }) {
+	const quantity = product.items.reduce(
+		(acc: number, item: Item) => (!item.onOrder ? acc + item.quantity : acc),
+		0
+	);
+	const exp = product.items.reduce(
+		(acc: number, item: Item) =>
+			item.expires !== null &&
+			(new Date(item.expires).getTime() < acc || acc === -1)
+				? new Date(item.expires).getTime()
+				: acc,
+		-1
+	);
+	const hasOnOrder = product.items.some((item) => item.onOrder);
+	const tags = [];
+	if (quantity < product.min) tags.push(Tag.LOW);
+	if (exp !== -1 && quantity > 0) {
+		const expired = isExpired(new Date(exp));
+		if (expired === Constants.IS_EXPIRED) tags.push(Tag.EXPIRED);
+		else if (expired === Constants.IS_EXPIRING) tags.push(Tag.EXPIRES);
+	}
+	if (hasOnOrder) tags.push(Tag.ONORDER);
+	return { tags: tags, exp: exp, quantity: quantity };
+}
+
+/**
+ * A response object for server actions.
+ */
+export class ActionResponse {
+	/**
+	 * Send a response message from a server action.
+	 * @param ok If the action was successful.
+	 * @param message The message to send if unsuccessful.
+	 * @returns A response object.
+	 */
+	static send(ok: false, message: string): { ok: boolean; message: string };
+	static send(ok: true, message?: string): { ok: boolean; message: string };
+	static send(ok: boolean, message?: string) {
+		return { ok, message };
+	}
+}
+
+/**
+ * Get the error message from an error object.
+ * @param error The error object.
+ * @returns The message parsed from the error object.
+ */
+export function getErrorMessage(error: unknown) {
+	let errorMessage = 'An unknown error occurred. Try again.';
+	if (error instanceof z.ZodError) errorMessage = error.issues[0]?.message;
+	else if (error instanceof Error) errorMessage = error.message;
+	errorMessage = errorMessage.endsWith('.') ? errorMessage : errorMessage + '.';
+	return errorMessage;
 }

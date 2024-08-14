@@ -10,7 +10,7 @@ import { z } from 'zod';
 
 const schema = z.array(
 	z.object({
-		id: z.string().cuid(),
+		id: z.number().int().positive(),
 		quantity: z.number().int().positive(),
 	})
 );

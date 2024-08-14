@@ -1,29 +1,33 @@
 'use client';
 
-import { useState } from 'react';
-import { DatePicker } from '@components/ui/date-picker';
 import { Checkbox } from '@components/ui/checkbox';
+import { DatePicker } from '@components/ui/date-picker';
 import { Input } from '@components/ui/input';
+import { dateToUTC } from '@lib/date';
 import { Item } from '@prisma/client';
+import { useState } from 'react';
 
 export default function ItemForm({ item }: { item?: Item }) {
-	const [date, setDate] = useState<Date>(item?.expires || new Date());
+	const [date, setDate] = useState<Date>(
+		dateToUTC(item?.expires) || new Date()
+	);
 	const [hasExpiration, setHasExpiration] = useState(item?.expires !== null);
+	const [isOnOrder, setIsOnOrder] = useState(item?.onOrder ?? false);
 	return (
 		<div className='grid grid-cols-[min-content_repeat(3,_minmax(0,_1fr))] gap-2 items-center'>
 			<label className='col-span-1 text-right'>
 				Expiration
-				<span className='text-red-500 ml-1'>*</span>
+				<span className='ml-1 text-red-500'>*</span>
 			</label>
 			<DatePicker
 				date={date}
 				setDate={setDate}
-				className='col-span-3 w-full'
-				disabled={!hasExpiration}
+				className='w-full col-span-3'
+				disabled={!hasExpiration || isOnOrder}
 			/>
 			<label className='col-span-1 text-right'>
 				Quantity
-				<span className='text-red-500 ml-1'>*</span>
+				<span className='ml-1 text-red-500'>*</span>
 			</label>
 			<Input
 				className='col-span-3'
@@ -46,6 +50,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 				className='ml-auto'
 				id='on-order'
 				name='on-order'
+				onCheckedChange={(checked) => setIsOnOrder(!!checked)}
 				defaultChecked={item?.onOrder || false}
 			/>
 			<label className='col-span-3' htmlFor='on-order'>

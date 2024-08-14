@@ -12,71 +12,65 @@ import {
 } from '@components/ui/dialog';
 import { Plus } from 'lucide-react';
 import InputGroup from '@components/FormGroup';
-import { FormEvent, useState } from 'react';
-import toast from 'react-hot-toast';
+import { FormEvent, ReactNode, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { parseFormData } from '@lib/utils';
+import ArrowButton from './ArrowButton';
+import { toast } from './ui/use-toast';
 
-export default function NewLocationDialog() {
+export default function NewLocationDialog({
+	children,
+}: {
+	children: ReactNode;
+}) {
 	const [open, setOpen] = useState(false);
-	const [loading, setLoading] = useState(false);
 	const router = useRouter();
-	async function submit(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setLoading(true);
-		const data = {
-			name: e.currentTarget['location-name'].value,
-		};
-		const result = await fetch('/api/locations', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}).then(async (res) => {
-			return { message: await res.text(), status: res.status };
-		});
 
-		if (result.status === 200) {
-			toast.success(result.message);
-			setOpen(false);
-			router.refresh();
-		} else {
-			toast.error(result.message);
-		}
-		setLoading(false);
-	}
+	const queryClient = useQueryClient();
+	const { mutate, isPending } = useMutation({
+		mutationFn: async (e: FormEvent<HTMLFormElement>) => {
+			const data = parseFormData(e);
+			return fetch('/api/locations', {
+				method: 'POST',
+				body: data,
+			});
+		},
+		onSettled: async (res) => {
+			const text = await res?.text();
+			if (res?.ok) {
+				queryClient.invalidateQueries({ queryKey: ['locations'] });
+				setOpen(false);
+				router.push('/app/' + text);
+			} else toast.error('Failed to add location', text);
+		},
+	});
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button
-					icon={Plus}
-					className='bg-transparent border-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:text-zinc-950 dark:hover:text-zinc-50'
-				>
-					New Location
-				</Button>
-			</DialogTrigger>
+			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent>
-				<form onSubmit={submit}>
+				<form onSubmit={mutate}>
 					<DialogHeader>
-						<DialogTitle>Add New Location</DialogTitle>
+						<DialogTitle>Create New Location</DialogTitle>
 						<DialogDescription>
-							Add a new inventory location. This inventory will be separate from
-							any other locations set up.
+							Create a new inventory location. This inventory will be separate
+							from any other locations set up.
 						</DialogDescription>
 					</DialogHeader>
 
 					<div className='grid gap-4 py-4 min-w-fit'>
-						<InputGroup
-							label='Name'
-							name='location-name'
-							placeholder='Enter location name'
-							required
-						/>
+						<InputGroup label='Name' name='name' required />
 					</div>
 					<DialogFooter>
-						<Button className='ml-auto' icon={Plus} isLoading={loading}>
-							Add
-						</Button>
+						<ArrowButton
+							className='ml-auto'
+							Icon={Plus}
+							isLoading={isPending}
+							type='submit'
+							variant='primary'
+						>
+							Create
+						</ArrowButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>

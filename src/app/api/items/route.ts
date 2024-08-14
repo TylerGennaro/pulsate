@@ -1,4 +1,5 @@
 import { authOptions } from '@lib/auth';
+import { getUTCDate } from '@lib/date';
 import { log } from '@lib/log';
 import { db } from '@lib/prisma';
 import { catchError } from '@lib/utils';
@@ -27,7 +28,8 @@ export async function POST(req: Request) {
 	const data = await req.json();
 
 	try {
-		const { date, quantity, onOrder } = schema.parse(data);
+		let { date, quantity, onOrder } = schema.parse(data);
+		if (onOrder) date = null;
 		if (!data.productId)
 			return new NextResponse('Invalid product ID.', { status: 400 });
 
@@ -60,7 +62,7 @@ export async function POST(req: Request) {
 						id: item.productId,
 					},
 					data: {
-						lastOrder: new Date(),
+						lastOrder: getUTCDate(),
 					},
 				});
 			} else
@@ -94,7 +96,7 @@ export async function POST(req: Request) {
 					id: data.productId,
 				},
 				data: {
-					lastOrder: new Date(),
+					lastOrder: getUTCDate(),
 				},
 			});
 		} else
@@ -119,10 +121,13 @@ export async function PUT(req: Request) {
 
 	const { searchParams } = new URL(req.url);
 	const data = await req.json();
-	const id = searchParams.get('id') || '';
+	const id = parseInt(searchParams.get('id') ?? '');
+
+	if (isNaN(id)) return new NextResponse('Invalid item ID.', { status: 400 });
 
 	try {
-		const { date, quantity, onOrder } = schema.parse(data);
+		let { date, quantity, onOrder } = schema.parse(data);
+		if (onOrder) date = null;
 		const item = await db.item.findFirst({
 			where: {
 				id,
@@ -210,7 +215,9 @@ export async function DELETE(req: Request) {
 	if (!userId) return new NextResponse('Unauthorized', { status: 401 });
 
 	const { searchParams } = new URL(req.url);
-	const id = searchParams.get('id') || '';
+	const id = parseInt(searchParams.get('id') ?? '');
+
+	if (isNaN(id)) return new NextResponse('Invalid item ID.', { status: 400 });
 
 	try {
 		const item = await db.item.findFirst({

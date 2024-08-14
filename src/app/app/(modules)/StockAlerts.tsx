@@ -1,73 +1,51 @@
 import TagBadge from '@components/TagBadge';
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from '@components/ui/accordion';
-import { Tag } from '@lib/enum';
-import { ChevronRight } from 'lucide-react';
+import { Constants, Tag } from '@lib/enum';
+import { StockAlert } from '../DashboardModules';
+import { format } from 'date-fns';
+import { dateToUTC, isExpired } from '@lib/date';
 
-export default function StockAlerts() {
+export default function StockAlerts({ data }: { data: StockAlert[] }) {
 	return (
-		<Accordion
-			type='single'
-			collapsible
-			className='mt-4 border-t rounded-md border-x bg-background'
-		>
-			<AccordionItem value='1' className='overflow-hidden rounded-md'>
-				<AccordionTrigger className='px-4 [&[data-state=open]]:border-b bg-content brightness-75'>
-					Test Location
-				</AccordionTrigger>
-				<AccordionContent className='pb-0 bg-content'>
-					<ul>
-						<li className='flex items-center justify-between px-4 py-4 transition-colors cursor-pointer hover:bg-muted'>
-							<span>Cervical Collar</span>
+		<ul className='mt-8 animate-[fade-in_500ms] max-h-96 overflow-y-auto'>
+			{data.map((item) => {
+				const expDate =
+					'expires' in item
+						? dateToUTC(new Date(item.expires)) ?? new Date()
+						: new Date();
+				return (
+					<li
+						key={item.name}
+						className='py-2 border-b last-of-type:border-none'
+					>
+						<a className='flex items-center justify-between px-4 py-2 transition-colors rounded-md hover:bg-content-muted'>
 							<div className='flex items-center gap-8'>
-								<div className='flex gap-2'>
-									<TagBadge tag={Tag.LOW} />
+								<div>
+									<TagBadge
+										tag={
+											'quantity' in item
+												? Tag.LOW
+												: isExpired(expDate) === Constants.IS_EXPIRED
+												? Tag.EXPIRED
+												: Tag.EXPIRES
+										}
+									/>
 								</div>
-								<ChevronRight size={16} />
-							</div>
-						</li>
-						<li className='flex items-center justify-between px-4 py-4 transition-colors cursor-pointer hover:bg-muted'>
-							<span>Cervical Collar</span>
-							<div className='flex items-center gap-8'>
-								<div className='flex gap-2'>
-									<TagBadge tag={Tag.LOW} />
+								<div>
+									<p>{item.name}</p>
+									<p className='text-sm text-muted-foreground'>
+										{item.location}
+									</p>
 								</div>
-								<ChevronRight size={16} />
 							</div>
-						</li>
-						<li className='flex items-center justify-between px-4 py-4 transition-colors cursor-pointer hover:bg-muted'>
-							<span>Cervical Collar</span>
-							<div className='flex items-center gap-8'>
-								<div className='flex gap-2'>
-									<TagBadge tag={Tag.LOW} />
-									<TagBadge tag={Tag.EXPIRES} />
-								</div>
-								<ChevronRight size={16} />
-							</div>
-						</li>
-					</ul>
-				</AccordionContent>
-			</AccordionItem>
-			<AccordionItem value='2' className='overflow-hidden rounded-md'>
-				<AccordionTrigger className='px-4 bg-content brightness-75 [&[data-state=open]]:border-b'>
-					Other Location
-				</AccordionTrigger>
-				<AccordionContent className='pb-0 bg-content'>
-					<ul>
-						<li className='flex items-center justify-between px-4 py-4 transition-colors cursor-pointer hover:bg-muted'>
-							<span>Cervical Collar</span>
-							<div className='flex items-center gap-8'>
-								<TagBadge tag={Tag.LOW} />
-								<ChevronRight size={16} />
-							</div>
-						</li>
-					</ul>
-				</AccordionContent>
-			</AccordionItem>
-		</Accordion>
+							<p className='text-muted-foreground'>
+								{'quantity' in item
+									? `${item.quantity <= 0 ? 'No' : item.quantity} items left`
+									: `Expires ${format(expDate, 'MMM d, yyyy')}`}
+							</p>
+						</a>
+					</li>
+				);
+			})}
+		</ul>
 	);
 }

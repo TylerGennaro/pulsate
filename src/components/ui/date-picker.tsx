@@ -46,9 +46,8 @@ export function DatePicker({
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
-					variant='outline'
 					className={cn(
-						'w-[280px] justify-start text-left font-normal',
+						'w-[280px] justify-start text-left font-normal bg-muted/30 hover:bg-muted',
 						!date && 'text-muted-foreground',
 						className
 					)}
@@ -73,7 +72,7 @@ export function DatePicker({
 							setYear(date.getFullYear());
 						}}
 						captionLayout='dropdown-buttons'
-						fromYear={new Date().getFullYear()}
+						fromYear={new Date().getFullYear() - 1}
 						toYear={2050}
 						initialFocus
 						components={{

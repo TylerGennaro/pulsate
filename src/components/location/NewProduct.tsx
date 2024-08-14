@@ -14,8 +14,9 @@ import { parseFormData } from '@lib/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { FormEvent, useState } from 'react';
-import toast from 'react-hot-toast';
 import ProductForm from './ProductForm';
+import ArrowButton from '@components/ArrowButton';
+import { toast } from '@components/ui/use-toast';
 
 export default function NewItemSheet({ location }: { location: string }) {
 	const [open, setOpen] = useState(false);
@@ -33,15 +34,15 @@ export default function NewItemSheet({ location }: { location: string }) {
 			if (res?.ok) {
 				queryClient.invalidateQueries({ queryKey: ['products'] });
 				setOpen(false);
-			} else toast.error('Failed to add product: ' + (await res?.text()));
+			} else toast.error('Failed to add product', await res?.text());
 		},
 	});
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>
-					<Plus className='w-4 h-4 mr-2' />
+				<Button variant='primary'>
+					<Plus className='icon-left' />
 					New Product
 				</Button>
 			</DialogTrigger>
@@ -56,14 +57,15 @@ export default function NewItemSheet({ location }: { location: string }) {
 					</DialogHeader>
 					<ProductForm />
 					<DialogFooter>
-						<Button
+						<ArrowButton
 							className='ml-auto'
 							type='submit'
-							icon={Plus}
+							Icon={Plus}
 							isLoading={isPending}
+							variant='primary'
 						>
 							Add
-						</Button>
+						</ArrowButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>

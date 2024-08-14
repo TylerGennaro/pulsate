@@ -44,7 +44,7 @@ export default function SignIn() {
 	const callbackUrl = searchParams.get('callbackUrl') ?? undefined;
 	return (
 		<div className='grid w-screen h-screen place-items-center'>
-			<div className="absolute top-0 left-0 w-screen h-screen bg-[url('/dot_grid.svg')] -z-[1]" />
+			<div className="absolute top-0 left-0 w-screen h-screen bg-[url('/dot_grid_light.svg')] dark:bg-[url('/dot_grid.svg')] -z-[1]" />
 			<div className='flex flex-col w-full max-w-sm gap-4 p-8 border rounded-md shadow-md bg-content'>
 				<div className='flex items-center justify-between mb-4'>
 					<Logo />

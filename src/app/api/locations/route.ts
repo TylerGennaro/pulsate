@@ -1,13 +1,15 @@
 import { authOptions } from '@lib/auth';
+import { LOCATION_ID_LENGTH } from '@lib/constants';
+import { isExpired } from '@lib/date';
+import { Constants, Tag } from '@lib/enum';
 import { db } from '@lib/prisma';
-import { catchError } from '@lib/utils';
+import { catchError, formDataToObject, getErrorMessage } from '@lib/utils';
+import { nanoid } from 'nanoid';
 import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const schema = z.object({
-	userId: z.string().cuid(),
 	name: z.optional(
 		z
 			.string()
@@ -21,26 +23,107 @@ const schema = z.object({
 	id: z.string().cuid().optional(),
 });
 
+export async function GET(req: Request) {
+	const session = await getServerSession(authOptions);
+	if (!session || !session?.user?.id)
+		return new NextResponse('Unauthorized', { status: 401 });
+
+	const { searchParams } = new URL(req.url);
+	const id = searchParams.get('id');
+	const single = searchParams.get('single') ?? false;
+
+	if (single === 'true') {
+		const locations = await db.location.findMany({
+			where: {
+				userId: session.user.id,
+				id: id ? { equals: id } : undefined,
+			},
+			select: {
+				id: true,
+				name: true,
+				user: {
+					select: {
+						name: true,
+					},
+				},
+			},
+		});
+		if (locations.length > 0) {
+			return NextResponse.json(locations[0], {
+				status: 200,
+			});
+		}
+		return new NextResponse('Location not found.', { status: 404 });
+	} else {
+		const locations = await db.location.findMany({
+			where: {
+				userId: session.user.id,
+				id: id ? { equals: id } : undefined,
+			},
+			select: {
+				id: true,
+				name: true,
+				products: {
+					select: {
+						items: {
+							select: {
+								quantity: true,
+								expires: true,
+							},
+						},
+						min: true,
+					},
+				},
+			},
+		});
+		const locationsWithTags = locations.map((location) => {
+			const tags: Tag[] = [];
+			const hasLow = location.products.some(
+				(product) =>
+					product.items.reduce((acc, item) => acc + item.quantity, 0) <
+					product.min
+			);
+			const expireStatus = location.products.reduce((acc, product) => {
+				const productExpireStatus = product.items.reduce((acc, item) => {
+					const getExpiredTag = isExpired(item.expires);
+					return Math.min(acc, getExpiredTag);
+				}, Infinity);
+				return Math.min(acc, productExpireStatus);
+			}, Infinity);
+			if (hasLow) tags.push(Tag.LOW);
+			if (expireStatus === Constants.IS_EXPIRED) tags.push(Tag.EXPIRED);
+			else if (expireStatus === Constants.IS_EXPIRING) tags.push(Tag.EXPIRES);
+			return {
+				...location,
+				tags,
+			};
+		});
+		return NextResponse.json(locationsWithTags, {
+			status: 200,
+		});
+	}
+}
+
 export async function POST(req: Request) {
 	const session = await getServerSession(authOptions);
 	if (!session || !session?.user?.id)
 		return new NextResponse('Unauthorized', { status: 401 });
 
-	const data = await req.json();
-	data.userId = session?.user.id;
+	const data = formDataToObject(await req.formData());
 
 	try {
-		const { userId, name } = schema.parse(data);
+		const { name } = schema.parse(data);
 		if (!name) return new NextResponse('Invalid name', { status: 400 });
 
 		const newLocation = await db.location.create({
 			data: {
+				id: nanoid(LOCATION_ID_LENGTH),
 				name,
-				userId,
+				userId: session.user.id,
 			},
 		});
 
-		return new NextResponse('Location added', {
+		return new NextResponse(newLocation.id, {
 			status: 200,
 		});
 	} catch (e) {
@@ -54,16 +137,18 @@ export async function PUT(req: Request) {
 		return new NextResponse('Unauthorized', { status: 401 });
 
 	const { searchParams } = new URL(req.url);
-	const data = await req.json();
-	data.userId = session?.user.id;
-	data.id = searchParams.get('id');
+	const formData = await req.formData();
+	const data = formDataToObject(formData);
+	const id = searchParams.get('id');
+
+	if (!id) return new NextResponse('Invalid query parameters', { status: 400 });
 
 	try {
-		const { name, id, userId } = schema.parse(data);
+		const { name } = schema.parse(data);
 		const location = await db.location.findFirst({
 			where: {
 				id,
-				userId,
+				userId: session.user.id,
 			},
 		});
 		if (!location)
@@ -88,27 +173,21 @@ export async function DELETE(req: Request) {
 		return new NextResponse('Unauthorized', { status: 401 });
 
 	const { searchParams } = new URL(req.url);
-	const data = {
-		userId: session?.user.id,
-		id: searchParams.get('id'),
-	};
+	const id = searchParams.get('id');
+
+	if (!id) return new NextResponse('Invalid query parameters', { status: 400 });
 
 	try {
-		const { id, userId } = schema.parse(data);
-		const location = await db.location.findFirst({
-			where: {
-				id,
-				userId,
-			},
-		});
-		if (!location)
-			return new NextResponse('Could not find location.', { status: 404 });
 		const deletedLocation = await db.location.delete({
 			where: {
 				id,
 			},
 		});
-		redirect('/app');
+		if (!deletedLocation.id)
+			return new NextResponse('Location not found.', { status: 404 });
+
+		const url = new URL('/app', req.url);
+		return NextResponse.redirect(url.toString());
 	} catch (e) {
 		return catchError(e);
 	}

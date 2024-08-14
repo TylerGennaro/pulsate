@@ -19,10 +19,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useRef, useState } from 'react';
 import ItemForm from './ItemForm';
+import ArrowButton from '@components/ArrowButton';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function NewItemDialog({ product }: { product: string }) {
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const queryClient = useQueryClient();
 	const router = useRouter();
 
 	const session = useSession();
@@ -45,13 +48,19 @@ export default function NewItemDialog({ product }: { product: string }) {
 		if (result.status === 200) {
 			setOpen(false);
 			router.refresh();
+			queryClient.invalidateQueries({ queryKey: ['locations'] });
+			queryClient.invalidateQueries({
+				queryKey: ['activity', product],
+			});
 		}
 		setLoading(false);
 	}
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button icon={Plus}>Add Item</Button>
+				<Button variant='primary' icon={Plus}>
+					Add Item
+				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
@@ -63,14 +72,15 @@ export default function NewItemDialog({ product }: { product: string }) {
 				<form className='flex flex-col gap-4' onSubmit={submit}>
 					<ItemForm />
 					<DialogFooter>
-						<Button
+						<ArrowButton
 							type='submit'
 							onClick={() => setLoading(true)}
 							isLoading={loading}
-							icon={Plus}
+							Icon={Plus}
+							variant='primary'
 						>
 							Add
-						</Button>
+						</ArrowButton>
 					</DialogFooter>
 				</form>
 			</DialogContent>

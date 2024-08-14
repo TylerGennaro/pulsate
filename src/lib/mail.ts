@@ -36,7 +36,7 @@ export async function sendMail(to: string, subject: string, message: string) {
 export async function sendCheckoutEmail(
 	email: string,
 	product: Product & { location: Location },
-	items: { id: string; quantity: number; expiration: Date | null }[]
+	items: { id: number; quantity: number; expiration: Date | null }[]
 ) {
 	const session = await getServerSession(authOptions);
 	await sendMail(

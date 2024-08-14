@@ -1,21 +1,21 @@
 'use client';
 
-import { Button } from '@components/ui/button';
+import ArrowButton from '@components/ArrowButton';
 import Heading from '@components/ui/heading';
 import { Skeleton } from '@components/ui/skeleton';
+import { toast } from '@components/ui/use-toast';
 import { Item } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ExternalLink, ShoppingCart } from 'lucide-react';
+import { Link as LinkIcon, ShoppingCart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import ItemCard from './ItemCard';
-import toast from 'react-hot-toast';
 
 export default function Checkout({ productId }: { productId: string }) {
 	const queryClient = useQueryClient();
 	const session = useSession();
-	const [cart, setCart] = useState<Map<string, number>>(new Map());
+	const [cart, setCart] = useState<Map<number, number>>(new Map());
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['product', productId],
@@ -37,7 +37,7 @@ export default function Checkout({ productId }: { productId: string }) {
 				setCart(new Map());
 				queryClient.invalidateQueries({ queryKey: ['product', productId] });
 				toast.success('Checkout recorded');
-			} else toast.error('Failed: ' + (await res.json()).message);
+			} else toast.error('Failed', (await res.json()).message);
 		},
 	});
 
@@ -57,10 +57,7 @@ export default function Checkout({ productId }: { productId: string }) {
 				)}
 				{!isLoading && session?.data?.user.id === data.location.userId && (
 					<Link href={`/app/${data.location.id}/${productId}`}>
-						<Button variant='outline'>
-							View Page
-							<ExternalLink className='w-4 h-4 ml-2' />
-						</Button>
+						<ArrowButton Icon={LinkIcon}>View Page</ArrowButton>
 					</Link>
 				)}
 			</div>
@@ -100,18 +97,19 @@ export default function Checkout({ productId }: { productId: string }) {
 					)}
 				</>
 			)}
-			<Button
-				icon={ShoppingCart}
+			<ArrowButton
+				Icon={ShoppingCart}
 				className='self-end mt-8 w-fit'
 				disabled={isLoading || !data.items.length}
 				type='submit'
 				isLoading={isPending}
 				onClick={() => mutate()}
+				variant='primary'
 			>
 				Checkout (
 				{Array.from(cart).reduce((acc, [, quantity]) => acc + quantity, 0)}{' '}
 				items)
-			</Button>
+			</ArrowButton>
 			{/* </form> */}
 		</div>
 	);

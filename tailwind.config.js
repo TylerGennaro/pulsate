@@ -22,10 +22,14 @@ module.exports = {
 				ring: "hsl(var(--ring))",
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
-				content: "hsl(var(--content))",
+				content: {
+					DEFAULT: "hsl(var(--content))",
+					muted: "hsl(var(--content-muted))",
+				},
 				primary: {
 					DEFAULT: "hsl(var(--primary))",
 					foreground: "hsl(var(--primary-foreground))",
+					border: "hsl(var(--primary-border))",
 				},
 				secondary: {
 					DEFAULT: "hsl(var(--secondary))",
@@ -71,6 +75,10 @@ module.exports = {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
+			transitionDelay: {
+				400: '400ms',
+				450: '450ms',
+			}
 		},
 	},
 	plugins: [require("tailwindcss-animate")],

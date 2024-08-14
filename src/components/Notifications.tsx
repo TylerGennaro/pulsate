@@ -56,7 +56,7 @@ export default function Notifications() {
 					size='sm'
 					className={
 						notifications.some((notif) => !notif.read)
-							? 'after:border-2 after:box-content after:border-zinc-50 hover:after:border-zinc-200 after:dark:border-zinc-900 dark:hover:after:border-zinc-800 relative after:rounded-full after:content-[""] after:absolute after:top-[4px] after:right-[10px] after:w-2 after:h-2 after:bg-blue-700'
+							? 'after:border-2 after:box-content after:border-content hover:after:border-muted relative after:rounded-full after:content-[""] after:absolute after:top-[4px] after:right-[10px] after:w-2 after:h-2 after:bg-primary after:transition-colors'
 							: ''
 					}
 				>
@@ -78,14 +78,12 @@ export default function Notifications() {
 									href={notification.redirect}
 									key={i}
 									className={`grid grid-cols-[0.5rem_1fr_min-content] items-center gap-x-2 p-4 border-b last:border-b-0 hover:brightness-95 dark:hover:brightness-125 ${
-										notification.read
-											? 'bg-zinc-100 dark:bg-zinc-900'
-											: 'bg-zinc-50 dark:bg-zinc-800'
+										notification.read ? 'bg-background' : 'bg-muted'
 									}`}
 									onClick={() => markAsRead([notification.created])}
 								>
 									{!notification.read ? (
-										<span className='w-2 h-2 bg-blue-700 rounded-full shrink-0' />
+										<span className='w-2 h-2 rounded-full bg-primary shrink-0' />
 									) : (
 										<span />
 									)}

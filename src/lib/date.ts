@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import {} from 'date-fns/locale';
+import { Constants } from './enum';
 
 export function toDateTime(seconds: number | null) {
 	if (seconds === null) return null;
@@ -14,6 +15,40 @@ export function formatDate(date: Date | string) {
 	return format(date, 'MMM d, yyyy');
 }
 
+export function formatDateTime(date: Date | string) {
+	if (typeof date === 'string') {
+		if (date.length === 0) return '';
+		date = new Date(date);
+	}
+	return format(date, 'MMM d, yyyy hh:mm a');
+}
+
+export function getUTCDate() {
+	const date = new Date();
+	return new Date(
+		Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+	);
+}
+
+export function getUTCDateTime() {
+	return new Date(
+		Date.UTC(
+			new Date().getFullYear(),
+			new Date().getMonth(),
+			new Date().getDate(),
+			new Date().getHours(),
+			new Date().getMinutes(),
+			new Date().getSeconds(),
+			new Date().getMilliseconds()
+		)
+	);
+}
+
+export function dateToUTC(date: Date | undefined | null) {
+	if (!date) return null;
+	return new Date(date.getTime() + date.getTimezoneOffset() * 60000); // 60,000 ms in a minute, getTimezoneOffset returns minutes
+}
+
 export function formatUTCDate(date: Date | string | null) {
 	if (date === null) return null;
 	if (typeof date === 'string' && date.length === 0) return '';
@@ -22,15 +57,26 @@ export function formatUTCDate(date: Date | string | null) {
 	return format(date, 'MMM d, yyyy');
 }
 
-export function isExpiring(date: Date | string | null) {
-	if (date === null) return false;
+export function isExpired(date: Date | string | null): number {
+	if (date === null) return 0;
 	if (typeof date === 'string') {
-		if (date.length === 0) return false;
+		if (date.length === 0) return 0;
 		date = new Date(date);
 	}
-	const today = new Date();
-	const diff = date.getTime() - today.getTime();
-	return diff <= 1000 * 60 * 60 * 24 * 7;
+	const newDate = new Date();
+	const today = new Date(
+		newDate.getFullYear(),
+		newDate.getMonth(),
+		newDate.getDate(),
+		0,
+		0,
+		0
+	);
+	const diff =
+		date.getTime() - (today.getTime() - today.getTimezoneOffset() * 60000);
+	if (diff < 0) return Constants.IS_EXPIRED;
+	if (diff <= 1000 * 60 * 60 * 24 * 7) return Constants.IS_EXPIRING; // 7 days
+	return 0;
 }
 
 export function timeSince(date: Date) {

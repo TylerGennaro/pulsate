@@ -1,9 +1,14 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { NextAuthOptions } from 'next-auth';
+import { Awaitable, NextAuthOptions } from 'next-auth';
 import { db } from './prisma';
 import GoogleProvider from 'next-auth/providers/google';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import { getTier } from './stripe-util';
+import { Prisma, PrismaClient, User } from '@prisma/client';
+import { DefaultArgs } from '@prisma/client/runtime/library';
+import { nanoid } from 'nanoid';
+import { USER_ID_LENGTH } from './constants';
+import { AdapterAccount, AdapterUser } from 'next-auth/adapters';
 
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 	const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -24,8 +29,23 @@ function getAzureCredentials() {
 	return { clientId, clientSecret, tenantId };
 }
 
+function CustomPrismaAdapter(
+	db: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
+) {
+	return {
+		...PrismaAdapter(db),
+		createUser: (data: Omit<AdapterUser, 'id'>) =>
+			db.user.create({
+				data: { ...data, id: nanoid(USER_ID_LENGTH) },
+			}) as Promise<AdapterUser>,
+		linkAccount: async (account: AdapterAccount) => {
+			await db.account.create({ data: account });
+		},
+	};
+}
+
 export const authOptions: NextAuthOptions = {
-	adapter: PrismaAdapter(db),
+	adapter: CustomPrismaAdapter(db),
 	session: {
 		strategy: 'jwt',
 	},

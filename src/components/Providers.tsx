@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react';
 import { Session } from 'next-auth';
 import { Provider as BalancerProvider } from 'react-wrap-balancer';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from './ui/toaster';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ export default function Providers({
 				>
 					<TooltipProvider delayDuration={0}>
 						<BalancerProvider>{children}</BalancerProvider>
+						<Toaster />
 					</TooltipProvider>
 				</NextThemesProvider>
 			</SessionProvider>

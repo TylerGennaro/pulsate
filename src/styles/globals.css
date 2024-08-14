@@ -5,13 +5,15 @@
 @layer base {
 	:root {
 		--content: 0 0% 100%;
+		--content-muted: 0 0% 95%;
 		--background: 0 0% 98%;
-		--foreground: 240 10% 3.9%;
+		--foreground: 0 0% 10%;
 		--card: 0 0% 100%;
 		--card-foreground: 240 10% 3.9%;
 		--popover: 0 0% 100%;
 		--popover-foreground: 240 10% 3.9%;
 		--primary: 262.1 83.3% 57.8%;
+		--primary-border: 263.4 70% 48%;
 		--primary-foreground: 210 20% 98%;
 		--secondary: 220 14.3% 95.9%;
 		--secondary-foreground: 220.9 39.3% 11%;
@@ -29,6 +31,7 @@
 
 	.dark {
 		--content: 240 10% 5.9%;
+		--content-muted: 240 10% 9%;
 		--background: 240 10% 3.9%;
 		--foreground: 0 0% 98%;
 		--card: 240 10% 3.9%;
@@ -36,6 +39,7 @@
 		--popover: 240 10% 3.9%;
 		--popover-foreground: 0 0% 98%;
 		--primary: 263.4 70% 50.4%;
+		--primary-border: 263.4 70% 56%;
 		--primary-foreground: 210 20% 98%;
 		--secondary: 215 27.9% 16.9%;
 		--secondary-foreground: 210 20% 98%;
@@ -76,20 +80,60 @@ input[type='number'].no-arrows {
 	appearance: textfield;
 }
 
-@layer base {
-	* {
-		@apply border-border scroll-smooth;
+* {
+	@apply border-border scroll-smooth;
+}
+body {
+	@apply bg-background text-foreground;
+}
+.icon-left {
+	@apply w-4 h-4 mr-2;
+}
+.icon-right {
+	@apply w-4 h-4 ml-2;
+}
+.absolute-center {
+	@apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
 	}
-	body {
-		@apply bg-background text-foreground;
+	to {
+		opacity: 1;
 	}
-	.icon-left {
-		@apply w-4 h-4 mr-2;
+}
+
+@keyframes fade-out {
+	from {
+		opacity: 1;
 	}
-	.icon-right {
-		@apply w-4 h-4 ml-2;
+	to {
+		opacity: 0;
 	}
-	.absolute-center {
-		@apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+@keyframes draw {
+	0% {
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dashoffset: 292;
+	}
+	100% {
+		stroke-dashoffset: 584;
+	}
+}
+
+@keyframes draw-alt {
+	0% {
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dashoffset: -292;
+	}
+	100% {
+		stroke-dashoffset: -584;
 	}
 }

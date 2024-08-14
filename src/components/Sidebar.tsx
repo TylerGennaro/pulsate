@@ -13,11 +13,9 @@ import Logo from './Logo';
 export default function Sidebar({
 	open,
 	toggle,
-	locations,
 }: {
 	open: boolean;
 	toggle: (open: boolean) => void;
-	locations: LocationInfo[] | null;
 }) {
 	const { data: session, status } = useSession();
 	const sidebarRef = useRef<HTMLDivElement>(null);
@@ -54,7 +52,7 @@ export default function Sidebar({
 				<div className='flex flex-col w-full gap-8 px-8 py-4'>
 					<Logo className='mt-4' />
 					<hr />
-					<Nav locations={locations} toggle={toggle} />
+					<Nav toggle={toggle} />
 				</div>
 				<div className='flex items-center justify-between gap-2 p-2'>
 					{status === 'loading' && (

@@ -17,8 +17,8 @@ export default function ItemCard({
 }: {
 	item: Item;
 	packageType: PackageType;
-	cart: Map<string, number>;
-	setCart: Dispatch<SetStateAction<Map<string, number>>>;
+	cart: Map<number, number>;
+	setCart: Dispatch<SetStateAction<Map<number, number>>>;
 }) {
 	const quantity = useMemo(() => cart.get(item.id) ?? 0, [cart, item.id]);
 	return (
@@ -38,7 +38,6 @@ export default function ItemCard({
 
 			<div className='flex justify-end'>
 				<Button
-					variant='outline'
 					className='rounded-none rounded-l-full'
 					onClick={() => {
 						const newCart = new Map(cart);
@@ -49,7 +48,7 @@ export default function ItemCard({
 					<Minus size={16} />
 				</Button>
 				<Input
-					className='w-20 text-center rounded-none border-x-0 no-arrows'
+					className='w-20 py-1 text-center rounded-none border-x-0 no-arrows'
 					placeholder='Quantity'
 					value={quantity.toString()}
 					onChange={(e) => {
@@ -64,7 +63,6 @@ export default function ItemCard({
 					type='number'
 				/>
 				<Button
-					variant='outline'
 					className='rounded-none rounded-r-full'
 					onClick={() => {
 						const newCart = new Map(cart);

@@ -31,7 +31,7 @@
 	✔ Default sort products by shelf location @done(24-03-18 23:28)
 ✔ Notification system @done(24-03-07 11:58)
 	✔ Email notifications @done(24-03-07 11:56)
-☐ Remove max quantity
+✔ Remove max quantity @done(24-07-24 22:01)
 ☐ Improve notifications
 	☐ Notification settings
 	☐ Improve overall functionality
@@ -39,16 +39,18 @@
 	☐ Send email on every checkout
 	☐ Only allow authenticated users to checkout
 		☐ Specify which email extensions can checkout
+	☐ Location permissions
+		☐ Individual permissions per added user
+		☐ Ensure separate read/write permissions
 
 ✔ Improve mobile UX @done(24-03-19 00:51)
-☐ Management sharing
 ☐ Global location log w/ filters
 ✔ Link to product order page @done(24-03-19 00:51)
-☐ Dashboard @started(24-03-09 11:36)
-	☐ Most used product per location
-	☐ Locations with low inventory
-	☐ Graphs on daily checkouts
-	☐ Activity feeds
+✔ Dashboard @started(24-06-15 01:16) @done(24-07-24 22:01) @lasted(5w4d20h45m34s)
+	✔ Most used product per location @done(24-07-24 22:01)
+	✔ Locations with low inventory @done(24-07-24 22:01)
+	✔ Graphs on daily checkouts @done(24-07-24 22:01)
+	✔ Users who have checked out items @done(24-07-24 22:01)
 ☐ Settings
 ☐ Mobile app
 
@@ -62,30 +64,3 @@ Benefits:
 	- Transparent costs
 		- You know exactly how much you are paying for the service
 		- ESO requires a demo/quote
-
-
-pulsate.app
-
-https://play.tailwindcss.com/DpwOpnJ7F2 -- Gradient button
-
-$299 + $14.99/month
-	- 1 location
-	- 100 products
-$299 + $29.99/month
-	- 5 locations
-	- 300 products per location
-
-
-Manager:
-Logs ~ 1500 MiB
-Items ~ 600 MiB
-Products ~ 30 MiB
-Locations ~ 1 MiB
-Total ~ 2,131 MiB ~ 2.1 GiB = $1.00/month
-
-Executive:
-Logs ~ 9,000 MiB
-Items ~ 2,700 MiB
-Products ~ 90 MiB
-Locations ~ 1 MiB
-Total ~ 11,791 MiB ~ 11.5 GiB = $6.00/month

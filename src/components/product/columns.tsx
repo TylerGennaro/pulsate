@@ -1,12 +1,12 @@
 'use client';
 
-import { formatUTCDate, isExpiring } from '@lib/date';
+import { formatUTCDate, isExpired } from '@lib/date';
 import { Tag } from '@lib/enum';
 import { Item } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
-import EditItem from '../../../../components/product/EditItem';
+import EditItem from './EditItem';
 import TagBadge from '@components/TagBadge';
-import ItemArrived from '../../../../components/product/ItemArrived';
+import ItemArrived from './ItemArrived';
 
 export type Log = {
 	user: string;
@@ -29,9 +29,8 @@ export const itemColumns: ColumnDef<Item>[] = [
 		header: 'Tags',
 		cell: ({ row }: { row: any }) => {
 			const tags = [];
-			if (isExpiring(row.original.expires)) tags.push(Tag.EXPIRES);
+			if (isExpired(row.original.expires)) tags.push(Tag.EXPIRES);
 			if (row.original.onOrder) tags.push(Tag.ONORDER);
-			if (tags.length === 0) return <TagBadge tag={Tag.NONE} />;
 			return (
 				<div className='flex flex-wrap gap-2'>
 					{tags.map((tag) => {
@@ -45,7 +44,7 @@ export const itemColumns: ColumnDef<Item>[] = [
 		id: 'actions',
 		cell: ({ row }: { row: { original: Item } }) => {
 			return (
-				<div className='flex justify-end gap-2'>
+				<div className='flex items-center justify-end gap-2'>
 					{row.original.onOrder && <ItemArrived item={row.original} />}
 					<EditItem item={row.original} />
 				</div>
