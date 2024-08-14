@@ -113,3 +113,27 @@ body {
 		opacity: 0;
 	}
 }
+
+@keyframes draw {
+	0% {
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dashoffset: 292;
+	}
+	100% {
+		stroke-dashoffset: 584;
+	}
+}
+
+@keyframes draw-alt {
+	0% {
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dashoffset: -292;
+	}
+	100% {
+		stroke-dashoffset: -584;
+	}
+}

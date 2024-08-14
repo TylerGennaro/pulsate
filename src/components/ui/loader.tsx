@@ -1,15 +1,35 @@
+import LogoSvg from '@components/LogoSvg';
 import { cn } from '@lib/utils';
-import { Loader2 as LoaderIcon } from 'lucide-react';
+import { cva, VariantProps } from 'class-variance-authority';
 
-export default function Loader({ className }: { className?: string }) {
+const loaderVariants = cva('', {
+	variants: {
+		size: {
+			sm: 'w-4 h-4 [&_path]:stroke-[9]',
+			md: 'w-8 h-8 [&_path]:stroke-[7]',
+			lg: 'w-12 h-12',
+			xl: 'w-16 h-16',
+		},
+	},
+	defaultVariants: {
+		size: 'lg',
+	},
+});
+
+type LoaderProps = VariantProps<typeof loaderVariants> & {
+	faded?: boolean;
+	className?: string;
+};
+
+export default function Loader({
+	faded,
+	className,
+	size,
+	...props
+}: LoaderProps) {
 	return (
-		<div className='w-12 h-12 border-[6px] rounded-full border-primary/10'>
-			<div
-				className={cn(
-					'w-12 h-12 -ml-1.5 -mt-1.5 rounded-full border-[6px] border-primary border-t-transparent border-r-transparent animate-spin',
-					className
-				)}
-			/>
+		<div className={cn(loaderVariants({ size }), className)} {...props}>
+			<LogoSvg animated faded={faded} />
 		</div>
 	);
 }
