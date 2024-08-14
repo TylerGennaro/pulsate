@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Account {
-  id                BigInt     @id @default(autoincrement())
+  id                Int     @id @default(sequence())
   userId            String
   type              String
   provider          String
@@ -38,6 +38,7 @@ model User {
   notifications      Notification[]
   payments           Payment[]
   subscriptions      Subscription[]
+	shares             LocationShare[]
 
   @@index([stripe_customer_id])
 }
@@ -49,6 +50,7 @@ model Location {
   user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   products Product[]
   settings LocationSettings[]
+	shares   LocationShare[]
 }
 
 model Product {
@@ -66,7 +68,7 @@ model Product {
 }
 
 model Item {
-  id        BigInt       @id @default(autoincrement())
+  id        Int       @id @default(sequence())
   productId String
   quantity  Int
   expires   DateTime? @default(now()) @db.Date
@@ -75,7 +77,7 @@ model Item {
 }
 
 model Log {
-  id        BigInt      @id @default(autoincrement())
+  id        Int      @id @default(sequence())
   timestamp DateTime @default(now())
   userId    String?
   productId String?
@@ -96,7 +98,7 @@ model Notification {
 }
 
 model LocationSettings {
-  id         BigInt      @id @default(autoincrement())
+  id         Int      @id @default(sequence())
   locationId String
   location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   key        String
@@ -119,6 +121,16 @@ model Subscription {
   user                 User?     @relation(fields: [userId], references: [id])
 
   @@index([userId])
+}
+
+model LocationShare {
+  id          Int         @id @default(sequence())
+  locationId  String
+  location    Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      ShareStatus
+  lastUpdated DateTime    @updatedAt
 }
 
 model Payment {
