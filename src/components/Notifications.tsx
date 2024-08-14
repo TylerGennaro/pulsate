@@ -56,7 +56,7 @@ export default function Notifications() {
 					size='sm'
 					className={
 						notifications.some((notif) => !notif.read)
-							? 'after:border-2 after:box-content after:border-zinc-50 hover:after:border-zinc-200 after:dark:border-zinc-900 dark:hover:after:border-zinc-800 relative after:rounded-full after:content-[""] after:absolute after:top-[4px] after:right-[10px] after:w-2 after:h-2 after:bg-primary'
+							? 'after:border-2 after:box-content after:border-content hover:after:border-muted relative after:rounded-full after:content-[""] after:absolute after:top-[4px] after:right-[10px] after:w-2 after:h-2 after:bg-primary after:transition-colors'
 							: ''
 					}
 				>
