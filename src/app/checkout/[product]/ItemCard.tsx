@@ -7,7 +7,7 @@ import { PackageType } from '@lib/enum';
 import { packageTypes } from '@lib/relations';
 import { Item } from '@prisma/client';
 import { Minus, Plus } from 'lucide-react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 
 export default function ItemCard({
 	item,
@@ -20,8 +20,7 @@ export default function ItemCard({
 	cart: Map<number, number>;
 	setCart: Dispatch<SetStateAction<Map<number, number>>>;
 }) {
-	const quantity = cart.get(item.id) ?? 0;
-	// const [quantity, setQuantity] = useState(0);
+	const quantity = useMemo(() => cart.get(item.id) ?? 0, [cart, item.id]);
 	return (
 		<div className='flex flex-col items-end gap-2 px-2 py-6'>
 			<div className='flex items-center justify-between w-full'>
