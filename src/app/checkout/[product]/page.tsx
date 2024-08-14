@@ -1,8 +1,6 @@
 import Container from '@components/Container';
-import { authOptions } from '@lib/auth';
 import { db } from '@lib/prisma';
 import { populateMetadata } from '@lib/utils';
-import { getServerSession } from 'next-auth';
 import Checkout from './Checkout';
 
 export async function generateMetadata({

@@ -1,8 +1,6 @@
-import Container from '@components/Container';
 import SignIn from '@components/SignIn';
 import { authOptions } from '@lib/auth';
 import { populateMetadata } from '@lib/utils';
-import { AlertTriangle } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import DashboardModules from './DashboardModules';
 
