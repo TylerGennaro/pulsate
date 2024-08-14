@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                BigInt     @id @default(autoincrement())
   userId            String
   type              String
   provider          String
@@ -26,9 +26,9 @@ model Account {
 }
 
 model User {
-  id                 String         @id @default(cuid())
+  id                 String          @id
   name               String?
-  email              String?        @unique
+  email              String?         @unique
   emailVerified      DateTime?
   image              String?
   stripe_customer_id String?
@@ -43,7 +43,7 @@ model User {
 }
 
 model Location {
-  id       String             @id @default(cuid())
+  id       String             @id
   name     String
   userId   String
   user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -52,7 +52,7 @@ model Location {
 }
 
 model Product {
-  id         String    @id @default(cuid())
+  id         String    @id
   name       String
   package    String
   min        Int       @default(5)
@@ -66,7 +66,7 @@ model Product {
 }
 
 model Item {
-  id        String    @id @default(cuid())
+  id        BigInt       @id @default(autoincrement())
   productId String
   quantity  Int
   expires   DateTime? @default(now()) @db.Date
@@ -75,7 +75,7 @@ model Item {
 }
 
 model Log {
-  id        String   @id @default(cuid())
+  id        BigInt      @id @default(autoincrement())
   timestamp DateTime @default(now())
   userId    String?
   productId String?
@@ -96,14 +96,14 @@ model Notification {
 }
 
 model LocationSettings {
-  id         String   @id @default(cuid())
+  id         BigInt      @id @default(autoincrement())
   locationId String
   location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   key        String
   value      String
   isNumber   Boolean  @default(false)
 
-	@@unique ([locationId, key])
+  @@unique([locationId, key])
 }
 
 model Subscription {
@@ -142,4 +142,10 @@ enum LogType {
   PRODUCT_REMOVE
   PRODUCT_UPDATE
   ITEM_CHECKOUT
+}
+
+enum ShareStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
