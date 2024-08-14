@@ -11,11 +11,6 @@ export async function generateMetadata({
 	return populateMetadata(name ?? 'Unknown Location');
 }
 
-export default function Layout({
-	children,
-}: {
-	tabs: ReactNode;
-	children: ReactNode;
-}) {
+export default function Layout({ children }: { children: ReactNode }) {
 	return <>{children}</>;
 }
