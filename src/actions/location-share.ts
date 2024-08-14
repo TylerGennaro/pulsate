@@ -3,10 +3,10 @@
 import { authOptions } from '@lib/auth';
 import { db } from '@lib/prisma';
 import { ActionResponse, getErrorMessage } from '@lib/utils';
-import { ShareStatus } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { ShareStatus } from '@prisma/client';
 
 const schema = z.object({
 	email: z.string().email(),
