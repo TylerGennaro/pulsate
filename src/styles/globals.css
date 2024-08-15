@@ -137,3 +137,21 @@ body {
 		stroke-dashoffset: -584;
 	}
 }
+
+@keyframes draw-in-out {
+	0% {
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dashoffset: -250;
+	}
+	100% {
+		stroke-dashoffset: -500;
+	}
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
