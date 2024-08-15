@@ -19,7 +19,6 @@ import { Product } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { Row, useReactTable } from '@tanstack/react-table';
 import { Search, X } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 import { columns } from './columns';
 import NewProduct from './NewProduct';
 
@@ -36,22 +35,22 @@ function printSelectedCodes(size: number, rows: Row<Product>[]) {
 
 function Toolbar({
 	table,
+	locationId,
 }: {
 	table: ReturnType<typeof useReactTable<Product>>;
+	locationId: string;
 }) {
 	const selectedRows = table.getFilteredSelectedRowModel().rows;
 	const isFiltered =
 		table.getPreFilteredRowModel().rows.length >
 		table.getFilteredRowModel().rows.length;
-	const pathname = usePathname();
-	const locationId = pathname.split('/').pop();
 
 	return (
 		<div className='flex flex-wrap justify-between gap-4 mb-4'>
 			<div className='flex flex-col justify-center flex-grow gap-4 lg:flex-row lg:items-center lg:justify-start'>
 				<Input
 					placeholder='Search products'
-					wrapperClass='max-w-xs'
+					className='max-w-xs'
 					startIcon={<Search />}
 					value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
 					onChange={(event) =>
@@ -113,16 +112,16 @@ function Toolbar({
 					/>
 				</DialogContent>
 			</Dialog>
-			{locationId && <NewProduct location={locationId} />}
+			{locationId && <NewProduct locationId={locationId} />}
 		</div>
 	);
 }
 
-export default function InventoryTable({ location }: { location: string }) {
+export default function InventoryTable({ locationId }: { locationId: string }) {
 	const { data, isLoading, isError } = useQuery({
-		queryKey: ['products', location],
+		queryKey: ['products', locationId],
 		queryFn: async () => {
-			const res = await fetch(`/api/products?location=${location}`);
+			const res = await fetch(`/api/products?location=${locationId}`);
 			return res.json();
 		},
 	});
@@ -130,7 +129,7 @@ export default function InventoryTable({ location }: { location: string }) {
 		<DataTable
 			columns={columns}
 			data={data ?? []}
-			toolbar={Toolbar}
+			toolbar={({ table }) => <Toolbar table={table} locationId={locationId} />}
 			isLoading={isLoading}
 			enableSelection
 			classNames={{ cell: 'p-3' }}
