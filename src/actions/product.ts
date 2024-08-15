@@ -1,9 +1,11 @@
 'use server';
 
 import { authOptions } from '@lib/auth';
+import { PRODUCT_ID_LENGTH } from '@lib/constants';
 import { db } from '@lib/prisma';
 import { ActionResponse, getErrorMessage } from '@lib/utils';
 import { Product } from '@prisma/client';
+import { nanoid } from 'nanoid';
 import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
@@ -20,7 +22,7 @@ const schema = z.object({
 	min: z.coerce
 		.number({ invalid_type_error: 'Min quantity is not a number.' })
 		.int({ message: 'Min quantity is not an integer.' })
-		.min(1, { message: 'Minimum quantity must be greater than 1.' })
+		.min(1, { message: 'Minimum quantity must be greater than 0.' })
 		.nullable(),
 	packageType: z.enum(['single', 'pack', 'box', 'case'], {
 		invalid_type_error: 'Package type is not valid.',
@@ -33,13 +35,40 @@ const schema = z.object({
 	url: z.string().url({ message: 'URL is not valid.' }).nullable(),
 });
 
+export async function addProduct(
+	locationId: string,
+	data: Partial<Omit<Product, 'locationId' | 'id'>>
+) {
+	const session = await getServerSession(authOptions);
+	if (!session) return ActionResponse.send(false, 'Unauthorized');
+
+	try {
+		const { name, min, packageType, position, url } = schema.parse(data);
+		await db.product.create({
+			data: {
+				id: nanoid(PRODUCT_ID_LENGTH),
+				name: name,
+				min: min ?? undefined,
+				package: packageType,
+				position,
+				locationId,
+				url,
+			},
+		});
+		revalidatePath(`/app/${locationId}`, 'page');
+		return ActionResponse.send(true);
+	} catch (error) {
+		return ActionResponse.send(false, getErrorMessage(error));
+	}
+}
+
 export async function editProduct(id: string, data: Partial<Product>) {
 	const session = await getServerSession(authOptions);
 	if (!session) return ActionResponse.send(false, 'Unauthorized');
 
 	try {
 		const { name, min, packageType, position, url } = schema.parse(data);
-		await db.product.update({
+		const updatedProduct = await db.product.update({
 			where: {
 				id,
 			},
@@ -52,7 +81,7 @@ export async function editProduct(id: string, data: Partial<Product>) {
 			},
 		});
 
-		revalidatePath('/app/[location]/' + id, 'page');
+		revalidatePath(`/app/${updatedProduct.locationId}`, 'page');
 		return ActionResponse.send(true);
 	} catch (error) {
 		return ActionResponse.send(false, getErrorMessage(error));
