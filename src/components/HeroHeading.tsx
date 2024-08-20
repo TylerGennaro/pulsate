@@ -26,16 +26,14 @@ export default function HeroHeading({
 		>
 			<Header
 				size={size}
-				className='block !leading-tight tracking-tight text-center duration-500 animate-in fade-in slide-in-from-bottom-6 bg-gradient-to-br from-black to-zinc-700 dark:from-white dark:to-zinc-400 bg-clip-text !text-transparent'
+				className='block !leading-tight tracking-tight text-center appear-up bg-gradient-to-br from-black to-zinc-700 dark:from-white dark:to-zinc-400 bg-clip-text !text-transparent'
 			>
 				<Balancer>{title}</Balancer>
 			</Header>
-			<span className='w-3/4 mb-2 text-base leading-normal text-center duration-500 delay-75 lg:text-lg text-muted-foreground animate-in fade-in slide-in-from-bottom-6'>
+			<span className='w-3/4 mb-2 text-base leading-normal text-center delay-150 lg:text-lg text-muted-foreground appear-up'>
 				<Balancer className='text-center'>{description}</Balancer>
 			</span>
-			<div className='flex gap-2 mt-2 duration-500 delay-150 animate-in fade-in slide-in-from-bottom-6'>
-				{children}
-			</div>
+			<div className='flex gap-2 mt-2 delay-300 appear-up'>{children}</div>
 		</div>
 	);
 }
