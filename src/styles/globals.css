@@ -96,6 +96,24 @@ body {
 	@apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
 }
 
+.appear-up {
+	animation-name: fade-in, slide-up;
+	animation-duration: 300ms;
+	animation-timing-function: ease-out;
+	animation-fill-mode: forwards;
+	transform: translateY(2rem);
+	opacity: 0;
+}
+
+.appear-down {
+	animation-name: fade-in, slide-down;
+	animation-duration: 300ms;
+	animation-timing-function: ease-out;
+	animation-fill-mode: forwards;
+	transform: translateY(-2rem);
+	opacity: 0;
+}
+
 @keyframes fade-in {
 	from {
 		opacity: 0;
@@ -111,6 +129,24 @@ body {
 	}
 	to {
 		opacity: 0;
+	}
+}
+
+@keyframes slide-up {
+	from {
+		transform: translateY(2rem);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
+@keyframes slide-down {
+	from {
+		transform: translateY(-2rem);
+	}
+	to {
+		transform: translateY(0);
 	}
 }
 
@@ -135,5 +171,23 @@ body {
 	}
 	100% {
 		stroke-dashoffset: -584;
+	}
+}
+
+@keyframes draw-in-out {
+	0% {
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dashoffset: -250;
+	}
+	100% {
+		stroke-dashoffset: -500;
+	}
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
 	}
 }

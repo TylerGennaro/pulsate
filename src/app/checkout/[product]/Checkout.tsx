@@ -1,20 +1,32 @@
 'use client';
 
 import ArrowButton from '@components/ArrowButton';
+import QrReader from '@components/QrReader';
+import { Button } from '@components/ui/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@components/ui/dialog';
 import Heading from '@components/ui/heading';
 import { Skeleton } from '@components/ui/skeleton';
 import { toast } from '@components/ui/use-toast';
 import { Item } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link as LinkIcon, ShoppingCart } from 'lucide-react';
+import { Link as LinkIcon, ScanQrCode, ShoppingCart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import ItemCard from './ItemCard';
 
 export default function Checkout({ productId }: { productId: string }) {
 	const queryClient = useQueryClient();
 	const session = useSession();
+	const router = useRouter();
 	const [cart, setCart] = useState<Map<number, number>>(new Map());
 
 	const { data, isLoading } = useQuery({
@@ -41,6 +53,20 @@ export default function Checkout({ productId }: { productId: string }) {
 		},
 	});
 
+	const onScanSuccess = (result: string) => {
+		const match = result.match(/https:\/\/pulsate.cloud\/checkout\/(\w+)/);
+		if (match) {
+			const id = match[1];
+			router.push(`/checkout/${id}`);
+		} else {
+			toast.error('Could not find product.');
+		}
+	};
+
+	const cartTotal = useMemo(() => {
+		return Array.from(cart).reduce((acc, [, quantity]) => acc + quantity, 0);
+	}, [cart]);
+
 	return (
 		<div className='flex flex-col'>
 			<div className='flex flex-wrap items-center justify-between gap-4'>
@@ -55,11 +81,29 @@ export default function Checkout({ productId }: { productId: string }) {
 						description={`Checkout ${data.name} from ${data.location.name}`}
 					/>
 				)}
-				{!isLoading && session?.data?.user.id === data.location.userId && (
-					<Link href={`/app/${data.location.id}/${productId}`}>
-						<ArrowButton Icon={LinkIcon}>View Page</ArrowButton>
-					</Link>
-				)}
+				<div className='flex gap-2'>
+					{!isLoading && session?.data?.user.id === data.location.userId && (
+						<Link href={`/app/${data.location.id}/${productId}`}>
+							<ArrowButton Icon={LinkIcon}>View Page</ArrowButton>
+						</Link>
+					)}
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button icon={ScanQrCode} variant='primary'>
+								Scan
+							</Button>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Scan QR Code</DialogTitle>
+								<DialogDescription>
+									Scan a QR code to checkout a new product.
+								</DialogDescription>
+							</DialogHeader>
+							<QrReader onScanSuccess={onScanSuccess} />
+						</DialogContent>
+					</Dialog>
+				</div>
 			</div>
 			<hr className='mt-6' />
 			{/* <form onSubmit={mutate}> */}
@@ -100,15 +144,13 @@ export default function Checkout({ productId }: { productId: string }) {
 			<ArrowButton
 				Icon={ShoppingCart}
 				className='self-end mt-8 w-fit'
-				disabled={isLoading || !data.items.length}
+				disabled={isLoading || !data.items.length || !cartTotal}
 				type='submit'
 				isLoading={isPending}
 				onClick={() => mutate()}
 				variant='primary'
 			>
-				Checkout (
-				{Array.from(cart).reduce((acc, [, quantity]) => acc + quantity, 0)}{' '}
-				items)
+				Checkout ({cartTotal} items)
 			</ArrowButton>
 			{/* </form> */}
 		</div>

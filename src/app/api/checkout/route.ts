@@ -90,7 +90,7 @@ export async function POST(req: Request) {
 		// Check if product is low on stock
 		const total = await getProductQuantity(product.id);
 		// If low, notify location owner
-		if (total < product.min) {
+		if (total === 0 || total < product.min) {
 			notify({
 				userId: product.location.userId,
 				message: `${product.name} is low on stock.`,
@@ -123,6 +123,10 @@ async function getProductQuantity(id: string) {
 		where: { productId: id },
 		_sum: { quantity: true },
 	});
-	if (!total?._sum?.quantity) throw new Error('Could not aggregate quantity');
-	return total._sum.quantity;
+	// if (!total?._sum?.quantity) throw new Error('Could not aggregate quantity');
+	/**
+	 * Because this happens after the checkout, it's possible there are no items left.
+	 * In this case, we return 0.
+	 */
+	return total._sum.quantity ?? 0;
 }

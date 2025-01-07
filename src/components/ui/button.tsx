@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { cn } from '@lib/utils';
 import { Loader2, LucideIcon } from 'lucide-react';
+import Loader from './loader';
 
 const buttonVariants = cva(
 	'inline-flex items-center justify-center rounded-md text-sm font-normal transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-default disabled:pointer-events-none ring-offset-zinc-100 dark:focus-visible:ring-zinc-700 dark:ring-offset-zinc-900',
@@ -77,7 +78,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				className={cn(
 					buttonVariants({ variant, size, className }),
 					isLoading
-						? 'opacity-50 pointer-events-none [&>:not(span):not(*[data-show-while-loading])]:hidden'
+						? 'opacity-50 pointer-events-none [&>:not(span):not(div)]:hidden'
 						: ''
 				)}
 				ref={ref}
@@ -87,10 +88,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				<>
 					{iconPosition === 'left' ? null : children}
 					{isLoading ? (
-						<Loader2
-							className='w-4 h-4 mr-2 animate-spin'
-							data-show-while-loading
-						/>
+						<Loader className='mr-2' size='sm' faded />
 					) : props.icon ? (
 						<props.icon className='w-4 h-4 mr-2' />
 					) : null}

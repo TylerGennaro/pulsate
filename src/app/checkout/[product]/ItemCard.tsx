@@ -38,7 +38,7 @@ export default function ItemCard({
 
 			<div className='flex justify-end'>
 				<Button
-					className='rounded-none rounded-l-full'
+					className='h-10 rounded-none rounded-l-full'
 					onClick={() => {
 						const newCart = new Map(cart);
 						newCart.set(item.id, Math.max(quantity - 1, 0));
@@ -48,7 +48,7 @@ export default function ItemCard({
 					<Minus size={16} />
 				</Button>
 				<Input
-					className='w-20 py-1 text-center rounded-none border-x-0 no-arrows'
+					inputClass='rounded-none text-center w-20 border-x-0 no-arrows h-10'
 					placeholder='Quantity'
 					value={quantity.toString()}
 					onChange={(e) => {
@@ -63,7 +63,7 @@ export default function ItemCard({
 					type='number'
 				/>
 				<Button
-					className='rounded-none rounded-r-full'
+					className='h-10 rounded-none rounded-r-full'
 					onClick={() => {
 						const newCart = new Map(cart);
 						newCart.set(item.id, Math.min(quantity + 1, item.quantity));

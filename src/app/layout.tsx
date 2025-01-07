@@ -5,6 +5,7 @@ import { Roboto } from 'next/font/google';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
 import { cn } from '@lib/utils';
+import { Analytics } from '@vercel/analytics/react';
 
 const roboto = Roboto({
 	weight: ['100', '300', '400', '500', '700', '900'],
@@ -27,6 +28,7 @@ export default async function RootLayout({
 		<html lang='en'>
 			<body className={cn(roboto.className)}>
 				<Providers session={session}>{children}</Providers>
+				<Analytics />
 			</body>
 		</html>
 	);

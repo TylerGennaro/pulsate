@@ -155,7 +155,7 @@ export default function DashboardModules() {
 function DashboardModulesSkeleton() {
 	return (
 		<>
-			<div className='grid grid-cols-3 col-span-2 gap-8'>
+			<div className='grid grid-cols-1 gap-8 xl:col-span-2 sm:grid-cols-3'>
 				<Container>
 					<div className='flex justify-between mb-2'>
 						<p className='text-sm font-medium text-muted-foreground'>

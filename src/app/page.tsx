@@ -43,12 +43,12 @@ export default function Home() {
 					<img
 						src='/dashboard.png'
 						alt='Dashboard'
-						className='hidden object-contain w-full duration-500 border rounded-lg shadow-white/5 shadow-[0_0_20px] dark:block animate-in fade-in slide-in-from-bottom-6'
+						className='hidden object-contain w-full border rounded-lg shadow-white/5 shadow-[0_0_20px] dark:block appear-up delay-400'
 					/>
 					<img
 						src='/dashboard_light.png'
 						alt='Dashboard'
-						className='object-contain w-full duration-500 border rounded-lg shadow-lg dark:hidden animate-in fade-in slide-in-from-bottom-6'
+						className='object-contain w-full border rounded-lg shadow-lg delay-400 dark:hidden appear-up'
 					/>
 				</div>
 				<Features />

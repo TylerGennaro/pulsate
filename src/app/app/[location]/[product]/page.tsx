@@ -177,7 +177,6 @@ export default async function Page({
 										Checkout
 									</Button>
 								</Link>
-								<OrderItem product={data} />
 								<NewItem product={params.product} />
 							</div>
 						</div>
