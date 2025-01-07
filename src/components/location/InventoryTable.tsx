@@ -1,6 +1,7 @@
 'use client';
 
 import QRCode from '@components/QRCode';
+import QrReader from '@components/QrReader';
 import { Button } from '@components/ui/button';
 import { DataTable } from '@components/ui/data-table';
 import { DataTableFacetedFilter } from '@components/ui/data-table-faceted-filter';
@@ -13,12 +14,14 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 import { Input } from '@components/ui/input';
+import { toast } from '@components/ui/use-toast';
 import { printQRCodes } from '@lib/qrcode';
 import { tags } from '@lib/relations';
 import { Product } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { Row, useReactTable } from '@tanstack/react-table';
-import { Search, X } from 'lucide-react';
+import { Printer, ScanQrCode, Search, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import NewProduct from './NewProduct';
 
@@ -44,6 +47,17 @@ function Toolbar({
 	const isFiltered =
 		table.getPreFilteredRowModel().rows.length >
 		table.getFilteredRowModel().rows.length;
+	const router = useRouter();
+
+	const onScanSuccess = (result: string) => {
+		const match = result.match(/https:\/\/pulsate.cloud\/checkout\/(\w+)/);
+		if (match) {
+			const id = match[1];
+			router.push(`/app/${locationId}/${id}`);
+		} else {
+			toast.error('Could not find product.');
+		}
+	};
 
 	return (
 		<div className='flex flex-wrap justify-between gap-4 mb-4'>
@@ -84,12 +98,28 @@ function Toolbar({
 			</div>
 			<Dialog>
 				<DialogTrigger asChild>
+					<Button className='whitespace-nowrap' icon={ScanQrCode}>
+						Scan
+					</Button>
+				</DialogTrigger>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Scan QR Code</DialogTitle>
+						<DialogDescription>
+							Scan a QR code to view or edit the product.
+						</DialogDescription>
+					</DialogHeader>
+					<QrReader onScanSuccess={onScanSuccess} />
+				</DialogContent>
+			</Dialog>
+			<Dialog>
+				<DialogTrigger asChild>
 					<Button
 						disabled={selectedRows.length === 0}
-						// onClick={() => printSelectedCodes(selectedRows)}
 						className='whitespace-nowrap'
+						icon={Printer}
 					>
-						Print {selectedRows.length > 0 ? selectedRows.length + ' ' : ''}QR
+						Print {selectedRows.length > 0 ? selectedRows.length + ' ' : ''}
 						Code(s)
 					</Button>
 				</DialogTrigger>
@@ -112,7 +142,7 @@ function Toolbar({
 					/>
 				</DialogContent>
 			</Dialog>
-			{locationId && <NewProduct locationId={locationId} />}
+			{locationId && <NewProduct location={locationId} />}
 		</div>
 	);
 }
