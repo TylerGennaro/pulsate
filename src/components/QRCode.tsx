@@ -1,12 +1,12 @@
 'use client';
 
-import { FC, useState } from 'react';
-import { Button } from './ui/button';
-import { QRCodeCanvas } from 'qrcode.react';
-import { getUrl, printQRCode } from '@lib/qrcode';
-import { Slider } from './ui/slider';
+import { getUrl } from '@lib/qrcode';
 import { cn } from '@lib/utils';
+import { Printer } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
+import { FC, useState } from 'react';
 import ArrowButton from './ArrowButton';
+import { Slider } from './ui/slider';
 
 interface QRCodeProps {
 	location: string;
@@ -33,7 +33,7 @@ const QRCode: FC<QRCodeProps> = ({ location, id, onPrint, style }) => {
 				<QRCodeCanvas
 					value={getUrl(location, id)}
 					size={size}
-					className='cursor-pointer'
+					className='box-content border border-white cursor-pointer'
 					color='#FF0000'
 				/>
 			</div>
@@ -53,6 +53,7 @@ const QRCode: FC<QRCodeProps> = ({ location, id, onPrint, style }) => {
 			<ArrowButton
 				onClick={() => onPrint(size)}
 				className={cn('mt-4', style?.button)}
+				Icon={Printer}
 			>
 				Print QR Code
 			</ArrowButton>
