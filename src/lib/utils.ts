@@ -109,15 +109,19 @@ export async function fetchJSON(
 export function catchError(e: any) {
 	console.error(e);
 	if (e instanceof z.ZodError) {
-		return new NextResponse(
-			e.issues[0]?.message || 'Invalid request. Try again.',
+		return NextResponse.json(
+			{ message: e.issues[0]?.message || 'Invalid request. Try again.' },
 			{
 				status: 400,
 			}
 		);
 	}
-	return new NextResponse(
-		`Could not complete request${e.message ? `: ${e.message}.` : '.'}`,
+	return NextResponse.json(
+		{
+			message: `Could not complete request${
+				e.message ? `: ${e.message}.` : '.'
+			}`,
+		},
 		{
 			status: 500,
 		}
