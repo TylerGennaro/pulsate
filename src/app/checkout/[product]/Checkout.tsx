@@ -54,7 +54,9 @@ export default function Checkout({ productId }: { productId: string }) {
 	});
 
 	const onScanSuccess = (result: string) => {
-		const match = result.match(/https:\/\/pulsate.cloud\/checkout\/(\w+)/);
+		const match = result.match(
+			/^https:\/\/pulsate.cloud\/checkout\/([\w-]+)\/?$/
+		);
 		if (match) {
 			const id = match[1];
 			router.push(`/checkout/${id}`);
