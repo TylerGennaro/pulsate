@@ -29,11 +29,13 @@ export function DatePicker({
 	setDate,
 	className,
 	disabled,
+	modal = false,
 }: {
 	date: Date;
 	setDate: Dispatch<SetStateAction<Date>>;
 	className?: string;
 	disabled?: boolean;
+	modal?: boolean;
 }) {
 	const [open, setOpen] = useState(false);
 	const [month, setMonth] = React.useState(
@@ -43,7 +45,7 @@ export function DatePicker({
 		(date as Date).getFullYear() || new Date().getFullYear()
 	);
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
+		<Popover open={open} onOpenChange={setOpen} modal={modal}>
 			<PopoverTrigger asChild>
 				<Button
 					className={cn(

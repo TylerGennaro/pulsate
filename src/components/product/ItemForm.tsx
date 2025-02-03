@@ -24,6 +24,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 				setDate={setDate}
 				className='w-full col-span-3'
 				disabled={!hasExpiration || isOnOrder}
+				modal
 			/>
 			<label className='col-span-1 text-right'>
 				Quantity
