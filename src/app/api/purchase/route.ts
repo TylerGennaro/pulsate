@@ -21,7 +21,7 @@ export async function GET(req: Request) {
 	}
 }
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
 	const body = await req.json();
 	const plan = body.plan as string;
 	const planData = plans[plan.toLowerCase()];
@@ -29,7 +29,7 @@ export async function POST(req: Request, res: Response) {
 	const userSession = await getServerSession(authOptions);
 	if (!userSession) {
 		return NextResponse.redirect(
-			`${origin}/signin?callbackUrl=${origin}/plans`
+			`${origin}/signin?callbackUrl=${origin}/plans`,
 		);
 	}
 	const hasSubscription = await hasActiveSubscription(userSession.user.id);
@@ -42,12 +42,12 @@ export async function POST(req: Request, res: Response) {
 			payment_method_types: ['card'],
 			mode: 'subscription',
 			customer: customerId,
-			line_items: planData.map((price) => ({
+			line_items: planData.map(price => ({
 				price,
 				quantity: 1,
 			})),
 			success_url: `${req.headers.get(
-				'origin'
+				'origin',
 			)}/purchase/{CHECKOUT_SESSION_ID}`,
 			cancel_url: `${req.headers.get('origin')}/plans`,
 			subscription_data: {
