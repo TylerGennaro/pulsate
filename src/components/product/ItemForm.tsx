@@ -2,7 +2,6 @@
 
 import Calendar28 from '@components/calendar-28';
 import { Checkbox } from '@components/ui/checkbox';
-import { DatePicker } from '@components/ui/date-picker';
 import { Input } from '@components/ui/input';
 import { dateToUTC } from '@lib/date';
 import { Item } from '@prisma/client';

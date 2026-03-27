@@ -4,14 +4,11 @@ import { Badge } from '@components/ui/badge';
 import { DataTable } from '@components/ui/data-table';
 import { formatDateTime } from '@lib/date';
 import { templates } from '@lib/logTemplates';
-import { Log, LogType } from '@prisma/client';
+import { LogType } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Pagination from './Pagination';
-import Loader from './ui/loader';
-import { DatePicker } from './ui/date-picker';
-import Calendar28 from './calendar-28';
 
 type ActivityLog = {
 	id: string;
