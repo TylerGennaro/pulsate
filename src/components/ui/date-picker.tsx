@@ -41,10 +41,10 @@ export function DatePicker({
 }) {
 	const [open, setOpen] = useState(false);
 	const [month, setMonth] = React.useState(
-		(date as Date).getMonth() || new Date().getMonth()
+		(date as Date).getMonth() || new Date().getMonth(),
 	);
 	const [year, setYear] = React.useState(
-		(date as Date).getFullYear() || new Date().getFullYear()
+		(date as Date).getFullYear() || new Date().getFullYear(),
 	);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -87,7 +87,7 @@ export function DatePicker({
 							className={cn(
 								'w-[280px] justify-start text-left font-normal bg-muted/30 hover:bg-muted',
 								!date && 'text-muted-foreground',
-								className
+								className,
 							)}
 							disabled={disabled}
 						>
@@ -100,12 +100,12 @@ export function DatePicker({
 					<Calendar
 						mode='single'
 						selected={date}
-						onSelect={(newDate) => {
+						onSelect={newDate => {
 							setDate((newDate as Date) || date);
 							setOpen(false);
 						}}
 						month={new Date(year, month)}
-						onMonthChange={(date) => {
+						onMonthChange={date => {
 							setMonth(date.getMonth());
 							setYear(date.getFullYear());
 						}}
@@ -113,33 +113,35 @@ export function DatePicker({
 						startMonth={new Date(year, 0)}
 						endMonth={new Date(year, 0)}
 						autoFocus
-						components={{
-							IconLeft: ({ ...props }) => <ChevronLeft className='w-4 h-4' />,
-							IconRight: ({ ...props }) => <ChevronRight className='w-4 h-4' />,
-							Dropdown: ({ ...props }) => {
-								if (props['aria-label'] === 'Month: ') {
-									return <p>{format(new Date(0, month), 'MMMM')}</p>;
-								}
-								return (
-									<Select onValueChange={(value) => setYear(parseInt(value))}>
-										<SelectTrigger>
-											<SelectValue>{year}</SelectValue>
-										</SelectTrigger>
-										<SelectContent>
-											<ScrollArea className='h-52'>
-												{React.Children.toArray(props.children).map(
-													(option: any, index) => (
-														<SelectItem value={option.props.value} key={index}>
-															{option.props.children}
-														</SelectItem>
-													)
-												)}
-											</ScrollArea>
-										</SelectContent>
-									</Select>
-								);
-							},
-						}}
+						components={
+							{
+								// IconLeft: ({ ...props }) => <ChevronLeft className='w-4 h-4' />,
+								// IconRight: ({ ...props }) => <ChevronRight className='w-4 h-4' />,
+								// Dropdown: ({ ...props }) => {
+								// 	if (props['aria-label'] === 'Month: ') {
+								// 		return <p>{format(new Date(0, month), 'MMMM')}</p>;
+								// 	}
+								// 	return (
+								// 		<Select onValueChange={(value) => setYear(parseInt(value))}>
+								// 			<SelectTrigger>
+								// 				<SelectValue>{year}</SelectValue>
+								// 			</SelectTrigger>
+								// 			<SelectContent>
+								// 				<ScrollArea className='h-52'>
+								// 					{React.Children.toArray(props.children).map(
+								// 						(option: any, index) => (
+								// 							<SelectItem value={option.props.value} key={index}>
+								// 								{option.props.children}
+								// 							</SelectItem>
+								// 						)
+								// 					)}
+								// 				</ScrollArea>
+								// 			</SelectContent>
+								// 		</Select>
+								// );
+								// },
+							}
+						}
 					/>
 				</PopoverContent>
 			</Popover>
