@@ -12,7 +12,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { dateToUTC } from '@lib/date';
 import { crud } from '@lib/utils';
 import { Item } from '@prisma/client';
 import { DialogDescription } from '@radix-ui/react-dialog';
@@ -72,6 +71,7 @@ export default function ItemArrived({ item }: { item: Item }) {
 							setDate={setDate}
 							className='w-full col-span-3'
 							disabled={!hasExpiration}
+							modal
 						/>
 						<Checkbox
 							className='ml-auto'

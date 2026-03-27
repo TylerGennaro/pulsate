@@ -23,7 +23,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@components/ui/table';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { Skeleton } from './skeleton';
 import { cn } from '@lib/utils';
 

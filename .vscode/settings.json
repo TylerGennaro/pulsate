@@ -1,5 +1,6 @@
 {
 	"vscode.tsc.compiler.alertTSConfigChanges": "never",
 	"vscode.tsc.compiler.alertOnError": "never",
-	"svg.preview.background": "editor"
+	"svg.preview.background": "editor",
+	"prisma.pinToPrisma6": true
 }

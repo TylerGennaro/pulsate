@@ -1,10 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -12,8 +11,11 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { PopoverPortal } from '@radix-ui/react-popover';
+import { Input } from './input';
+import { ScrollArea } from './scroll-area';
 import {
 	Select,
 	SelectContent,
@@ -21,8 +23,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from './select';
-import { ScrollArea } from './scroll-area';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function DatePicker({
 	date = new Date(),
@@ -30,12 +30,14 @@ export function DatePicker({
 	className,
 	disabled,
 	modal = false,
+	editable = false,
 }: {
 	date: Date;
 	setDate: Dispatch<SetStateAction<Date>>;
 	className?: string;
 	disabled?: boolean;
 	modal?: boolean;
+	editable?: boolean;
 }) {
 	const [open, setOpen] = useState(false);
 	const [month, setMonth] = React.useState(
@@ -44,22 +46,56 @@ export function DatePicker({
 	const [year, setYear] = React.useState(
 		(date as Date).getFullYear() || new Date().getFullYear()
 	);
+	const inputRef = React.useRef<HTMLInputElement>(null);
+
+	React.useEffect(() => {
+		setTimeout(() => {
+			if (open && inputRef.current) {
+				inputRef.current.focus();
+			}
+		}, 1);
+	});
+
+	React.useEffect(() => {
+		const handleInput = () => {
+			console.log('input');
+			if (!inputRef.current) return;
+			const newValue = inputRef.current.value;
+			if (isNaN(parseInt(newValue))) return;
+			if (parseInt(newValue) <= 0) return;
+			if (newValue.length === 1 && parseInt(newValue) > 1) {
+				inputRef.current.value = '0' + parseInt(newValue) + '/';
+			}
+		};
+		inputRef.current?.addEventListener('input', handleInput);
+		return () => inputRef.current?.removeEventListener('input', handleInput);
+	}, []);
+
 	return (
-		<Popover open={open} onOpenChange={setOpen} modal={modal}>
-			<PopoverTrigger asChild>
-				<Button
-					className={cn(
-						'w-[280px] justify-start text-left font-normal bg-muted/30 hover:bg-muted',
-						!date && 'text-muted-foreground',
-						className
+		<>
+			<Popover open={open} onOpenChange={setOpen} modal={modal}>
+				<PopoverTrigger asChild={!editable}>
+					{editable ? (
+						<Input
+							className={`w-[280px] justify-start text-left font-normal ${
+								!editable ? 'hidden' : ''
+							}`}
+							ref={inputRef}
+						/>
+					) : (
+						<Button
+							className={cn(
+								'w-[280px] justify-start text-left font-normal bg-muted/30 hover:bg-muted',
+								!date && 'text-muted-foreground',
+								className
+							)}
+							disabled={disabled}
+						>
+							<CalendarIcon className='w-4 h-4 mr-2' />
+							{date ? format(date, 'PPP') : <span>Pick a date</span>}
+						</Button>
 					)}
-					disabled={disabled}
-				>
-					<CalendarIcon className='w-4 h-4 mr-2' />
-					{date ? format(date, 'PPP') : <span>Pick a date</span>}
-				</Button>
-			</PopoverTrigger>
-			<PopoverPortal>
+				</PopoverTrigger>
 				<PopoverContent className='w-auto p-0 max-h-[calc(var(--radix-popper-available-height)_-_10px)] overflow-y-auto'>
 					<Calendar
 						mode='single'
@@ -73,10 +109,10 @@ export function DatePicker({
 							setMonth(date.getMonth());
 							setYear(date.getFullYear());
 						}}
-						captionLayout='dropdown-buttons'
-						fromYear={new Date().getFullYear() - 1}
-						toYear={2050}
-						initialFocus
+						captionLayout='dropdown'
+						startMonth={new Date(year, 0)}
+						endMonth={new Date(year, 0)}
+						autoFocus
 						components={{
 							IconLeft: ({ ...props }) => <ChevronLeft className='w-4 h-4' />,
 							IconRight: ({ ...props }) => <ChevronRight className='w-4 h-4' />,
@@ -106,7 +142,7 @@ export function DatePicker({
 						}}
 					/>
 				</PopoverContent>
-			</PopoverPortal>
-		</Popover>
+			</Popover>
+		</>
 	);
 }

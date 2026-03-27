@@ -1,9 +1,10 @@
 import ActivityTable from '@components/ActivityTable';
 
-export default function ActivityPage({
-	params,
-}: {
-	params: { location: string };
-}) {
-	return <ActivityTable locationId={params.location} />;
+export default async function ActivityPage(
+    props: {
+        params: Promise<{ location: string }>;
+    }
+) {
+    const params = await props.params;
+    return <ActivityTable locationId={params.location} />;
 }

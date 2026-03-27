@@ -1,4 +1,4 @@
-import { Slot } from '@radix-ui/react-slot';
+import { Slot as SlotPrimitive } from 'radix-ui';
 import { VariantProps, cva } from 'class-variance-authority';
 import * as React from 'react';
 
@@ -61,7 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	) => {
 		if (asChild) {
 			return (
-				<Slot
+				<SlotPrimitive.Slot
 					className={cn(
 						buttonVariants({ variant, size, className }),
 						isLoading ? 'opacity-50 pointer-events-none' : ''
@@ -70,7 +70,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					{...props}
 				>
 					{children}
-				</Slot>
+				</SlotPrimitive.Slot>
 			);
 		}
 		return (

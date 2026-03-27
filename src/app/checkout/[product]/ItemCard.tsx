@@ -6,7 +6,7 @@ import { formatUTCDate } from '@lib/date';
 import { PackageType } from '@lib/enum';
 import { packageTypes } from '@lib/relations';
 import { Item } from '@prisma/client';
-import { Minus, Plus } from 'lucide-react';
+import { CalendarClock, Minus, Plus, ShelvingUnit } from 'lucide-react';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 
 export default function ItemCard({
@@ -22,21 +22,17 @@ export default function ItemCard({
 }) {
 	const quantity = useMemo(() => cart.get(item.id) ?? 0, [cart, item.id]);
 	return (
-		<div className='flex flex-col items-end gap-2 px-2 py-6'>
-			<div className='flex items-center justify-between w-full'>
-				<div className='flex flex-col'>
-					<span className='text-lg'>Quantity</span>
-					<span className='text-muted-foreground'>{`${item.quantity} ${packageTypes[packageType]}`}</span>
-				</div>
-				<div className='flex flex-col items-end'>
-					<span className='text-lg'>Expires</span>
-					<span className='text-muted-foreground'>
-						{formatUTCDate(item.expires) ?? 'Never'}
-					</span>
-				</div>
+		<div className='flex flex-col items-end gap-2 px-2 py-6 xs:justify-between sm:grid sm:grid-cols-3 sm:items-center'>
+			<div className='flex items-center gap-2'>
+				<CalendarClock className='w-4 h-4 text-muted-foreground' />
+				<span>{formatUTCDate(item.expires) ?? 'Never'}</span>
+			</div>
+			<div className='flex items-center gap-2'>
+				<ShelvingUnit className='w-4 h-4 text-muted-foreground' />
+				<span>{`${item.quantity} ${packageTypes[packageType]}`}</span>
 			</div>
 
-			<div className='flex justify-end'>
+			<div className='flex shrink-0 place-content-end'>
 				<Button
 					className='h-10 rounded-none rounded-l-full'
 					onClick={() => {
@@ -49,13 +45,14 @@ export default function ItemCard({
 				</Button>
 				<Input
 					inputClass='rounded-none text-center w-20 border-x-0 no-arrows h-10'
+					className='w-20'
 					placeholder='Quantity'
 					value={quantity.toString()}
-					onChange={(e) => {
+					onChange={e => {
 						const newCart = new Map(cart);
 						newCart.set(
 							item.id,
-							Math.min(Math.abs(Number(e.target.value) || 0), item.quantity)
+							Math.min(Math.abs(Number(e.target.value) || 0), item.quantity),
 						);
 						setCart(newCart);
 					}}

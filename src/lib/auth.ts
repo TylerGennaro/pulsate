@@ -48,6 +48,10 @@ export const authOptions: NextAuthOptions = {
 	adapter: CustomPrismaAdapter(db),
 	session: {
 		strategy: 'jwt',
+		maxAge: 30 * 24 * 60 * 60,
+	},
+	jwt: {
+		maxAge: 30 * 24 * 60 * 60,
 	},
 	pages: {
 		signIn: '/signin',
@@ -56,6 +60,14 @@ export const authOptions: NextAuthOptions = {
 		GoogleProvider({
 			clientId: getGoogleCredentials().clientId,
 			clientSecret: getGoogleCredentials().clientSecret,
+			authorization: {
+				params: {
+					prompt: 'consent',
+					access_type: 'offline',
+					response_type: 'code',
+					max_age: 86400,
+				},
+			},
 		}),
 		AzureADProvider({
 			clientId: getAzureCredentials().clientId,
@@ -76,7 +88,7 @@ export const authOptions: NextAuthOptions = {
 
 			return session;
 		},
-		async jwt({ token, user }) {
+		async jwt({ token, user, account, profile }) {
 			const dbUser = await db.user.findFirst({
 				where: {
 					email: token.email,

@@ -34,6 +34,14 @@ export async function GET(req: Request) {
 				where: {
 					onOrder: false,
 				},
+				orderBy: [
+					{
+						expires: {
+							sort: 'asc',
+							nulls: 'last',
+						},
+					},
+				],
 			},
 			package: true,
 		},

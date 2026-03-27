@@ -10,7 +10,7 @@ export default function QrReader({
 	onScanSuccess = () => {},
 	onScanFail = () => {},
 }: QrReaderProps) {
-	const scanner = useRef<QrScanner>();
+	const scanner = useRef<QrScanner>(undefined);
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const qrBoxRef = useRef<HTMLDivElement>(null);
 	const [qrOn, setQrOn] = useState<boolean>(true);

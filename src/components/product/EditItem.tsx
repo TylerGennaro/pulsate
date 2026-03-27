@@ -122,7 +122,7 @@ export default function EditItem({ item }: { item: Item }) {
 							</DropdownMenuItem>
 						</DialogTrigger>
 						<AlertDialogTrigger asChild>
-							<DropdownMenuItem className='text-red-500'>
+							<DropdownMenuItem className='text-red-500 focus:bg-red-500/30 focus:text-red-300'>
 								<Trash2 className='w-4 h-4 mr-2' /> Delete
 							</DropdownMenuItem>
 						</AlertDialogTrigger>

@@ -21,12 +21,19 @@ import { Product } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { Row, useReactTable } from '@tanstack/react-table';
 import { Printer, ScanQrCode, Search, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { columns } from './columns';
 import NewProduct from './NewProduct';
+import { usePermissions } from '@context/permissionsContext';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { useSearch } from '@components/SearchProvider';
+
+function normalizeTags(value: string[]) {
+	return [...new Set(value)].sort();
+}
 
 function printSelectedCodes(size: number, rows: Row<Product>[]) {
-	const codes = rows.map((row) => {
+	const codes = rows.map(row => {
 		return {
 			location: row.original.locationId,
 			id: row.original.id,
@@ -46,12 +53,72 @@ function Toolbar({
 	const selectedRows = table.getFilteredSelectedRowModel().rows;
 	const isFiltered =
 		table.getPreFilteredRowModel().rows.length >
-		table.getFilteredRowModel().rows.length;
+			table.getFilteredRowModel().rows.length ||
+		table.getColumn('tags')?.getFilterValue() !== undefined;
 	const router = useRouter();
+	const permissions = usePermissions();
+	const search = useSearch();
+	const searchParams = useSearchParams();
+	const tagsColumnFilter = table
+		.getState()
+		.columnFilters.find(filter => filter.id === 'tags')?.value;
+	const selectedTags = useMemo(
+		() => (Array.isArray(tagsColumnFilter) ? tagsColumnFilter : []),
+		[tagsColumnFilter],
+	);
+
+	useEffect(() => {
+		if (search) {
+			table.getColumn('name')?.setFilterValue(search);
+		} else {
+			table.getColumn('name')?.setFilterValue('');
+		}
+	}, [search, table]);
+
+	useEffect(() => {
+		const tagsFromUrl = normalizeTags(searchParams.getAll('tags'));
+		const currentTagsFilter = table.getColumn('tags')?.getFilterValue();
+		const currentTags = normalizeTags(
+			Array.isArray(currentTagsFilter) ? currentTagsFilter : [],
+		);
+
+		const isSameSelection =
+			currentTags.length === tagsFromUrl.length &&
+			currentTags.every((tag, index) => tag === tagsFromUrl[index]);
+
+		if (!isSameSelection) {
+			table
+				.getColumn('tags')
+				?.setFilterValue(tagsFromUrl.length ? tagsFromUrl : undefined);
+		}
+	}, [searchParams, table]);
+
+	useEffect(() => {
+		const selectedTagsNormalized = normalizeTags(selectedTags);
+		const currentTagsInUrl = normalizeTags(searchParams.getAll('tags'));
+		const hasSameTags =
+			selectedTagsNormalized.length === currentTagsInUrl.length &&
+			selectedTagsNormalized.every(
+				(tag, index) => tag === currentTagsInUrl[index],
+			);
+
+		if (hasSameTags) {
+			return;
+		}
+
+		const params = new URLSearchParams(searchParams.toString());
+		params.delete('tags');
+		selectedTagsNormalized.forEach(tag => params.append('tags', tag));
+
+		const nextParams = params.toString();
+		if (nextParams !== searchParams.toString()) {
+			router.replace(`?${nextParams}`);
+		}
+	}, [router, searchParams, selectedTags]);
 
 	const onScanSuccess = (result: string) => {
 		const match = result.match(
-			/^https:\/\/pulsate.cloud\/checkout\/([\w-]+)\/?$/
+			/^https:\/\/pulsate.cloud\/checkout\/([\w-]+)\/?$/,
 		);
 		if (match) {
 			const id = match[1];
@@ -61,24 +128,21 @@ function Toolbar({
 		}
 	};
 
+	const handleReset = () => {
+		table.resetColumnFilters();
+		router.replace(`/app/${locationId}`);
+	};
+
 	return (
 		<div className='flex flex-wrap justify-between gap-4 mb-4'>
 			<div className='flex flex-col justify-center flex-grow gap-4 lg:flex-row lg:items-center lg:justify-start'>
-				<Input
-					placeholder='Search products'
-					className='max-w-xs'
-					startIcon={<Search />}
-					value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-					onChange={(event) =>
-						table.getColumn('name')?.setFilterValue(event.target.value)
-					}
-				/>
+				<SearchBar />
 				<div className='flex flex-wrap gap-2'>
 					{table.getColumn('tags') && (
 						<DataTableFacetedFilter
 							column={table.getColumn('tags')}
 							title='Tags'
-							options={Object.values(tags).map((tag) => ({
+							options={Object.values(tags).map(tag => ({
 								value: tag.value,
 								label: tag.label,
 								icon: tag.icon || undefined,
@@ -89,7 +153,7 @@ function Toolbar({
 					{isFiltered && (
 						<Button
 							variant='ghost'
-							onClick={() => table.resetColumnFilters()}
+							onClick={handleReset}
 							className='h-8 px-2 lg:px-3'
 						>
 							Reset
@@ -136,7 +200,7 @@ function Toolbar({
 					<QRCode
 						id={selectedRows[0]?.original.id || ''}
 						location={selectedRows[0]?.original.locationId || ''}
-						onPrint={(size) => printSelectedCodes(size, selectedRows)}
+						onPrint={size => printSelectedCodes(size, selectedRows)}
 						style={{
 							container: 'flex flex-col items-center',
 							button: 'self-end',
@@ -144,8 +208,49 @@ function Toolbar({
 					/>
 				</DialogContent>
 			</Dialog>
-			{locationId && <NewProduct location={locationId} />}
+			{locationId && permissions.has('product.create') && (
+				<NewProduct location={locationId} />
+			)}
 		</div>
+	);
+}
+
+function SearchBar() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const initialQuery = searchParams.get('q') ?? '';
+	const [query, setQuery] = useState(initialQuery);
+
+	useEffect(() => {
+		setQuery(initialQuery);
+	}, [initialQuery]);
+
+	function handleChange(e: ChangeEvent<HTMLInputElement>) {
+		const value = e.target.value;
+		setQuery(value);
+
+		const params = new URLSearchParams(searchParams.toString());
+		if (value) {
+			params.set('q', value);
+		} else {
+			params.delete('q');
+		}
+		router.replace(`?${params.toString()}`);
+	}
+
+	return (
+		<Input
+			placeholder='Search products'
+			className='max-w-xs'
+			startIcon={<Search />}
+			// value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+			// onChange={(event) =>
+			// 	table.getColumn('name')?.setFilterValue(event.target.value)
+			// }
+			value={query}
+			onChange={handleChange}
+		/>
 	);
 }
 

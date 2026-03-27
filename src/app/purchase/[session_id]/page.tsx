@@ -6,12 +6,13 @@ import { Check } from 'lucide-react';
 
 export const metadata = populateMetadata('Payment Confirmation');
 
-export default async function Page({
-	params,
-}: {
-	params: { session_id: string };
-}) {
-	const session = await fetch(
+export default async function Page(
+    props: {
+        params: Promise<{ session_id: string }>;
+    }
+) {
+    const params = await props.params;
+    const session = await fetch(
 		`${process.env.NEXT_PUBLIC_PROJECT_URL}/api/purchase?id=${params.session_id}`,
 		{
 			next: {
@@ -20,7 +21,7 @@ export default async function Page({
 		}
 	).then((res) => res.json());
 
-	return (
+    return (
 		<div className='flex flex-col items-center gap-8 p-8 mx-auto mt-16 border rounded-md shadow-sm bg-zinc-50 dark:bg-zinc-900 w-fit'>
 			<Logo className='self-start mb-4' />
 			<Header>Payment submitted</Header>

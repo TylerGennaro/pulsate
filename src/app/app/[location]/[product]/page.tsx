@@ -30,12 +30,13 @@ import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export async function generateMetadata({
-	params,
-}: {
-	params: { product: string };
-}) {
-	const data = await db.product.findFirst({
+export async function generateMetadata(
+    props: {
+        params: Promise<{ product: string }>;
+    }
+) {
+    const params = await props.params;
+    const data = await db.product.findFirst({
 		select: {
 			name: true,
 		},
@@ -43,7 +44,7 @@ export async function generateMetadata({
 			id: params.product,
 		},
 	});
-	return populateMetadata(data?.name!);
+    return populateMetadata(data?.name!);
 }
 
 function InfoBlock({
@@ -129,21 +130,22 @@ async function getUser(id: string) {
 	return location?.location.userId;
 }
 
-export default async function Page({
-	params,
-}: {
-	params: { location: string; product: string };
-}) {
-	const session = await getServerSession(authOptions);
-	if (!session) return <SignIn />;
-	const userId = await getUser(params.product);
-	if (userId !== session.user?.id) return notFound();
+export default async function Page(
+    props: {
+        params: Promise<{ location: string; product: string }>;
+    }
+) {
+    const params = await props.params;
+    const session = await getServerSession(authOptions);
+    if (!session) return <SignIn />;
+    const userId = await getUser(params.product);
+    if (userId !== session.user?.id) return notFound();
 
-	const { data, tags } = await getData(params.product);
-	if (!data) return null;
+    const { data, tags } = await getData(params.product);
+    if (!data) return null;
 
-	const units = packageTypes[data.package as PackageType];
-	return (
+    const units = packageTypes[data.package as PackageType];
+    return (
 		<div className='lg:px-2'>
 			<div className='flex items-center gap-4 my-4'>
 				<Link href={`/app/${params.location}`} className='block w-fit'>

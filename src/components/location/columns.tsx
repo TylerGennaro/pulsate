@@ -3,14 +3,11 @@
 import ArrowButton from '@components/ArrowButton';
 import DataTableSortableHeader from '@components/DataTableSortableHeader';
 import TagBadge from '@components/TagBadge';
-import { Button } from '@components/ui/button';
 import { formatUTCDate } from '@lib/date';
 import { PackageType, Tag } from '@lib/enum';
 import { packageTypes, tags } from '@lib/relations';
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreVertical } from 'lucide-react';
 import Link from 'next/link';
-import EditProduct from './EditProduct';
 
 export const columns: ColumnDef<ProductListing>[] = [
 	{
@@ -18,6 +15,7 @@ export const columns: ColumnDef<ProductListing>[] = [
 			<DataTableSortableHeader column={column} header='Name' />
 		),
 		invertSorting: true,
+		sortingFn: 'text',
 		accessorKey: 'name',
 	},
 	{

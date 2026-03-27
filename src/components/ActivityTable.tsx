@@ -10,6 +10,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useEffect, useRef, useState } from 'react';
 import Pagination from './Pagination';
 import Loader from './ui/loader';
+import { DatePicker } from './ui/date-picker';
+import Calendar28 from './calendar-28';
 
 type ActivityLog = {
 	id: string;
@@ -48,7 +50,7 @@ export default function ActivityTable({
 			const response = await fetch(
 				`/api/locations/activity?location=${locationId}${
 					productId ? `&product=${productId}` : ''
-				}&page=${page}&perPage=${PER_PAGE}`
+				}&page=${page}&perPage=${PER_PAGE}`,
 			);
 			const data = await response.json();
 			totalItems.current = data.total;
@@ -59,7 +61,7 @@ export default function ActivityTable({
 	const columns: ColumnDef<ActivityLog>[] = [
 		{
 			header: 'User',
-			accessorFn: (row) => row.user?.name ?? 'Guest',
+			accessorFn: row => row.user?.name ?? 'Guest',
 		},
 		...(!productId
 			? [
@@ -67,7 +69,7 @@ export default function ActivityTable({
 						header: 'Product',
 						accessorFn: (row: ActivityLog) => row.product.name,
 					},
-			  ]
+				]
 			: []),
 		{
 			header: 'Type',
@@ -90,13 +92,15 @@ export default function ActivityTable({
 		},
 	];
 
+	const [date, setDate] = useState<Date>(new Date());
+
 	return (
 		<>
 			<DataTable
 				columns={columns}
 				data={data?.logs ?? []}
 				isLoading={isLoading}
-				onRowClick={(row) => {
+				onRowClick={row => {
 					console.log(row);
 				}}
 				classNames={{ cell: 'p-2' }}
