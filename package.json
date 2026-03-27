@@ -46,7 +46,7 @@
     "next": "^15.5.9",
     "next-auth": "^4.22.1",
     "next-themes": "^0.2.1",
-    "nodemailer": "^8.0.4",
+    "nodemailer": "^7.0.13",
     "postcss": "^8.4.33",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.3",
@@ -66,7 +66,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.14",
+    "@types/nodemailer": "^7.0.11",
     "@types/qrcode": "^1.5.0",
     "dotenv-cli": "^7.4.2",
     "prisma": "^6.12.0"
