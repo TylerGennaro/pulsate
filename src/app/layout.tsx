@@ -1,11 +1,11 @@
 import Providers from '@components/Providers';
-import '@styles/globals.css';
-import { Metadata } from 'next';
-import { Roboto } from 'next/font/google';
-import { getServerSession } from 'next-auth';
 import { authOptions } from '@lib/auth';
 import { cn } from '@lib/utils';
+import '@styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
+import { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
+import { Roboto } from 'next/font/google';
 
 const roboto = Roboto({
 	weight: ['100', '300', '400', '500', '700', '900'],
@@ -25,7 +25,7 @@ export default async function RootLayout({
 }) {
 	const session = await getServerSession(authOptions);
 	return (
-		<html lang='en'>
+		<html lang='en' suppressHydrationWarning>
 			<body className={cn(roboto.className)}>
 				<Providers session={session}>{children}</Providers>
 				<Analytics />

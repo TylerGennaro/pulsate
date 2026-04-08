@@ -22,4 +22,17 @@ declare global {
 		status: string;
 		created: number;
 	}
+
+	export type Permission =
+		| 'location.delete' // Location
+		| 'location.edit'
+		| 'location.permissions'
+		| 'product.create' // Product
+		| 'product.edit'
+		| 'product.delete'
+		| 'product.stock'
+		| 'product.checkout'
+		| 'product.print_qr';
+
+	export type PermissionSet = Set<Permission>;
 }

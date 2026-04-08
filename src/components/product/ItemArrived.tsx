@@ -1,9 +1,9 @@
 'use client';
 
 import ArrowButton from '@components/ArrowButton';
+import Calendar28 from '@components/calendar-28';
 import { Button } from '@components/ui/button';
 import { Checkbox } from '@components/ui/checkbox';
-import { DatePicker } from '@components/ui/date-picker';
 import {
 	Dialog,
 	DialogContent,
@@ -12,7 +12,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { dateToUTC } from '@lib/date';
 import { crud } from '@lib/utils';
 import { Item } from '@prisma/client';
 import { DialogDescription } from '@radix-ui/react-dialog';
@@ -67,7 +66,7 @@ export default function ItemArrived({ item }: { item: Item }) {
 							Expiration
 							<span className='ml-1 text-red-500'>*</span>
 						</label>
-						<DatePicker
+						<Calendar28
 							date={date}
 							setDate={setDate}
 							className='w-full col-span-3'
@@ -77,7 +76,7 @@ export default function ItemArrived({ item }: { item: Item }) {
 							className='ml-auto'
 							id='no-expire'
 							name='no-expire'
-							onCheckedChange={(checked) => setHasExpiration(!checked)}
+							onCheckedChange={checked => setHasExpiration(!checked)}
 							defaultChecked={!hasExpiration}
 						/>
 						<label className='col-span-3' htmlFor='no-expire'>

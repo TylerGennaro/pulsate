@@ -1,5 +1,6 @@
 import SettingsPage from '@components/location/settings/SettingsPage';
 
-export default function Page({ params }: { params: { location: string } }) {
-	return <SettingsPage locationId={params.location} />;
+export default async function Page(props: { params: Promise<{ location: string }> }) {
+    const params = await props.params;
+    return <SettingsPage locationId={params.location} />;
 }

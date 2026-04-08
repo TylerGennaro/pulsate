@@ -3,12 +3,13 @@ import { db } from '@lib/prisma';
 import { populateMetadata } from '@lib/utils';
 import Checkout from './Checkout';
 
-export async function generateMetadata({
-	params,
-}: {
-	params: { product: string };
-}) {
-	const product = await db.product.findFirst({
+export async function generateMetadata(
+    props: {
+        params: Promise<{ product: string }>;
+    }
+) {
+    const params = await props.params;
+    const product = await db.product.findFirst({
 		select: {
 			name: true,
 		},
@@ -16,7 +17,7 @@ export async function generateMetadata({
 			id: params.product,
 		},
 	});
-	return populateMetadata(`${product?.name!} Checkout`);
+    return populateMetadata(`${product?.name!} Checkout`);
 }
 
 // async function getData(productId: string) {
@@ -64,12 +65,13 @@ export async function generateMetadata({
 // 	};
 // }
 
-export default async function Page({
-	params,
-}: {
-	params: { product: string };
-}) {
-	return (
+export default async function Page(
+    props: {
+        params: Promise<{ product: string }>;
+    }
+) {
+    const params = await props.params;
+    return (
 		<Container className='w-full max-w-screen-lg m-2 lg:m-8 h-max'>
 			<Checkout productId={params.product} />
 		</Container>

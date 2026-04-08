@@ -1,7 +1,7 @@
 'use client';
 
+import Calendar28 from '@components/calendar-28';
 import { Checkbox } from '@components/ui/checkbox';
-import { DatePicker } from '@components/ui/date-picker';
 import { Input } from '@components/ui/input';
 import { dateToUTC } from '@lib/date';
 import { Item } from '@prisma/client';
@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 export default function ItemForm({ item }: { item?: Item }) {
 	const [date, setDate] = useState<Date>(
-		dateToUTC(item?.expires) || new Date()
+		dateToUTC(item?.expires) || new Date(),
 	);
 	const [hasExpiration, setHasExpiration] = useState(item?.expires !== null);
 	const [isOnOrder, setIsOnOrder] = useState(item?.onOrder ?? false);
@@ -19,10 +19,17 @@ export default function ItemForm({ item }: { item?: Item }) {
 				Expiration
 				<span className='ml-1 text-red-500'>*</span>
 			</label>
-			<DatePicker
+			{/* <DatePicker
 				date={date}
 				setDate={setDate}
 				className='w-full col-span-3'
+				disabled={!hasExpiration || isOnOrder}
+				modal
+			/> */}
+			<Calendar28
+				className='w-full col-span-3'
+				date={date}
+				setDate={setDate}
 				disabled={!hasExpiration || isOnOrder}
 			/>
 			<label className='col-span-1 text-right'>
@@ -40,7 +47,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 				className='ml-auto'
 				id='no-expire'
 				name='no-expire'
-				onCheckedChange={(checked) => setHasExpiration(!checked)}
+				onCheckedChange={checked => setHasExpiration(!checked)}
 				defaultChecked={!hasExpiration}
 			/>
 			<label className='col-span-3' htmlFor='no-expire'>
@@ -50,7 +57,7 @@ export default function ItemForm({ item }: { item?: Item }) {
 				className='ml-auto'
 				id='on-order'
 				name='on-order'
-				onCheckedChange={(checked) => setIsOnOrder(!!checked)}
+				onCheckedChange={checked => setIsOnOrder(!!checked)}
 				defaultChecked={item?.onOrder || false}
 			/>
 			<label className='col-span-3' htmlFor='on-order'>

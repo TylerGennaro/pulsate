@@ -12,19 +12,24 @@ import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 
-export default async function Layout({
-	children,
-	params,
-}: {
-	children: ReactNode;
-	params: { location: string };
-}) {
-	const session = await getServerSession(authOptions);
-	if (!session) return <SignIn />;
-	const { name, userId } = await fetchLocationInfo(params.location);
-	if (!name) return notFound();
-	if (userId !== session.user.id) return notFound();
-	return (
+export default async function Layout(
+    props: {
+        children: ReactNode;
+        params: Promise<{ location: string }>;
+    }
+) {
+    const params = await props.params;
+
+    const {
+        children
+    } = props;
+
+    const session = await getServerSession(authOptions);
+    if (!session) return <SignIn />;
+    const { name, userId } = await fetchLocationInfo(params.location);
+    if (!name) return notFound();
+    if (userId !== session.user.id) return notFound();
+    return (
 		<>
 			<LocationHeader location={params.location} />
 			<Container>

@@ -1,8 +1,7 @@
 'use client';
 
+import ArrowButton from '@components/ArrowButton';
 import { Button } from '@components/ui/button';
-import { Checkbox } from '@components/ui/checkbox';
-import { DatePicker } from '@components/ui/date-picker';
 import {
 	Dialog,
 	DialogContent,
@@ -12,15 +11,13 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { Input } from '@components/ui/input';
 import { crud } from '@lib/utils';
+import { useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import ItemForm from './ItemForm';
-import ArrowButton from '@components/ArrowButton';
-import { useQueryClient } from '@tanstack/react-query';
 
 export default function NewItemDialog({ product }: { product: string }) {
 	const [open, setOpen] = useState(false);
